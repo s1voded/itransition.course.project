@@ -2,7 +2,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject UserManager<ApplicationUser> UserManager
 
 @attribute [Authorize(Roles ="Admin")]
@@ -50,7 +51,7 @@
 
     private async Task GetUsers()
     {
-        Users = UserManager.Users.ToList();
+        Users = await UserManager.Users.ToListAsync();
         Admins = await UserManager.GetUsersForClaimAsync(adminClaim);
     }
 
