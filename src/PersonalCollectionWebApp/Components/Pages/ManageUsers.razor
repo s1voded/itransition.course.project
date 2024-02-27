@@ -1,0 +1,78 @@
+﻿@page "/manageusers"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@rendermode InteractiveServer
+@inject UserManager<ApplicationUser> UserManager
+
+@attribute [Authorize(Roles ="Admin")]
+
+<PageTitle>Manage users</PageTitle>
+
+<MudDataGrid T="ApplicationUser" MultiSelection="true" Items="@Users" SortMode="SortMode.Multiple"
+             SelectedItemsChanged="@SelectedItemsChanged" SelectOnRowClick="true" QuickFilter="@_quickFilter">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Users</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="ApplicationUser" />
+        <PropertyColumn Property="x => x.Id" Sortable="false" Filterable="false" />
+        <PropertyColumn Property="x => x.UserName" />
+        <PropertyColumn Property="x => x.Email" />
+        <PropertyColumn Property="x => IsAdmin(x)" Title="Admin" />
+        <PropertyColumn Property="x => false" Title="Block" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ApplicationUser" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private HashSet<ApplicationUser> selectedUsers;
+    private IEnumerable<ApplicationUser> Users = [];
+    private IEnumerable<ApplicationUser> Admins = [];
+    private string _searchString;
+    private Claim adminClaim;
+
+    protected override async Task OnInitializedAsync()
+    {
+        adminClaim = new Claim(ClaimTypes.Role, "Admin");
+        await GetUsers();
+    }
+
+    private bool IsAdmin(ApplicationUser user)
+    {
+        return Admins.Contains(user);
+    }
+
+    private async Task GetUsers()
+    {
+        Users = UserManager.Users.ToList();
+        Admins = await UserManager.GetUsersForClaimAsync(adminClaim);
+    }
+
+    private Func<ApplicationUser, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if ($"{x.Id}".Contains(_searchString))
+            return true;
+
+        if (x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    void SelectedItemsChanged(HashSet<ApplicationUser> items)
+    {
+        selectedUsers = items;
+    }
+}
