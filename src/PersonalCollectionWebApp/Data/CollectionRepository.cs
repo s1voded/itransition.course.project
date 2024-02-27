@@ -34,7 +34,8 @@ namespace PersonalCollectionWebApp.Data
 
         public async Task InsertCollection(PersonalCollection collection)
         {
-            throw new NotImplementedException();
+            await _context.Collections.AddAsync(collection);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateCollection(PersonalCollection collection)

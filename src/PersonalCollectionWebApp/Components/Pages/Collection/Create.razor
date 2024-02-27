@@ -1,0 +1,55 @@
+﻿@page "/Collections/Create"
+@using System.Security.Claims
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+@inject CollectionRepository CollectionRepository
+
+<h3>Create</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Collection" OnValidSubmit="AddCollection" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name:</label>
+                <InputText id="name" @bind-Value="Collection.Name" class="form-control" />
+                <ValidationMessage For="() => Collection.Name" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <InputText id="description" @bind-Value="Collection.Description" class="form-control" />
+                <ValidationMessage For="() => Collection.Description" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public PersonalCollection Collection { get; set; } = new();
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    bool success;
+
+    public async Task AddCollection()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState.User;
+
+            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                Collection.UserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                await CollectionRepository.InsertCollection(Collection);
+
+                NavigationManager.NavigateTo("/Collections");
+            }
+        }
+    }
+}

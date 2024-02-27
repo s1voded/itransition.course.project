@@ -1,9 +1,43 @@
 ﻿@page "/Collections"
-@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
 @attribute [Authorize]
+@inject CollectionRepository CollectionRepository
 
 <h3>Collections</h3>
 
-@code {
+<p>
+    <a href="Collections/Create">Create New</a>
+</p>
 
+<MudTable Items="@Collections" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh><MudTableSortLabel SortBy="new Func<PersonalCollection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+        <MudTh>Description</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Description">@context.Description</MudTd>
+    </RowTemplate>
+</MudTable>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private IEnumerable<PersonalCollection> Collections;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState.User;
+
+            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+                Collections = await CollectionRepository.GetUserCollections(userId);
+            }
+        }
+    }
 }

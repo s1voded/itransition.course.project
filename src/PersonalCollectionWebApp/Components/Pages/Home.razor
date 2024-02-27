@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject CollectionRepository Repository
+@inject CollectionRepository CollectionRepository
 
 <PageTitle>Home</PageTitle>
 
@@ -13,6 +13,6 @@ Welcome to your new app.
 
     protected override async Task OnInitializedAsync()
     {
-        LastCreatedItems = await Repository.GetLastCreatedItemAsync(10);
+        LastCreatedItems = await CollectionRepository.GetLastCreatedItemAsync(10);
     }
 }

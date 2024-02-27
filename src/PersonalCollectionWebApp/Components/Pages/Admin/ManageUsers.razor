@@ -1,5 +1,4 @@
 ﻿@page "/ManageUsers"
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
 @using Microsoft.EntityFrameworkCore
@@ -45,11 +44,11 @@
         <MudTh>Block</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Id</MudTd>
-        <MudTd DataLabel="Sign">@context.UserName</MudTd>
-        <MudTd DataLabel="Name">@context.Email</MudTd>
-        <MudTd DataLabel="Position">@IsAdmin(context)</MudTd>
-        <MudTd DataLabel="Molar mass">@context.IsBlocked</MudTd>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Username">@context.UserName</MudTd>
+        <MudTd DataLabel="Email">@context.Email</MudTd>
+        <MudTd DataLabel="Admin">@IsAdmin(context)</MudTd>
+        <MudTd DataLabel="Block">@context.IsBlocked</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
