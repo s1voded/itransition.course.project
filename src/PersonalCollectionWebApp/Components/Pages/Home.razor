@@ -1,7 +1,18 @@
 ﻿@page "/"
+@inject CollectionRepository Repository
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+
+@code {
+    private IEnumerable<Item> LastCreatedItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LastCreatedItems = await Repository.GetLastCreatedItemAsync(10);
+    }
+}

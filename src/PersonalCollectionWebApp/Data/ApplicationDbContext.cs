@@ -6,11 +6,11 @@ namespace PersonalCollectionWebApp.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
     {
-        DbSet<PersonalCollection> Collections { get; set; }
-        DbSet<Item> Items { get; set; }
-        DbSet<Theme> Themes { get; set; }
-        DbSet<Tag> Tags { get; set; }
-        DbSet<Comment> Comments { get; set; }
-        DbSet<Like> Likes { get; set; }
+        public DbSet<PersonalCollection> Collections { get; set; }
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Theme> Themes { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
     }
 }
