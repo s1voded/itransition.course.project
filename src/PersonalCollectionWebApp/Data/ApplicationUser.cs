@@ -9,6 +9,9 @@ namespace PersonalCollectionWebApp.Data
         //public bool IsAdmin { get; set; }
         public bool IsBlocked { get; set; }
         public ICollection<PersonalCollection> Collections { get; } = [];
+
+        //https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0#add-navigation-properties
+        public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
     }
 
 }

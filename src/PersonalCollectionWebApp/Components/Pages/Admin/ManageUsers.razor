@@ -40,14 +40,14 @@
         <MudTh>Id</MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
         <MudTh>Email</MudTh>
-        <MudTh>Admin</MudTh>
+        <MudTh>Role</MudTh>
         <MudTh>Block</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Username">@context.UserName</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
-        <MudTd DataLabel="Admin">@IsAdmin(context)</MudTd>
+        <MudTd DataLabel="Role">@GetUserRole(context)</MudTd>
         <MudTd DataLabel="Block">@context.IsBlocked</MudTd>
     </RowTemplate>
     <PagerContent>
@@ -58,25 +58,24 @@
 @code {
     private HashSet<ApplicationUser> selectedUsers;
     private IEnumerable<ApplicationUser> Users;
-    private IEnumerable<ApplicationUser> Admins;
     private string _searchString;
-    private Claim adminClaim;
 
     protected override async Task OnInitializedAsync()
     {
-        adminClaim = new Claim(ClaimTypes.Role, "Admin");
         await GetUsers();
     }
 
-    private bool IsAdmin(ApplicationUser user)
+    private string GetUserRole(ApplicationUser user)
     {
-        return Admins.Contains(user);
+        var roleClaim = user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).ToList();
+        var roles = string.Join(",", roleClaim.Select(r => r.ClaimValue));
+
+        return roles;
     }
 
     private async Task GetUsers()
     {
-        Users = await UserManager.Users.ToListAsync();
-        Admins = await UserManager.GetUsersForClaimAsync(adminClaim);
+        Users = await UserManager.Users.Include(u => u.Claims).ToListAsync();
     }
 
     private Func<ApplicationUser, bool> UserFilter => x =>
