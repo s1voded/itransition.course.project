@@ -1,7 +1,7 @@
 ﻿@page "/Collections"
 @using System.Security.Claims
 @attribute [Authorize]
-@inject CollectionRepository CollectionRepository
+@inject CollectionService CollectionService
 
 <h3>Collections</h3>
 
@@ -36,7 +36,7 @@
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
                 var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                Collections = await CollectionRepository.GetUserCollections(userId);
+                Collections = await CollectionService.GetUserCollections(userId);
             }
         }
     }

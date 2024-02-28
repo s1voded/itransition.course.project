@@ -2,7 +2,7 @@
 @using System.Security.Claims
 @attribute [Authorize]
 @inject NavigationManager NavigationManager
-@inject CollectionRepository CollectionRepository
+@inject CollectionService CollectionService
 
 <h3>Create</h3>
 
@@ -46,7 +46,7 @@
             {
                 Collection.UserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-                await CollectionRepository.InsertCollection(Collection);
+                await CollectionService.AddCollection(Collection);
 
                 NavigationManager.NavigateTo("/Collections");
             }

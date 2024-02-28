@@ -5,14 +5,14 @@ using MudBlazor.Services;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Data;
+using PersonalCollectionWebApp.Extensions;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
-builder.Services.AddMudServices();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -37,7 +37,10 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-builder.Services.AddScoped<CollectionRepository>();
+
+builder.Services.AddMudServices();
+builder.Services.AddRepositories();
+builder.Services.AddMyServices();
 
 var app = builder.Build();
 
