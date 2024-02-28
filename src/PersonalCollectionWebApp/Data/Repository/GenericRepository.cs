@@ -15,7 +15,6 @@ namespace PersonalCollectionWebApp.Data.Repository
 
         public IQueryable<TEntity> GetAll() => _context.Set<TEntity>();
         public async Task<TEntity> GetById(int id) => await _context.Set<TEntity>().FindAsync(id);
-        public IQueryable<TEntity> GetByCondition(Expression<Func<TEntity, bool>> expression) => _context.Set<TEntity>().Where(expression);
         public async Task Create(TEntity entity) => await _context.Set<TEntity>().AddAsync(entity);
         public async Task Update(int id, TEntity entity) => _context.Set<TEntity>().Update(entity);
         public async Task Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);

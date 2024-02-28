@@ -9,7 +9,7 @@
     <a href="Collections/Create">Create New</a>
 </p>
 
-<MudTable Items="@Collections" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Items="@collections" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<PersonalCollection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
         <MudTh>Description</MudTh>
@@ -24,7 +24,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private IEnumerable<PersonalCollection> Collections;
+    private IEnumerable<PersonalCollection> collections;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,7 +36,7 @@
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
                 var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                Collections = await CollectionService.GetUserCollections(userId);
+                collections = await CollectionService.GetUserCollections(userId);
             }
         }
     }

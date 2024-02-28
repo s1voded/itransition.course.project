@@ -1,9 +1,6 @@
 ﻿@page "/ManageUsers"
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
-@inject UserManager<ApplicationUser> UserManager
+@inject UserManagerService UserManagerService
 
 @attribute [Authorize(Roles ="Admin")]
 
@@ -30,11 +27,11 @@
     </PagerContent>
 </MudDataGrid> *@
 
-<MudTable Items="@Users" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Items="@users" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
         <MudText Typo="Typo.h4">Users</MudText>
         <MudSpacer />
-        <MudTextField Immediate="true" @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField Immediate="true" @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
@@ -47,7 +44,7 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Username">@context.UserName</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
-        <MudTd DataLabel="Role">@GetUserRole(context)</MudTd>
+        <MudTd DataLabel="Role">@GetUserRoles(context)</MudTd>
         <MudTd DataLabel="Block">@context.IsBlocked</MudTd>
     </RowTemplate>
     <PagerContent>
@@ -57,39 +54,31 @@
 
 @code {
     private HashSet<ApplicationUser> selectedUsers;
-    private IEnumerable<ApplicationUser> Users;
-    private string _searchString;
+    private IEnumerable<ApplicationUser> users;
+    private string searchString;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetUsers();
+        users = await UserManagerService.GetAllUsers();
     }
 
-    private string GetUserRole(ApplicationUser user)
+    private string GetUserRoles(ApplicationUser user)
     {
-        var roleClaim = user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).ToList();
-        var roles = string.Join(",", roleClaim.Select(r => r.ClaimValue));
-
-        return roles;
-    }
-
-    private async Task GetUsers()
-    {
-        Users = await UserManager.Users.Include(u => u.Claims).ToListAsync();
+        return UserManagerService.GetUserRoles(user);
     }
 
     private Func<ApplicationUser, bool> UserFilter => x =>
     {
-        if (string.IsNullOrWhiteSpace(_searchString))
+        if (string.IsNullOrWhiteSpace(searchString))
             return true;
 
-        if ($"{x.Id}".Contains(_searchString))
+        if ($"{x.Id}".Contains(searchString))
             return true;
 
-        if (x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (x.Email.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
         return false;

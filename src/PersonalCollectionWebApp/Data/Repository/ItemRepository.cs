@@ -1,4 +1,5 @@
-﻿using PersonalCollectionWebApp.Data.Repository.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonalCollectionWebApp.Data.Repository.Interfaces;
 using PersonalCollectionWebApp.Models;
 
 namespace PersonalCollectionWebApp.Data.Repository
@@ -7,6 +8,11 @@ namespace PersonalCollectionWebApp.Data.Repository
     {
         public ItemRepository(ApplicationDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Item>> GetLastAddedItems(int count)
+        {
+            return await GetAll().Include(i => i.Collection).OrderByDescending(i => i.CreatedDate).Take(count).ToListAsync();
         }
     }
 }

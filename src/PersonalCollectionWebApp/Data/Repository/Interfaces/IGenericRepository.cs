@@ -6,7 +6,6 @@ namespace PersonalCollectionWebApp.Data.Repository.Interfaces
     {
         IQueryable<TEntity> GetAll();
         Task<TEntity> GetById(int id);
-        IQueryable<TEntity> GetByCondition(Expression<Func<TEntity, bool>> expression);
         Task Create(TEntity entity);
         Task Update(int id, TEntity entity);
         Task Delete(TEntity entity);

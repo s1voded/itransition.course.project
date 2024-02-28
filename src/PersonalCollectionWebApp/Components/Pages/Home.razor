@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject CollectionService CollectionService
 
 <PageTitle>Home</PageTitle>
 
@@ -8,10 +9,14 @@ Welcome to your new app.
 
 
 @code {
-    private IEnumerable<Item> LastCreatedItems;
+    private IEnumerable<Item> lastCreatedItems;
+    private IEnumerable<PersonalCollection> largestCollections;
+    private int countLargestCollections = 5;
+    private int countLastAddedItems = 5;
 
     protected override async Task OnInitializedAsync()
     {
-        
+        largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
+        lastCreatedItems = await CollectionService.GetLastAddedItems(countLastAddedItems);
     }
 }

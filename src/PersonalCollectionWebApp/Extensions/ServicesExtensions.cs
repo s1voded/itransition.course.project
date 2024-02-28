@@ -19,6 +19,7 @@ namespace PersonalCollectionWebApp.Extensions
         public static void AddMyServices(this IServiceCollection services)
         {
             services.AddScoped<CollectionService>();
+            services.AddScoped<UserManagerService>();
         }
     }
 }
