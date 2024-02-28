@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace PersonalCollectionWebApp.Models
+namespace PersonalCollectionWebApp.Models.Entities
 {
     public class Tag
     {

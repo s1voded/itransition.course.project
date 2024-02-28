@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using PersonalCollectionWebApp.Models;
+using PersonalCollectionWebApp.Models.Entities;
 
 namespace PersonalCollectionWebApp.Data
 {

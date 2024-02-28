@@ -1,32 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollectionWebApp.Data;
-using System.Security.Claims;
+using PersonalCollectionWebApp.Models.Dto;
 
 namespace PersonalCollectionWebApp.Services
 {
     public class UserManagerService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
 
-        private IEnumerable<ApplicationUser> users;
-        //public IEnumerable<ApplicationUser> Users => users;
-
-        public UserManagerService(UserManager<ApplicationUser> userManager)
+        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
+        public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
-            users = await _userManager.Users.Include(u => u.Claims).ToListAsync();
-            return users;
-        }
-
-        public string GetUserRoles(ApplicationUser user)
-        {
-            var roleClaims = user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).ToList();
-            return string.Join(",", roleClaims.Select(r => r.ClaimValue));
+            return await _userManager.Users.Include(u => u.Claims).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
     }
 }

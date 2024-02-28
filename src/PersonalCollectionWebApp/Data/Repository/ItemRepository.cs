@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonalCollectionWebApp.Data.Repository.Interfaces;
-using PersonalCollectionWebApp.Models;
+using PersonalCollectionWebApp.Models.Entities;
 
 namespace PersonalCollectionWebApp.Data.Repository
 {

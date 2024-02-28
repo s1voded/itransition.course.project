@@ -1,6 +1,6 @@
 ﻿using System.Reflection.Metadata;
 
-namespace PersonalCollectionWebApp.Models
+namespace PersonalCollectionWebApp.Models.Entities
 {
     public class Theme
     {

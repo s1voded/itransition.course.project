@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using PersonalCollectionWebApp.Models;
+using PersonalCollectionWebApp.Models.Entities;
 
 namespace PersonalCollectionWebApp.Data
 {

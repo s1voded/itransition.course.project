@@ -1,4 +1,4 @@
-﻿namespace PersonalCollectionWebApp.Models
+﻿namespace PersonalCollectionWebApp.Models.Entities
 {
     public class ItemTag
     {

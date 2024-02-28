@@ -35,7 +35,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUser, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
         <MudTh>Email</MudTh>
         <MudTh>Role</MudTh>
         <MudTh>Block</MudTh>
@@ -44,7 +44,7 @@
         <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Username">@context.UserName</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
-        <MudTd DataLabel="Role">@GetUserRoles(context)</MudTd>
+        <MudTd DataLabel="Role">@string.Join(",", context.Roles)</MudTd>
         <MudTd DataLabel="Block">@context.IsBlocked</MudTd>
     </RowTemplate>
     <PagerContent>
@@ -53,8 +53,8 @@
 </MudTable>
 
 @code {
-    private HashSet<ApplicationUser> selectedUsers;
-    private IEnumerable<ApplicationUser> users;
+    private HashSet<ApplicationUserDto> selectedUsers;
+    private IEnumerable<ApplicationUserDto> users;
     private string searchString;
 
     protected override async Task OnInitializedAsync()
@@ -62,12 +62,7 @@
         users = await UserManagerService.GetAllUsers();
     }
 
-    private string GetUserRoles(ApplicationUser user)
-    {
-        return UserManagerService.GetUserRoles(user);
-    }
-
-    private Func<ApplicationUser, bool> UserFilter => x =>
+    private Func<ApplicationUserDto, bool> UserFilter => x =>
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;

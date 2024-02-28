@@ -1,5 +1,5 @@
 ﻿using PersonalCollectionWebApp.Data.Repository.Interfaces;
-using PersonalCollectionWebApp.Models;
+using PersonalCollectionWebApp.Models.Entities;
 
 namespace PersonalCollectionWebApp.Services
 {
