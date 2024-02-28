@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersonalCollectionWebApp.Data;
-using PersonalCollectionWebApp.Data.Repository.Interfaces;
+﻿using PersonalCollectionWebApp.Data.Repository.Interfaces;
 using PersonalCollectionWebApp.Models;
 
 namespace PersonalCollectionWebApp.Services

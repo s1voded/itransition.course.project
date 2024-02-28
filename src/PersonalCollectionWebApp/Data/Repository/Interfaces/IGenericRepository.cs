@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-
+﻿
 namespace PersonalCollectionWebApp.Data.Repository.Interfaces
 {
     public interface IGenericRepository<TEntity> where TEntity : class

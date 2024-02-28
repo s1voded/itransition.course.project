@@ -6,7 +6,6 @@ using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Data;
 using PersonalCollectionWebApp.Extensions;
-using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
