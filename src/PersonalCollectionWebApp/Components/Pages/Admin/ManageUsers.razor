@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject UserManagerService UserManagerService
 
-@attribute [Authorize(Roles ="Admin")]
+@attribute [Authorize(Roles = Constants.AdminRole)]
 
 <PageTitle>Manage users</PageTitle>
 
@@ -26,6 +26,11 @@
         <MudDataGridPager T="ApplicationUser" />
     </PagerContent>
 </MudDataGrid> *@
+
+<MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="SetUserRoleAdmin">Set admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="RemoveUserRoleAdmin">Remove admin</MudButton>
+</MudButtonGroup>
 
 <MudTable Items="@users" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
@@ -59,23 +64,46 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await GetUsers();
+    }
+
+    private async Task GetUsers()
+    {
         users = await UserManagerService.GetAllUsers();
+    }
+
+    private async Task SetUserRoleAdmin()
+    {
+        foreach (var user in selectedUsers)
+        {
+            await UserManagerService.AddUserRole(user.Id, Constants.AdminRole);
+        }
+        await GetUsers();
+    }
+
+    private async Task RemoveUserRoleAdmin()
+    {
+        foreach (var user in selectedUsers)
+        {
+            await UserManagerService.RemoveUserRole(user.Id, Constants.AdminRole);
+        }
+        await GetUsers();
     }
 
     private Func<ApplicationUserDto, bool> UserFilter => x =>
     {
-        if (string.IsNullOrWhiteSpace(searchString))
-            return true;
+    if (string.IsNullOrWhiteSpace(searchString))
+        return true;
 
-        if ($"{x.Id}".Contains(searchString))
-            return true;
+    if ($"{x.Id}".Contains(searchString))
+        return true;
 
-        if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
+    if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        return true;
 
-        if (x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
+    if (x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+        return true;
 
-        return false;
+    return false;
     };
 }
