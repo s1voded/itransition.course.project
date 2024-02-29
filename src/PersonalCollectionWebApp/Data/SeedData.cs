@@ -13,7 +13,7 @@ namespace PersonalCollectionWebApp.Data
 
             if (userManager.Users.Any())
             {
-                //return;
+                return;
             }
 
             var users = new ApplicationUser[]

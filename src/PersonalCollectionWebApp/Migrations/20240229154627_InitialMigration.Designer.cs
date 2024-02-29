@@ -12,8 +12,8 @@ using PersonalCollectionWebApp.Data;
 namespace PersonalCollectionWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240229150032_AddNavigateFieldThemeIdToCollection")]
-    partial class AddNavigateFieldThemeIdToCollection
+    [Migration("20240229154627_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -389,7 +389,7 @@ namespace PersonalCollectionWebApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ThemeId")
+                    b.Property<int?>("ThemeId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -554,9 +554,7 @@ namespace PersonalCollectionWebApp.Migrations
                 {
                     b.HasOne("PersonalCollectionWebApp.Models.Entities.Theme", "Theme")
                         .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ThemeId");
 
                     b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", "User")
                         .WithMany("Collections")
