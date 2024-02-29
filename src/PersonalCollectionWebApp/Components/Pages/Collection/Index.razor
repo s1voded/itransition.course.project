@@ -1,7 +1,9 @@
 ﻿@page "/Collections"
 @using System.Security.Claims
+@rendermode InteractiveServer
 @attribute [Authorize]
 @inject CollectionService CollectionService
+@inject NavigationManager NavigationManager
 
 <h3>Collections</h3>
 
@@ -9,13 +11,15 @@
     <a href="Collections/Create">Create New</a>
 </p>
 
-<MudTable Items="@collections" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable T="PersonalCollection" Items="@collections" Hover=" true" OnRowClick="@CollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<PersonalCollection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+        <MudTh>Theme</MudTh>
         <MudTh>Description</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
+        <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>
         <MudTd DataLabel="Description">@context.Description</MudTd>
     </RowTemplate>
 </MudTable>
@@ -39,5 +43,10 @@
                 collections = await CollectionService.GetUserCollections(userId);
             }
         }
+    }
+
+    private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> collection)
+    {
+        NavigationManager.NavigateTo($"/collections/details?id={collection.Item.Id}");
     }
 }

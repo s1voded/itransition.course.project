@@ -32,7 +32,7 @@
     <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="RemoveUserRoleAdmin">Remove admin</MudButton>
 </MudButtonGroup>
 
-<MudTable Items="@users" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Hover=" true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
         <MudText Typo="Typo.h4">Users</MudText>
         <MudSpacer />

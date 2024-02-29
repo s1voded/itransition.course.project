@@ -12,7 +12,19 @@ namespace PersonalCollectionWebApp.Data.Repository
 
         public async Task<IEnumerable<Item>> GetLastAddedItems(int count)
         {
-            return await GetAll().Include(i => i.Collection).OrderByDescending(i => i.CreatedDate).Take(count).ToListAsync();
+            return await GetAll()
+                .Include(i => i.Collection)
+                .OrderByDescending(i => i.CreatedDate)
+                .Take(count)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Item>> GetCollectionItemsWithTags(int collectionId)
+        {
+            return await GetAll()
+                .Include(i => i.Tags)
+                .Where(i => i.CollectionId == collectionId)
+                .ToListAsync();
         }
     }
 }

@@ -21,6 +21,16 @@
                 <InputText id="description" @bind-Value="Collection.Description" class="form-control" />
                 <ValidationMessage For="() => Collection.Description" class="text-danger" />
             </div>
+            <div class="mb-3">
+                <label for="theme" class="form-label">Theme:</label>
+                <InputSelect id="theme" @bind-Value="Collection.ThemeId" class="form-control">
+                    @foreach (var theme in themes)
+                    {
+                        <option value="@theme.Id">@theme.Name</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Collection.ThemeId" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -33,7 +43,12 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    bool success;
+    private IEnumerable<Theme> themes = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        themes = await CollectionService.GetCollectionThemes();
+    }
 
     public async Task AddCollection()
     {
