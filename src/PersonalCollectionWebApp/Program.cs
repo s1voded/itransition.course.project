@@ -44,6 +44,13 @@ builder.Services.AddMyServices();
 
 var app = builder.Build();
 
+//add default data in db if db empty
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedData.InitializeAsync(services);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
