@@ -28,7 +28,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private IEnumerable<PersonalCollection> collections;
+    private IEnumerable<PersonalCollection> collections = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,7 +40,10 @@
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
                 var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                collections = await CollectionService.GetUserCollections(userId);
+                if(!string.IsNullOrEmpty(userId))
+                {
+                    collections = await CollectionService.GetUserCollections(userId);
+                }          
             }
         }
     }

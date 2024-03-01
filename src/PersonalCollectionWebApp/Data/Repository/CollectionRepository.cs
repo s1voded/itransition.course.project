@@ -29,7 +29,7 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .ToListAsync();
         }
 
-        public async Task<PersonalCollection> GetCollectionWithItems(int collectionId)
+        public async Task<PersonalCollection?> GetCollectionWithItems(int collectionId)
         {
             return await GetAll()
                 .Include(c => c.Theme)

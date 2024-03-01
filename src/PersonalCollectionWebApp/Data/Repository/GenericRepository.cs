@@ -11,10 +11,10 @@ namespace PersonalCollectionWebApp.Data.Repository
         }
 
         public IQueryable<TEntity> GetAll() => _context.Set<TEntity>();
-        public async Task<TEntity> GetById(int id) => await _context.Set<TEntity>().FindAsync(id);
+        public async Task<TEntity?> GetById(int id) => await _context.Set<TEntity>().FindAsync(id);
         public async Task Create(TEntity entity) => await _context.Set<TEntity>().AddAsync(entity);
-        public async Task Update(int id, TEntity entity) => _context.Set<TEntity>().Update(entity);
-        public async Task Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
+        public void Update(int id, TEntity entity) => _context.Set<TEntity>().Update(entity);
+        public void Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

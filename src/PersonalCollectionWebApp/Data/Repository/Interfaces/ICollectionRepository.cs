@@ -6,6 +6,6 @@ namespace PersonalCollectionWebApp.Data.Repository.Interfaces
     {
         public Task<IEnumerable<PersonalCollection>> GetLargestCollections(int count);
         public Task<IEnumerable<PersonalCollection>> GetUserCollections(string userId);
-        public Task<PersonalCollection> GetCollectionWithItems(int collectionId);
+        public Task<PersonalCollection?> GetCollectionWithItems(int collectionId);
     }
 }

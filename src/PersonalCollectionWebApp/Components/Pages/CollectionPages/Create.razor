@@ -59,11 +59,13 @@
 
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
-                Collection.UserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-                await CollectionService.AddCollection(Collection);
-
-                NavigationManager.NavigateTo("/Collections");
+                var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if(!string.IsNullOrEmpty(userId))
+                {
+                    Collection.UserId = userId;
+                    await CollectionService.AddCollection(Collection);
+                    NavigationManager.NavigateTo("/collections");
+                }             
             }
         }
     }

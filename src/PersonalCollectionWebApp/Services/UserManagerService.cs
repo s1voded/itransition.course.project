@@ -14,7 +14,7 @@ namespace PersonalCollectionWebApp.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private IEnumerable<ApplicationUser> users;
+        private IEnumerable<ApplicationUser>? users;
 
         public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
@@ -55,7 +55,7 @@ namespace PersonalCollectionWebApp.Services
             }
         }
 
-        private async Task<ApplicationUser> GetUserById(string userId)
+        private async Task<ApplicationUser?> GetUserById(string userId)
         {
             return await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
             //return users.FirstOrDefault(u => u.Id == userId);

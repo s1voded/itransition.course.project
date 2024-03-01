@@ -32,7 +32,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private PersonalCollection collection;
+    private PersonalCollection collection = new();
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()

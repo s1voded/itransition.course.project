@@ -39,9 +39,9 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
-    private HashSet<ApplicationUserDto> selectedUsers;
-    private IEnumerable<ApplicationUserDto> users;
-    private string searchString;
+    private HashSet<ApplicationUserDto> selectedUsers = [];
+    private IEnumerable<ApplicationUserDto> users = [];
+    private string? searchString;
     private enum ChangeType
     {
         SetAdmin,
