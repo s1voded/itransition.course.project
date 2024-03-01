@@ -6,5 +6,8 @@
 
         public const int DbFieldShortStringLenght = 50;
         public const int DbFieldLongStringLenght = 500;
+
+        public const string PolicyAdminOnly = "AdminOnly";
+        public const string PolicyCanManageCollection = "CanManageCollection";
     }
 }

@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using PersonalCollectionWebApp;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Data;
 using PersonalCollectionWebApp.Extensions;
+using PersonalCollectionWebApp.Policies.Requirements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,12 +37,21 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Constants.PolicyCanManageCollection, policy =>
+        policy.Requirements.Add(new AllowedManageCollectionRequirement()));
+    options.AddPolicy(Constants.PolicyAdminOnly, policy =>
+        policy.Requirements.Add(new IsAdminRequirement()));
+});
+
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddAutoMapper((typeof(Program)));
 builder.Services.AddMudServices();
 builder.Services.AddRepositories();
 builder.Services.AddMyServices();
+builder.Services.AddHandlersServices();
 
 var app = builder.Build();
 

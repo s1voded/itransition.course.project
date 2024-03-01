@@ -28,5 +28,14 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .Where(c => c.UserId == userId)
                 .ToListAsync();
         }
+
+        public async Task<PersonalCollection> GetCollectionWithItems(int collectionId)
+        {
+            return await GetAll()
+                .Include(c => c.Theme)
+                .Include(c => c.User)
+                .Include(c => c.Items).ThenInclude(i => i.Tags)
+                .FirstOrDefaultAsync(c => c.Id == collectionId);
+        }
     }
 }

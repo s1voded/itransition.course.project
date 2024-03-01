@@ -28,9 +28,9 @@
             </Authorized>
         </AuthorizeView>
 
-        <AuthorizeView Roles="Admin">
+        <AuthorizeView Roles=@Constants.AdminRole>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="ManageUsers">
+            <NavLink class="nav-link" href="usermanager">
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Users
             </NavLink>
         </div>

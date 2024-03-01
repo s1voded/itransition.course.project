@@ -18,13 +18,5 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .Take(count)
                 .ToListAsync();
         }
-
-        public async Task<IEnumerable<Item>> GetCollectionItemsWithTags(int collectionId)
-        {
-            return await GetAll()
-                .Include(i => i.Tags)
-                .Where(i => i.CollectionId == collectionId)
-                .ToListAsync();
-        }
     }
 }

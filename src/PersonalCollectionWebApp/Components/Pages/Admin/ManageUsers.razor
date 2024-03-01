@@ -1,35 +1,14 @@
-﻿@page "/ManageUsers"
+﻿@page "/usermanager"
 @rendermode InteractiveServer
 @inject UserManagerService UserManagerService
-
-@attribute [Authorize(Roles = Constants.AdminRole)]
+@inject IAuthorizationService AuthorizationService
+@attribute [Authorize(Policy = Constants.PolicyAdminOnly)]
 
 <PageTitle>Manage users</PageTitle>
 
-@* <MudDataGrid T="ApplicationUser" MultiSelection="true" Items="@Users" @bind-SelectedItems="selectedUsers"
-             SelectOnRowClick="true" QuickFilter="@UserFilter">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6">Users</MudText>
-        <MudSpacer />
-        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Small" Class="mt-0"></MudTextField>
-    </ToolBarContent>
-    <Columns>
-        <SelectColumn T="ApplicationUser" />
-        <PropertyColumn Property="x => x.Id" Sortable="false" Filterable="false" />
-        <PropertyColumn Property="x => x.UserName" />
-        <PropertyColumn Property="x => x.Email" />
-        <PropertyColumn Property="x => IsAdmin(x)" Title="Admin"/>
-        <PropertyColumn Property="x => x.IsBlocked" Title="Block"/>
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager T="ApplicationUser" />
-    </PagerContent>
-</MudDataGrid> *@
-
 <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="SetUserRoleAdmin">Set admin</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="RemoveUserRoleAdmin">Remove admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">Set admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
 </MudButtonGroup>
 
 <MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -58,9 +37,18 @@
 </MudTable>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
     private HashSet<ApplicationUserDto> selectedUsers;
     private IEnumerable<ApplicationUserDto> users;
     private string searchString;
+    private enum ChangeType
+    {
+        SetAdmin,
+        RemoveAdmin,
+        Block,
+        Unblock
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,20 +60,32 @@
         users = await UserManagerService.GetAllUsers();
     }
 
-    private async Task SetUserRoleAdmin()
+    private async Task ChangeUser(ChangeType changeType)
     {
-        foreach (var user in selectedUsers)
+        if (authenticationState is not null)
         {
-            await UserManagerService.AddUserRole(user.Id, Constants.AdminRole);
-        }
-        await GetUsers();
-    }
+            var authState = await authenticationState;
+            var user = authState?.User;
 
-    private async Task RemoveUserRoleAdmin()
-    {
-        foreach (var user in selectedUsers)
-        {
-            await UserManagerService.RemoveUserRole(user.Id, Constants.AdminRole);
+            if (user is not null)
+            {
+                if ((await AuthorizationService.AuthorizeAsync(user, Constants.PolicyAdminOnly)).Succeeded)
+                {
+                    foreach (var selectedUser in selectedUsers)
+                    {
+                        switch (changeType)
+                        {
+                            case ChangeType.SetAdmin:
+                                await UserManagerService.AddUserRole(selectedUser.Id, Constants.AdminRole);
+                                break;
+
+                            case ChangeType.RemoveAdmin:
+                                await UserManagerService.RemoveUserRole(selectedUser.Id, Constants.AdminRole);
+                                break;
+                        }
+                    }
+                }
+            }
         }
         await GetUsers();
     }

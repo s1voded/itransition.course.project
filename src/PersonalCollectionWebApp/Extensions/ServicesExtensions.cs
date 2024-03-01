@@ -1,5 +1,7 @@
-﻿using PersonalCollectionWebApp.Data.Repository;
+﻿using Microsoft.AspNetCore.Authorization;
+using PersonalCollectionWebApp.Data.Repository;
 using PersonalCollectionWebApp.Data.Repository.Interfaces;
+using PersonalCollectionWebApp.Policies.Handlers;
 using PersonalCollectionWebApp.Services;
 
 namespace PersonalCollectionWebApp.Extensions
@@ -20,6 +22,12 @@ namespace PersonalCollectionWebApp.Extensions
         {
             services.AddScoped<CollectionService>();
             services.AddScoped<UserManagerService>();
+        }
+
+        public static void AddHandlersServices(this IServiceCollection services)
+        {
+            services.AddScoped<IAuthorizationHandler, IsCollectionOwnerHandler>();
+            services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
         }
     }
 }

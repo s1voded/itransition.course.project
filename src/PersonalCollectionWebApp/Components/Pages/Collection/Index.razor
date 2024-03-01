@@ -1,11 +1,11 @@
-﻿@page "/Collections"
+﻿@page "/collections"
 @using System.Security.Claims
 @rendermode InteractiveServer
 @attribute [Authorize]
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 
-<h3>Collections</h3>
+<PageTitle>Collections</PageTitle>
 
 <p>
     <a href="Collections/Create">Create New</a>

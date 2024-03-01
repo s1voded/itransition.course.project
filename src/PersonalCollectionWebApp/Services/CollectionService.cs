@@ -22,6 +22,11 @@ namespace PersonalCollectionWebApp.Services
             return await _collectionRepository.GetUserCollections(userId);
         }
 
+        public async Task<PersonalCollection> GetCollectionWithItems(int collectionId)
+        {
+            return await _collectionRepository.GetCollectionWithItems(collectionId);
+        }
+
         public async Task<IEnumerable<PersonalCollection>> GetLargestCollections(int count)
         {
             return await _collectionRepository.GetLargestCollections(count);
@@ -31,11 +36,6 @@ namespace PersonalCollectionWebApp.Services
         {
             await _collectionRepository.Create(collection);
             await _collectionRepository.SaveChangesAsync();
-        }
-
-        public async Task<IEnumerable<Item>> GetCollectionItemsWithTags(int collectionId)
-        {
-            return await _itemRepository.GetCollectionItemsWithTags(collectionId);
         }
 
         public async Task<IEnumerable<Item>> GetLastAddedItems(int count)

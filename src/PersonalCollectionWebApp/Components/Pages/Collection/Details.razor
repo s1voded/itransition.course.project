@@ -1,9 +1,15 @@
-﻿@page "/Collections/Details"
+﻿@page "/collections/details"
 @inject CollectionService CollectionService
+@inject IAuthorizationService AuthorizationService
 
 <PageTitle>Details</PageTitle>
 
-<MudTable Items="@collectionItems" Hover="true" Dense="true">
+@if(canManageCollection)
+{
+    <MudButton StartIcon="@Icons.Material.Filled.Edit">Edit</MudButton>
+}
+
+<MudTable Items="@collection?.Items" Hover="true" Dense="true">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Collection items</MudText>
     </ToolBarContent>
@@ -23,10 +29,26 @@
     [SupplyParameterFromQuery]
     public int Id { get; set; }
 
-    private IEnumerable<Item> collectionItems;
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private PersonalCollection collection;
+    private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
-        collectionItems = await CollectionService.GetCollectionItemsWithTags(Id);
+        collection = await CollectionService.GetCollectionWithItems(Id);
+
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
+                canManageCollection = isAuthorized.Succeeded;
+            }
+        }
     }
 }
