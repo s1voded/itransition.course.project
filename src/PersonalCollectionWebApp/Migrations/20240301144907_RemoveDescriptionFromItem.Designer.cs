@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalCollectionWebApp.Data;
 
@@ -11,9 +12,11 @@ using PersonalCollectionWebApp.Data;
 namespace PersonalCollectionWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240301144907_RemoveDescriptionFromItem")]
+    partial class RemoveDescriptionFromItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -280,31 +283,31 @@ namespace PersonalCollectionWebApp.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("CustomBool1")
+                    b.Property<bool>("CustomBool1")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("CustomBool2")
+                    b.Property<bool>("CustomBool2")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("CustomBool3")
+                    b.Property<bool>("CustomBool3")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("CustomDateTime1")
+                    b.Property<DateTime>("CustomDateTime1")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("CustomDateTime2")
+                    b.Property<DateTime>("CustomDateTime2")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("CustomDateTime3")
+                    b.Property<DateTime>("CustomDateTime3")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CustomInt1")
+                    b.Property<int>("CustomInt1")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomInt2")
+                    b.Property<int>("CustomInt2")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CustomInt3")
+                    b.Property<int>("CustomInt3")
                         .HasColumnType("int");
 
                     b.Property<string>("CustomMultiLineText1")

@@ -1,12 +1,14 @@
 ﻿@page "/collections/{CollectionId:int}"
+@rendermode InteractiveServer
 @inject CollectionService CollectionService
+@inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 
 <PageTitle>Details</PageTitle>
 
 @if(canManageCollection)
 {
-    <MudButton StartIcon="@Icons.Material.Filled.Edit">Edit</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddItemToCollection">Add item</MudButton>
 }
 
 <MudTable Items="@collection?.Items" Hover="true" Dense="true">
@@ -32,7 +34,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private PersonalCollection collection = new();
+    private PersonalCollection? collection;
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
@@ -50,5 +52,10 @@
                 canManageCollection = isAuthorized.Succeeded;
             }
         }
+    }
+
+    private void AddItemToCollection()
+    {
+        NavigationManager.NavigateTo($"/collections/{CollectionId}/itemcreate");
     }
 }
