@@ -6,7 +6,7 @@
 
 <PageTitle>Details</PageTitle>
 
-@if(canManageCollection)
+@if(canManageCollection && collection != null)
 {
     <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddItemToCollection">Add item</MudButton>
 }
