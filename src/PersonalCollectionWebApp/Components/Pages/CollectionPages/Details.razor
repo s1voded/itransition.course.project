@@ -1,4 +1,4 @@
-﻿@page "/collections/details"
+﻿@page "/collections/{CollectionId:int}"
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
 
@@ -26,8 +26,8 @@
 </MudTable>
 
 @code {
-    [SupplyParameterFromQuery]
-    public int Id { get; set; }
+    [Parameter]
+    public int CollectionId { get; set; }
 
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
@@ -37,7 +37,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        collection = await CollectionService.GetCollectionWithItems(Id);
+        collection = await CollectionService.GetCollectionWithItems(CollectionId);
 
         if (authenticationState is not null)
         {

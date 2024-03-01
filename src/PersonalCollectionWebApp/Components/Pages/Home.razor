@@ -56,6 +56,6 @@
 
     private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> collection)
     {
-        NavigationManager.NavigateTo($"/collections/details?id={collection.Item.Id}");
+        NavigationManager.NavigateTo($"/collections/{collection.Item.Id}");
     }
 }
