@@ -48,6 +48,12 @@ namespace PersonalCollectionWebApp.Services
             await _collectionRepository.SaveChangesAsync();
         }
 
+        public async Task DeleteCollection(PersonalCollection collection)
+        {
+            _collectionRepository.Delete(collection);
+            await _collectionRepository.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Item>> GetLastAddedItems(int count)
         {
             return await _itemRepository.GetLastAddedItems(count);
@@ -72,6 +78,12 @@ namespace PersonalCollectionWebApp.Services
         public async Task<IEnumerable<Tag>> GetAllItemTags()
         {
             return await _tagRepository.GetAll().AsNoTracking().ToListAsync();
+        }
+
+        public async Task DeleteItem(Item item)
+        {
+            _itemRepository.Delete(item);
+            await _itemRepository.SaveChangesAsync();
         }
     }
 }

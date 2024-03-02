@@ -10,6 +10,8 @@
 @if(canManageCollection && collection != null)
 {
     <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddItemToCollection">Add item</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="EditCollection">Edit collection</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
 }
 
 <MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@ItemDetails" RowClass="cursor-pointer">
@@ -60,8 +62,22 @@
         NavigationManager.NavigateTo($"/collections/{CollectionId}/itemcreate");
     }
 
+    private void EditCollection()
+    {
+        NavigationManager.NavigateTo($"/collections/{CollectionId}/edit");
+    }
+
     private void ItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/items/{args.Item.Id}");
+    }
+
+    private async Task OnDeleteCollection()
+    {
+        if (collection != null)
+        {
+            await CollectionService.DeleteCollection(collection);
+        }
+        NavigationManager.NavigateTo($"/collections");
     }
 }

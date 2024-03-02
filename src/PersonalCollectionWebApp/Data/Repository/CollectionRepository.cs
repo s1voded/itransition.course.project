@@ -37,7 +37,6 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .Include(c => c.Theme)
                 .Include(c => c.User)
                 .Include(c => c.Items).ThenInclude(i => i.Tags)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == collectionId);
         }
     }

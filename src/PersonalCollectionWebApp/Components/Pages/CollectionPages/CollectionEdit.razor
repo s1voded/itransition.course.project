@@ -5,6 +5,11 @@
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 
+@if (canManageCollection && collection != null)
+{
+    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
+}
+
 @code {
     [Parameter]
     public int CollectionId { get; set; }
@@ -30,5 +35,14 @@
                 canManageCollection = isAuthorized.Succeeded;
             }
         }
+    }
+
+    private async Task OnDeleteCollection()
+    {
+        if (collection != null)
+        {
+            await CollectionService.DeleteCollection(collection);
+        }
+        NavigationManager.NavigateTo($"/collections");
     }
 }

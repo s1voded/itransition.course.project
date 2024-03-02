@@ -12,6 +12,7 @@
 @if (canManageItem && item != null)
 {
     <MudButton StartIcon="@Icons.Material.Filled.Add">Edit item</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
 }
 
 @code {
@@ -39,6 +40,14 @@
                 canManageItem = isAuthorized.Succeeded;
             }
         }
+    }
 
+    private async Task OnDeleteItem()
+    {
+        if(item != null)
+        {
+            await CollectionService.DeleteItem(item);
+        }
+        NavigationManager.NavigateTo($"/collections/{item?.Collection.Id}");
     }
 }
