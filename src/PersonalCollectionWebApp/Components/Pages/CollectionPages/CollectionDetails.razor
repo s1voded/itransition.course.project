@@ -4,7 +4,7 @@
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 
-<PageTitle>Details</PageTitle>
+<PageTitle>@collection?.Name</PageTitle>
 
 @if(canManageCollection && collection != null)
 {
