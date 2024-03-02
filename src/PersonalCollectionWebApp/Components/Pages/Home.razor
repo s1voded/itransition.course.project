@@ -5,7 +5,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudTable Items="@lastAddedItems" Hover="true" Dense="true">
+<MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@ItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Last added items</MudText>
     </ToolBarContent>
@@ -57,5 +57,10 @@
     private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> collection)
     {
         NavigationManager.NavigateTo($"/collections/{collection.Item.Id}");
+    }
+
+    private void ItemDetails(TableRowClickEventArgs<Item> args)
+    {
+        NavigationManager.NavigateTo($"/items/{args.Item.Id}");
     }
 }

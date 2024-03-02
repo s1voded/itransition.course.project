@@ -47,8 +47,8 @@
         }
     }
 
-    private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> collection)
+    private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> args)
     {
-        NavigationManager.NavigateTo($"/collections/{collection.Item.Id}");
+        NavigationManager.NavigateTo($"/collections/{args.Item.Id}");
     }
 }

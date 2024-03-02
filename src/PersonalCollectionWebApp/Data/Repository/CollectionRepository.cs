@@ -18,6 +18,7 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .Include(c => c.Items)
                 .OrderByDescending(c => c.Items.Count)
                 .Take(count)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -26,6 +27,7 @@ namespace PersonalCollectionWebApp.Data.Repository
             return await GetAll()
                 .Include(c => c.Theme)
                 .Where(c => c.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -35,6 +37,7 @@ namespace PersonalCollectionWebApp.Data.Repository
                 .Include(c => c.Theme)
                 .Include(c => c.User)
                 .Include(c => c.Items).ThenInclude(i => i.Tags)
+                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == collectionId);
         }
     }

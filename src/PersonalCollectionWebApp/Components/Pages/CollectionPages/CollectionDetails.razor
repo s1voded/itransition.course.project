@@ -11,7 +11,7 @@
     <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddItemToCollection">Add item</MudButton>
 }
 
-<MudTable Items="@collection?.Items" Hover="true" Dense="true">
+<MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@ItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Collection items</MudText>
     </ToolBarContent>
@@ -57,5 +57,10 @@
     private void AddItemToCollection()
     {
         NavigationManager.NavigateTo($"/collections/{CollectionId}/itemcreate");
+    }
+
+    private void ItemDetails(TableRowClickEventArgs<Item> args)
+    {
+        NavigationManager.NavigateTo($"/items/{args.Item.Id}");
     }
 }

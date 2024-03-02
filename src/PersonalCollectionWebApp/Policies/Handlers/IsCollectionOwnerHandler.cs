@@ -14,7 +14,7 @@ namespace PersonalCollectionWebApp.Policies.Handlers
         {
             _userManager = userManager;
         }
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, PersonalCollection resource)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, PersonalCollection? resource)
         {
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)
@@ -22,7 +22,7 @@ namespace PersonalCollectionWebApp.Policies.Handlers
                 return;
             }
 
-            if (resource.UserId == user.Id)
+            if (resource?.UserId == user.Id)
             {
                 context.Succeed(requirement);
             }

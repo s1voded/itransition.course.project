@@ -64,6 +64,11 @@ namespace PersonalCollectionWebApp.Services
             return await _themeRepository.GetAll().AsNoTracking().ToListAsync();
         }
 
+        public async Task<Item?> GetItemWithollection(int itemId)
+        {
+            return await _itemRepository.GetItemWithCollection(itemId);
+        }
+
         public async Task<IEnumerable<Tag>> GetAllItemTags()
         {
             return await _tagRepository.GetAll().AsNoTracking().ToListAsync();
