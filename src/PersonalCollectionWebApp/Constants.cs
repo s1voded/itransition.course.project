@@ -10,5 +10,6 @@
         public const string PolicyAdminOnly = "AdminOnly";
         public const string PolicyCanManageCollection = "CanManageCollection";
         public const string PolicyUserNotBlocked = "UserNotBlocked";
+        public const string PolicyUserNotBlockedOrAnonymous = "UserNotBlockedOrAnonymous";
     }
 }

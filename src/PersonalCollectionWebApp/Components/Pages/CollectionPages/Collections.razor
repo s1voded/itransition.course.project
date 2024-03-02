@@ -1,4 +1,5 @@
 ﻿@page "/collections"
+@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @using System.Security.Claims
 @rendermode InteractiveServer
 @inject CollectionService CollectionService

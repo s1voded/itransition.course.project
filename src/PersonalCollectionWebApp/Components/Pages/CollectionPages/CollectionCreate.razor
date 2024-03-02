@@ -1,4 +1,5 @@
 ﻿@page "/collections/create"
+@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService

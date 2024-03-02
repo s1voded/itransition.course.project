@@ -1,4 +1,5 @@
 ﻿@page "/collections/{CollectionId:int}/edit"
+@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager

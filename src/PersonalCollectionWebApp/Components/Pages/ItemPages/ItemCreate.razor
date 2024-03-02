@@ -1,4 +1,5 @@
 ﻿@page "/collections/{CollectionId:int}/itemcreate"
+@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService

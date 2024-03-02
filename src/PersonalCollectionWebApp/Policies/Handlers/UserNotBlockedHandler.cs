@@ -21,7 +21,10 @@ namespace PersonalCollectionWebApp.Policies.Handlers
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)
             {
-                context.Succeed(requirement);
+                if(requirement.AllowAnonymous)
+                {
+                    context.Succeed(requirement);
+                }
                 return;
             }
 
