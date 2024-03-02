@@ -9,12 +9,22 @@ namespace PersonalCollectionWebApp.Services
         private readonly ICollectionRepository _collectionRepository;
         private readonly IItemRepository _itemRepository;
         private readonly IThemeRepository _themeRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public CollectionService(ICollectionRepository collectionRepository, IItemRepository itemRepository, IThemeRepository themeRepository)
+        public CollectionService(ICollectionRepository collectionRepository, 
+            IItemRepository itemRepository, 
+            IThemeRepository themeRepository, 
+            ITagRepository tagRepository)
         {
             _collectionRepository = collectionRepository;
             _itemRepository = itemRepository;
             _themeRepository = themeRepository;
+            _tagRepository = tagRepository;
+        }
+
+        public async Task<PersonalCollection?> GetCollectionById(int collectionId)
+        {
+            return await _collectionRepository.GetById(collectionId);
         }
 
         public async Task<IEnumerable<PersonalCollection>> GetUserCollections(string userId)
@@ -52,6 +62,11 @@ namespace PersonalCollectionWebApp.Services
         public async Task<IEnumerable<Theme>> GetCollectionThemes()
         {
             return await _themeRepository.GetAll().AsNoTracking().ToListAsync();
+        }
+
+        public async Task<IEnumerable<Tag>> GetAllItemTags()
+        {
+            return await _tagRepository.GetAll().AsNoTracking().ToListAsync();
         }
     }
 }

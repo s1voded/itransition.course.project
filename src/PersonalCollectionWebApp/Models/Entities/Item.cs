@@ -10,7 +10,7 @@ namespace PersonalCollectionWebApp.Models.Entities
         public DateTime CreatedDate { get; set; }
         public int CollectionId { get; set; } // Required foreign key property
         public PersonalCollection Collection { get; set; } = null!; // Required reference navigation to principal
-        public ICollection<Tag>? Tags { get; } = [];
+        public ICollection<Tag>? Tags { get; set; } = [];
         [StringLength(Constants.DbFieldShortStringLenght)]
         public string? CustomString1 { get; set; }
         [StringLength(Constants.DbFieldShortStringLenght)]
