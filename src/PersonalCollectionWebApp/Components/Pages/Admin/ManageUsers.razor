@@ -1,14 +1,16 @@
 ﻿@page "/usermanager"
+@attribute [Authorize(Policy = Constants.PolicyAdminOnly)]
 @rendermode InteractiveServer
 @inject UserManagerService UserManagerService
 @inject IAuthorizationService AuthorizationService
-@attribute [Authorize(Policy = Constants.PolicyAdminOnly)]
 
 <PageTitle>Manage users</PageTitle>
 
 <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
     <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">Set admin</MudButton>
     <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Block" OnClick="@(args => ChangeUser(ChangeType.Block))">Block</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Unarchive" OnClick="@(args => ChangeUser(ChangeType.Unblock))">Unblock</MudButton>
 </MudButtonGroup>
 
 <MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -81,6 +83,14 @@
 
                             case ChangeType.RemoveAdmin:
                                 await UserManagerService.RemoveUserRole(selectedUser.Id, Constants.AdminRole);
+                                break;
+
+                            case ChangeType.Block:
+                                await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, true);
+                                break;
+
+                            case ChangeType.Unblock:
+                                await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, false);
                                 break;
                         }
                     }

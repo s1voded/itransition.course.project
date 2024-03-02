@@ -1,6 +1,5 @@
 ﻿@page "/collections/{CollectionId:int}/itemcreate"
 @rendermode InteractiveServer
-@attribute [Authorize]
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
@@ -11,7 +10,6 @@
 {
     <h3>not authorized</h3>
 }
-
 
 <div class="row">
     <div class="col-md-4">

@@ -9,5 +9,6 @@
 
         public const string PolicyAdminOnly = "AdminOnly";
         public const string PolicyCanManageCollection = "CanManageCollection";
+        public const string PolicyUserNotBlocked = "UserNotBlocked";
     }
 }

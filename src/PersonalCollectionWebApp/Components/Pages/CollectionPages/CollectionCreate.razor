@@ -1,8 +1,8 @@
 ﻿@page "/collections/create"
 @using System.Security.Claims
-@attribute [Authorize]
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
+@inject IAuthorizationService AuthorizationService
 
 <h3>Collection create</h3>
 
@@ -55,17 +55,25 @@
         if (authenticationState is not null)
         {
             var authState = await authenticationState;
-            var user = authState.User;
+            var user = authState?.User;
 
-            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            if (user is not null)
             {
-                var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if(!string.IsNullOrEmpty(userId))
+                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (!string.IsNullOrEmpty(userId))
                 {
                     Collection.UserId = userId;
-                    await CollectionService.AddCollection(Collection);
-                    NavigationManager.NavigateTo("/collections");
-                }             
+                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, Collection, Constants.PolicyCanManageCollection);
+                    if (isAuthorized.Succeeded)
+                    {
+                        await CollectionService.AddCollection(Collection);
+                        NavigationManager.NavigateTo("/collections");
+                    }
+                    else
+                    {
+                        NavigationManager.NavigateTo("/");
+                    }
+                }
             }
         }
     }

@@ -14,7 +14,6 @@ namespace PersonalCollectionWebApp.Services
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private IEnumerable<ApplicationUser>? users;
 
         public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
@@ -24,41 +23,42 @@ namespace PersonalCollectionWebApp.Services
 
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
-            users = await _userManager.Users.Include(u => u.Claims).ToListAsync();
-            return _mapper.Map<IEnumerable<ApplicationUserDto>>(users);
-            //return await _userManager.Users.Include(u => u.Claims).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return await _userManager.Users.Include(u => u.Claims).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task AddUserRole(string userId, string role)
         {
-            var user = await GetUserById(userId);
-            if (user != null) 
+            var user = await GetUserByIdWithClaims(userId);
+            if (user != null && !UserHasClaim(user, ClaimTypes.Role, role))
             {
-                if(!UserHasClaim(user, ClaimTypes.Role, role))
-                {
-                    var claimRole = new Claim(ClaimTypes.Role, role);
-                    await _userManager.AddClaimAsync(user, claimRole);
-                }
-            }        
+                var claimRole = new Claim(ClaimTypes.Role, role);
+                await _userManager.AddClaimAsync(user, claimRole);
+            }
         }
 
         public async Task RemoveUserRole(string userId, string role)
         {
-            var user = await GetUserById(userId);
-            if (user != null)
+            var user = await GetUserByIdWithClaims(userId);
+            if (user != null && UserHasClaim(user, ClaimTypes.Role, role))
             {
-                if (UserHasClaim(user, ClaimTypes.Role, role))
-                {
-                    var claimRole = new Claim(ClaimTypes.Role, role);
-                    await _userManager.RemoveClaimAsync(user, claimRole);
-                }
+                var claimRole = new Claim(ClaimTypes.Role, role);
+                await _userManager.RemoveClaimAsync(user, claimRole);
             }
         }
 
-        private async Task<ApplicationUser?> GetUserById(string userId)
+        public async Task UpdateBlockStatusUser(string userId, bool status)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null && user.IsBlocked != status)
+            {
+                user.IsBlocked = status;
+                await _userManager.UpdateAsync(user);
+            }
+        }
+
+        private async Task<ApplicationUser?> GetUserByIdWithClaims(string userId)
         {
             return await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
-            //return users.FirstOrDefault(u => u.Id == userId);
         }
 
         private bool UserHasClaim(ApplicationUser user, string claimType, string claimValue)

@@ -28,6 +28,7 @@ namespace PersonalCollectionWebApp.Extensions
         {
             services.AddScoped<IAuthorizationHandler, IsCollectionOwnerHandler>();
             services.AddScoped<IAuthorizationHandler, IsAdminHandler>();
+            services.AddScoped<IAuthorizationHandler, UserNotBlockedHandler>();
         }
     }
 }

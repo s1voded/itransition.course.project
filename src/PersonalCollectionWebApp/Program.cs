@@ -40,9 +40,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(Constants.PolicyCanManageCollection, policy =>
-        policy.Requirements.Add(new AllowedManageCollectionRequirement()));
+        policy.AddRequirements(new AllowedManageCollectionRequirement(), new UserNotBlockedRequirement()));
     options.AddPolicy(Constants.PolicyAdminOnly, policy =>
-        policy.Requirements.Add(new IsAdminRequirement()));
+        policy.AddRequirements(new IsAdminRequirement()));
+    options.AddPolicy(Constants.PolicyUserNotBlocked, policy =>
+        policy.AddRequirements(new UserNotBlockedRequirement()));
 });
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
