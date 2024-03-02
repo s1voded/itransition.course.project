@@ -50,7 +50,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddAutoMapper((typeof(Program)));
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
 builder.Services.AddRepositories();
 builder.Services.AddMyServices();
 builder.Services.AddHandlersServices();

@@ -15,7 +15,6 @@
     <div class="col-md-4">
         <EditForm method="post" Model="Item" OnValidSubmit="AddItemToCollection" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" />
             <div class="mb-3">
                 <label for="name" class="form-label">Name:</label>
                 <InputText id="name" @bind-Value="Item.Name" class="form-control" />
@@ -25,6 +24,17 @@
         </EditForm>
     </div>
 </div>
+
+<MudItem xs="12" sm="6" md="4">
+    <MudAutocomplete T="Tag" Label="Tags" @bind-Value="selectedTag" SearchFunc="@TagsSearch" ToStringFunc="@(tag => tag?.Name)" SelectValueOnTab CoerceValue="true"/>
+</MudItem>
+
+@if (selectedTag != null)
+{
+    <MudChip Tag="selectedTag" Color="Color.Default" OnClose="Closed">@selectedTag.Name</MudChip>
+}
+
+
 
 @code {
     [Parameter]
@@ -36,17 +46,14 @@
     [SupplyParameterFromForm]
     public Item Item { get; set; } = new();
 
-    private string selectedTagName;
     private Tag? selectedTag;
     private PersonalCollection? collection;
     private IEnumerable<Tag> tags;
-    private List<string> tagsNames;
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
         tags = await CollectionService.GetAllItemTags();
-        tagsNames = tags.Select(t => t.Name).ToList();
         collection = await CollectionService.GetCollectionById(CollectionId);
 
         if (authenticationState is not null)
@@ -64,11 +71,24 @@
 
     public async Task AddItemToCollection()
     {
-        // var tags = new List<Tag>() { new Tag { Name = "Expensive" } };
-        // Item.Tags = tags;
         Item.CollectionId = CollectionId;
         Item.CreatedDate = DateTime.Now;
         await CollectionService.AddItemToCollection(Item);
         NavigationManager.NavigateTo($"/collections/{CollectionId}");
+    }
+
+    private async Task<IEnumerable<Tag>> TagsSearch(string value)
+    {
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return tags;
+        return tags.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    @code {
+        void Closed(MudChip chip)
+        {
+            selectedTag = null;
+        }
     }
 }
