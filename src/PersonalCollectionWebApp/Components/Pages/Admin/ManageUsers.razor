@@ -11,6 +11,7 @@
     <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
     <MudButton StartIcon="@Icons.Material.Filled.Block" OnClick="@(args => ChangeUser(ChangeType.Block))">Block</MudButton>
     <MudButton StartIcon="@Icons.Material.Filled.Unarchive" OnClick="@(args => ChangeUser(ChangeType.Unblock))">Unblock</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="@(args => ChangeUser(ChangeType.Delete))">Delete</MudButton>
 </MudButtonGroup>
 
 <MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
@@ -49,7 +50,8 @@
         SetAdmin,
         RemoveAdmin,
         Block,
-        Unblock
+        Unblock,
+        Delete
     }
 
     protected override async Task OnInitializedAsync()
@@ -91,6 +93,9 @@
 
                             case ChangeType.Unblock:
                                 await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, false);
+                                break;
+                            case ChangeType.Delete:
+                                await UserManagerService.DeleteUser(selectedUser.Id);
                                 break;
                         }
                     }

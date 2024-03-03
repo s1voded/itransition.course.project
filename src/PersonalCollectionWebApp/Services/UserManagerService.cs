@@ -56,6 +56,15 @@ namespace PersonalCollectionWebApp.Services
             }
         }
 
+        public async Task DeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+                await _userManager.DeleteAsync(user);
+            }
+        }
+
         private async Task<ApplicationUser?> GetUserByIdWithClaims(string userId)
         {
             return await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
