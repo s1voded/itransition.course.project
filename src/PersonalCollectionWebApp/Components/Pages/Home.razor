@@ -20,7 +20,7 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
         <MudTd DataLabel="Author">@context.Collection.User.UserName</MudTd>
-        <MudTd DataLabel="Added" >@context.CreatedDate</MudTd>
+        <MudTd DataLabel="Added" >@context.CreatedDate.ToLocalTime()</MudTd>
     </RowTemplate>
 </MudTable>
 

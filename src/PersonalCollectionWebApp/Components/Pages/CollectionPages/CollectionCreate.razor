@@ -12,8 +12,8 @@
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
             <MudForm @bind-IsValid="@formIsValid">
-                <MudTextField T="string" @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
-                <MudTextField T="string" @bind-Value="Collection.Description" Label="Description" Margin="Margin.Dense" />
+                <MudTextField @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
+                <MudTextField @bind-Value="Collection.Description" Label="Description" Margin="Margin.Dense" />
                 <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter">
                     @foreach (var theme in themes)
                     {
@@ -24,10 +24,46 @@
                 {
                     var index = i;
                     <MudGrid Spacing="2">
-                        <MudItem>
+                    <MudItem xs="1">
+                            <MudCheckBox @bind-Value="customFieldsSettings.CustomStrings[index].Enable"></MudCheckBox>
+                        </MudItem >
+                    <MudItem xs="11">
+                            <MudTextField @bind-Value="customFieldsSettings.CustomStrings[index].Name" Label="Custom string field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomStrings[index].Enable" Disabled="!customFieldsSettings.CustomStrings[index].Enable"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
+                    <MudGrid Spacing="2">
+                        <MudItem xs="1">
+                            <MudCheckBox @bind-Value="customFieldsSettings.CustomTexts[index].Enable"></MudCheckBox>
+                        </MudItem>
+                        <MudItem xs="11">
+                            <MudTextField @bind-Value="customFieldsSettings.CustomTexts[index].Name" Label="Custom text field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomTexts[index].Enable" Disabled="!customFieldsSettings.CustomTexts[index].Enable"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
+                    <MudGrid Spacing="2">
+                        <MudItem xs="1">
+                            <MudCheckBox @bind-Value="customFieldsSettings.CustomInts[index].Enable"></MudCheckBox>
+                        </MudItem>
+                        <MudItem xs="11">
+                            <MudTextField @bind-Value="customFieldsSettings.CustomInts[index].Name" Label="Custom int field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomInts[index].Enable" Disabled="!customFieldsSettings.CustomInts[index].Enable"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
+                    <MudGrid Spacing="2">
+                        <MudItem xs="1">
                             <MudCheckBox @bind-Value="customFieldsSettings.CustomBools[index].Enable"></MudCheckBox>
                         </MudItem>
-                        <MudItem>
+                        <MudItem xs="11">
                             <MudTextField @bind-Value="customFieldsSettings.CustomBools[index].Name" Label="Custom bool field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomBools[index].Enable" Disabled="!customFieldsSettings.CustomBools[index].Enable"></MudTextField>
                         </MudItem>
                     </MudGrid>
@@ -36,10 +72,10 @@
                 {
                     var index = i;
                     <MudGrid Spacing="2">
-                        <MudItem>
+                        <MudItem xs="1">
                             <MudCheckBox @bind-Value="customFieldsSettings.CustomDates[index].Enable"></MudCheckBox>
                         </MudItem>
-                        <MudItem>
+                        <MudItem xs="11">
                             <MudTextField @bind-Value="customFieldsSettings.CustomDates[index].Name" Label="Custom date field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomDates[index].Enable" Disabled="!customFieldsSettings.CustomDates[index].Enable"></MudTextField>
                         </MudItem>
                     </MudGrid>

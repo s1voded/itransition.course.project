@@ -25,6 +25,14 @@
         @for (int i = 0; i < Constants.CustomFieldsCount; i++)
         {
             var index = i;
+            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
+            {
+                <MudTh>@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTh>
+            }
+        }
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
             @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
             {
                 <MudTh>@collection.CustomFieldsSettings.CustomDates[index].Name</MudTh>
@@ -33,8 +41,16 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Added">@context.CreatedDate</MudTd>
+        <MudTd DataLabel="Added">@context.CreatedDate.ToLocalTime()</MudTd>
         <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
+            {
+                <MudTd DataLabel="@collection.CustomFieldsSettings.CustomStrings[index].Name">@context.CustomStrings[index]</MudTd>
+            }
+        }
         @for (int i = 0; i < Constants.CustomFieldsCount; i++)
         {
             var index = i;

@@ -20,6 +20,30 @@
                 @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
+                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
+                    {
+                        <MudTextField @bind-Value="Item.CustomStrings[index]" Label=@collection.CustomFieldsSettings.CustomStrings[index].Name Margin="Margin.Dense" />
+                    }
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
+                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomTexts[index].Enable)
+                    {
+                        <MudTextField @bind-Value="Item.CustomTexts[index]" Label=@collection.CustomFieldsSettings.CustomTexts[index].Name Margin="Margin.Dense" AutoGrow MaxLines="3" Lines="3"/>
+                    }
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
+                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomInts[index].Enable)
+                    {
+                        <MudNumericField @bind-Value="Item.CustomInts[index]" Label=@collection.CustomFieldsSettings.CustomInts[index].Name Margin="Margin.Dense" />
+                    }
+                }
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                {
+                    var index = i;
                     @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomBools[index].Enable)
                     {
                         <MudCheckBox @bind-Value="Item.CustomBools[index]" Label=@collection.CustomFieldsSettings.CustomBools[index].Name Margin="Margin.Dense" />
@@ -87,7 +111,7 @@
     public async Task AddItemToCollection()
     {
         Item.CollectionId = CollectionId;
-        Item.CreatedDate = DateTime.Now;
+        Item.CreatedDate = DateTime.UtcNow;
         await CollectionService.AddItemToCollection(Item);
         NavigationManager.NavigateTo($"/collections/{CollectionId}");
     }
