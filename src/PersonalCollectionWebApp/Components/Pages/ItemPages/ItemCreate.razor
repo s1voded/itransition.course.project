@@ -17,10 +17,34 @@
         <EditForm method="post" Model="Item" OnValidSubmit="AddItemToCollection" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
+                <label for="name" class="form-label">Name</label>
                 <InputText id="name" @bind-Value="Item.Name" class="form-control" />
                 <ValidationMessage For="() => Item.Name" class="text-danger" />
             </div>
+            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDate1Enable)
+            {
+                <div class="mb-3">
+                    <label for="customDate1" class="form-label">@collection.CustomFieldsSettings.CustomDate1Name</label>
+                    <InputDate id="customDate1" @bind-Value="Item.CustomDateTime1" class="form-control" />
+                    <ValidationMessage For="() => Item.CustomDateTime1" class="text-danger" />
+                </div>
+            }
+            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDate2Enable)
+            {
+                <div class="mb-3">
+                    <label for="customDate2" class="form-label">@collection.CustomFieldsSettings.CustomDate2Name</label>
+                    <InputDate id="customDate2" @bind-Value="Item.CustomDateTime2" class="form-control" />
+                    <ValidationMessage For="() => Item.CustomDateTime2" class="text-danger" />
+                </div>
+            }
+            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDate3Enable)
+            {
+                <div class="mb-3">
+                    <label for="customDate3" class="form-label">@collection.CustomFieldsSettings.CustomDate3Name</label>
+                    <InputDate id="customDate3" @bind-Value="Item.CustomDateTime3" class="form-control" />
+                    <ValidationMessage For="() => Item.CustomDateTime3" class="text-danger" />
+                </div>
+            }
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -34,8 +58,6 @@
 {
     <MudChip Tag="selectedTag" Color="Color.Default" OnClose="Closed">@selectedTag.Name</MudChip>
 }
-
-
 
 @code {
     [Parameter]

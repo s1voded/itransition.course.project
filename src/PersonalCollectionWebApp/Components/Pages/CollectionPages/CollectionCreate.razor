@@ -1,5 +1,6 @@
 ﻿@page "/collections/create"
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+@rendermode InteractiveServer
 @using System.Security.Claims
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
@@ -37,6 +38,55 @@
     </div>
 </div>
 
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool1Enable" Label="bool1"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomBool1Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool2Enable" Label="bool2"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomBool2Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool3Enable" Label="bool3"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomBool3Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate1Enable" Label="date1"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomDate1Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate2Enable" Label="date2"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomDate2Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+<MudGrid Spacing="2">
+    <MudItem>
+        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate3Enable" Label="date3"></MudCheckBox>
+    </MudItem>
+    <MudItem>
+        <MudTextField @bind-Value="customFieldsSettings.CustomDate3Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+    </MudItem>
+</MudGrid>
+
 @code {
     [SupplyParameterFromForm]
     public PersonalCollection Collection { get; set; } = new();
@@ -45,6 +95,7 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private IEnumerable<Theme> themes = [];
+    private CustomFieldsSettings customFieldsSettings = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,6 +118,7 @@
                     var isAuthorized = await AuthorizationService.AuthorizeAsync(user, Collection, Constants.PolicyCanManageCollection);
                     if (isAuthorized.Succeeded)
                     {
+                        Collection.CustomFieldsSettings = customFieldsSettings;
                         await CollectionService.AddCollection(Collection);
                         NavigationManager.NavigateTo("/collections");
                     }

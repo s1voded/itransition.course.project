@@ -19,7 +19,10 @@ namespace PersonalCollectionWebApp.Data
                     .IsRequired();
             });
 
-            modelBuilder.Entity<PersonalCollection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => { builder.ToJson(); });
+            modelBuilder.Entity<PersonalCollection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => 
+            {
+                builder.ToJson(); 
+            });
         }
         public DbSet<PersonalCollection> Collections { get; set; }
         public DbSet<Item> Items { get; set; }

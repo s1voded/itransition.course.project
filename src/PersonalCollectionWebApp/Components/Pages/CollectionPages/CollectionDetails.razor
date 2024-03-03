@@ -22,11 +22,35 @@
         <MudTh>Name</MudTh>
         <MudTh>Added</MudTh>
         <MudTh>Tags</MudTh>
+        @if (collection.CustomFieldsSettings.CustomDate1Enable)
+        {
+            <MudTh>@collection.CustomFieldsSettings.CustomDate1Name</MudTh>
+        }
+        @if (collection.CustomFieldsSettings.CustomDate2Enable)
+        {
+            <MudTh>@collection.CustomFieldsSettings.CustomDate2Name</MudTh>
+        }
+        @if (collection.CustomFieldsSettings.CustomDate3Enable)
+        {
+            <MudTh>@collection.CustomFieldsSettings.CustomDate3Name</MudTh>
+        }
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Added">@context.CreatedDate</MudTd>
         <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
+        @if (collection.CustomFieldsSettings.CustomDate1Enable)
+        {
+            <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDate1Name">@context.CustomDateTime1</MudTd>
+        }
+        @if (collection.CustomFieldsSettings.CustomDate2Enable)
+        {
+            <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDate2Name">@context.CustomDateTime2</MudTd>
+        }
+        @if (collection.CustomFieldsSettings.CustomDate3Enable)
+        {
+            <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDate3Name">@context.CustomDateTime3</MudTd>
+        }
     </RowTemplate>
 </MudTable>
 
