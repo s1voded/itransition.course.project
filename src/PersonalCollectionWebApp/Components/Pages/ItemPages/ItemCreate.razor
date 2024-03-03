@@ -17,7 +17,7 @@
         <MudPaper Class="pa-4">
             <MudForm @bind-IsValid="@formIsValid">
                 <MudTextField @bind-Value="Item.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
-                @for (int i = 0; i < Item.CustomBools.Count(); i++)
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomBools[index].Enable)
@@ -25,7 +25,7 @@
                         <MudCheckBox @bind-Value="Item.CustomBools[index]" Label=@collection.CustomFieldsSettings.CustomBools[index].Name Margin="Margin.Dense" />
                     }
                 }
-                @for (int i = 0; i < Item.CustomDates.Count(); i++)
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)

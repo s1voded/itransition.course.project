@@ -11,5 +11,7 @@
         public const string PolicyCanManageCollection = "CanManageCollection";
         public const string PolicyUserNotBlocked = "UserNotBlocked";
         public const string PolicyUserNotBlockedOrAnonymous = "UserNotBlockedOrAnonymous";
+
+        public const int CustomFieldsCount = 3;
     }
 }

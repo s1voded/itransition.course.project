@@ -22,7 +22,7 @@
         <MudTh>Name</MudTh>
         <MudTh>Added</MudTh>
         <MudTh>Tags</MudTh>
-        @for (int i = 0; i < 3; i++)
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
         {
             var index = i;
             @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
@@ -35,7 +35,7 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Added">@context.CreatedDate</MudTd>
         <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
-        @for (int i = 0; i < context.CustomDates.Count(); i++)
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
         {
             var index = i;
             @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)

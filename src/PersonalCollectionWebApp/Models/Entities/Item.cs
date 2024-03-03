@@ -12,10 +12,10 @@ namespace PersonalCollectionWebApp.Models.Entities
         public PersonalCollection Collection { get; set; } = null!; // Required reference navigation to principal
         public ICollection<Tag>? Tags { get; set; } = [];
 
-        public string?[] CustomStrings { get; set; } = new string?[3];
-        public string?[] CustomTexts { get; set; } = new string?[3];
-        public int?[] CustomInts { get; set; } = new int?[3];
-        public bool[] CustomBools { get; set; } = new bool[3];
-        public DateTime?[] CustomDates { get; set; } = new DateTime?[3];
+        public string?[] CustomStrings { get; set; } = new string?[Constants.CustomFieldsCount];
+        public string?[] CustomTexts { get; set; } = new string?[Constants.CustomFieldsCount];
+        public int?[] CustomInts { get; set; } = new int?[Constants.CustomFieldsCount];
+        public bool[] CustomBools { get; set; } = new bool[Constants.CustomFieldsCount];
+        public DateTime?[] CustomDates { get; set; } = new DateTime?[Constants.CustomFieldsCount];
     }
 }

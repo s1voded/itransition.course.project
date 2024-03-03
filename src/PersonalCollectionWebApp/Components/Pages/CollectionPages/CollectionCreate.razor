@@ -20,7 +20,7 @@
                         <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
                     }
                 </MudSelect>
-                @for (int i = 0; i < 3; i++)
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
                     <MudGrid Spacing="2">
@@ -32,7 +32,7 @@
                         </MudItem>
                     </MudGrid>
                 }
-                @for (int i = 0; i < 3; i++)
+                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
                     <MudGrid Spacing="2">
@@ -64,12 +64,22 @@
     private IEnumerable<Theme> themes = [];
     private CustomFieldsSettings customFieldsSettings = new()
     {
-            CustomStrings = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
-            CustomTexts = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
-            CustomInts = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
-            CustomBools = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
-            CustomDates = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+            CustomStrings = GetInitCustomFields(Constants.CustomFieldsCount),
+            CustomTexts = GetInitCustomFields(Constants.CustomFieldsCount),
+            CustomInts = GetInitCustomFields(Constants.CustomFieldsCount),
+            CustomBools = GetInitCustomFields(Constants.CustomFieldsCount),
+            CustomDates = GetInitCustomFields(Constants.CustomFieldsCount),
     };
+
+    private static List<CustomField> GetInitCustomFields(int count)
+    {
+        var customFieldsList = new List<CustomField>(count);
+        for (int i = 0; i < count; i++)
+        {
+            customFieldsList.Add(new CustomField());
+        }
+        return customFieldsList;
+    }
 
     protected override async Task OnInitializedAsync()
     {
