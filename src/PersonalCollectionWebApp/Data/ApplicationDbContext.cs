@@ -18,6 +18,8 @@ namespace PersonalCollectionWebApp.Data
                     .HasForeignKey(uc => uc.UserId)
                     .IsRequired();
             });
+
+            modelBuilder.Entity<PersonalCollection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => { builder.ToJson(); });
         }
         public DbSet<PersonalCollection> Collections { get; set; }
         public DbSet<Item> Items { get; set; }
