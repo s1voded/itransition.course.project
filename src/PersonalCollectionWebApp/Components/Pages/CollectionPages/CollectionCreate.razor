@@ -8,82 +8,47 @@
 
 <PageTitle>Collection create</PageTitle>
 
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Collection" OnValidSubmit="AddCollection" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" />
-            <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <InputText id="name" @bind-Value="Collection.Name" class="form-control" />
-                <ValidationMessage For="() => Collection.Name" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">Description:</label>
-                <InputText id="description" @bind-Value="Collection.Description" class="form-control" />
-                <ValidationMessage For="() => Collection.Description" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="theme" class="form-label">Theme:</label>
-                <InputSelect id="theme" @bind-Value="Collection.ThemeId" class="form-control">
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper Class="pa-4">
+            <MudForm @bind-IsValid="@formIsValid">
+                <MudTextField T="string" @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
+                <MudTextField T="string" @bind-Value="Collection.Description" Label="Description" Margin="Margin.Dense" />
+                <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter">
                     @foreach (var theme in themes)
                     {
-                        <option value="@theme.Id">@theme.Name</option>
+                        <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
                     }
-                </InputSelect>
-                <ValidationMessage For="() => Collection.ThemeId" class="text-danger" />
-            </div>
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
-</div>
-
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool1Enable" Label="bool1"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomBool1Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-    </MudItem>
-</MudGrid>
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool2Enable" Label="bool2"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomBool2Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-    </MudItem>
-</MudGrid>
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomBool3Enable" Label="bool3"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomBool3Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-    </MudItem>
-</MudGrid>
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate1Enable" Label="date1"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomDate1Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-    </MudItem>
-</MudGrid>
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate2Enable" Label="date2"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomDate2Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
-    </MudItem>
-</MudGrid>
-<MudGrid Spacing="2">
-    <MudItem>
-        <MudCheckBox @bind-Value="customFieldsSettings.CustomDate3Enable" Label="date3"></MudCheckBox>
-    </MudItem>
-    <MudItem>
-        <MudTextField @bind-Value="customFieldsSettings.CustomDate3Name" Label="Field name" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </MudSelect>
+                @for (int i = 0; i < 3; i++)
+                {
+                    var index = i;
+                    <MudGrid Spacing="2">
+                        <MudItem>
+                            <MudCheckBox @bind-Value="customFieldsSettings.CustomBools[index].Enable"></MudCheckBox>
+                        </MudItem>
+                        <MudItem>
+                            <MudTextField @bind-Value="customFieldsSettings.CustomBools[index].Name" Label="Custom bool field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomBools[index].Enable" Disabled="!customFieldsSettings.CustomBools[index].Enable"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                }
+                @for (int i = 0; i < 3; i++)
+                {
+                    var index = i;
+                    <MudGrid Spacing="2">
+                        <MudItem>
+                            <MudCheckBox @bind-Value="customFieldsSettings.CustomDates[index].Enable"></MudCheckBox>
+                        </MudItem>
+                        <MudItem>
+                            <MudTextField @bind-Value="customFieldsSettings.CustomDates[index].Name" Label="Custom date field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomDates[index].Enable" Disabled="!customFieldsSettings.CustomDates[index].Enable"></MudTextField>
+                        </MudItem>
+                    </MudGrid>
+                }
+                <div class="d-flex align-center justify-space-between">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="AddCollection">Create</MudButton>
+                </div>
+            </MudForm>
+        </MudPaper>
     </MudItem>
 </MudGrid>
 
@@ -91,11 +56,20 @@
     [SupplyParameterFromForm]
     public PersonalCollection Collection { get; set; } = new();
 
+    private bool formIsValid;
+
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private IEnumerable<Theme> themes = [];
-    private CustomFieldsSettings customFieldsSettings = new();
+    private CustomFieldsSettings customFieldsSettings = new()
+    {
+            CustomStrings = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+            CustomTexts = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+            CustomInts = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+            CustomBools = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+            CustomDates = new List<CustomField> { new CustomField(), new CustomField(), new CustomField() },
+    };
 
     protected override async Task OnInitializedAsync()
     {

@@ -12,8 +12,8 @@ using PersonalCollectionWebApp.Data;
 namespace PersonalCollectionWebApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240303075417_AddCustomFieldsSettingsToCollection")]
-    partial class AddCustomFieldsSettingsToCollection
+    [Migration("20240303134251_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -282,56 +282,25 @@ namespace PersonalCollectionWebApp.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool?>("CustomBool1")
-                        .HasColumnType("bit");
+                    b.Property<string>("CustomBools")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("CustomBool2")
-                        .HasColumnType("bit");
+                    b.Property<string>("CustomDates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("CustomBool3")
-                        .HasColumnType("bit");
+                    b.Property<string>("CustomInts")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CustomDateTime1")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CustomStrings")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("CustomDateTime2")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("CustomDateTime3")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CustomInt1")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CustomInt2")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CustomInt3")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CustomMultiLineText1")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("CustomMultiLineText2")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("CustomMultiLineText3")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("CustomString1")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CustomString2")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("CustomString3")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("CustomTexts")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -562,96 +531,6 @@ namespace PersonalCollectionWebApp.Migrations
                             b1.Property<int>("PersonalCollectionId")
                                 .HasColumnType("int");
 
-                            b1.Property<bool>("CustomBool1Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomBool1Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomBool2Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomBool2Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomBool3Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomBool3Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomDate1Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomDate1Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomDate2Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomDate2Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomDate3Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomDate3Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomInt1Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomInt1Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomInt2Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomInt2Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomInt3Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomInt3Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomString1Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomString1Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomString2Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomString2Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomString3Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomString3Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomText1Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomText1Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomText2Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomText2Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<bool>("CustomText3Enable")
-                                .HasColumnType("bit");
-
-                            b1.Property<string>("CustomText3Name")
-                                .HasColumnType("nvarchar(max)");
-
                             b1.HasKey("PersonalCollectionId");
 
                             b1.ToTable("Collections");
@@ -660,6 +539,131 @@ namespace PersonalCollectionWebApp.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonalCollectionId");
+
+                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomBools", b2 =>
+                                {
+                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("int");
+
+                                    b2.Property<bool>("Enable")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+
+                                    b2.ToTable("Collections");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                });
+
+                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomDates", b2 =>
+                                {
+                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("int");
+
+                                    b2.Property<bool>("Enable")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+
+                                    b2.ToTable("Collections");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                });
+
+                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomInts", b2 =>
+                                {
+                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("int");
+
+                                    b2.Property<bool>("Enable")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+
+                                    b2.ToTable("Collections");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                });
+
+                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomStrings", b2 =>
+                                {
+                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("int");
+
+                                    b2.Property<bool>("Enable")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+
+                                    b2.ToTable("Collections");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                });
+
+                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomTexts", b2 =>
+                                {
+                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                        .HasColumnType("int");
+
+                                    b2.Property<int>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("int");
+
+                                    b2.Property<bool>("Enable")
+                                        .HasColumnType("bit");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+
+                                    b2.ToTable("Collections");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                });
+
+                            b1.Navigation("CustomBools");
+
+                            b1.Navigation("CustomDates");
+
+                            b1.Navigation("CustomInts");
+
+                            b1.Navigation("CustomStrings");
+
+                            b1.Navigation("CustomTexts");
                         });
 
                     b.Navigation("CustomFieldsSettings");

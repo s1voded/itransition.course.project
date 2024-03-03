@@ -192,7 +192,8 @@ namespace PersonalCollectionWebApp.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ThemeId = table.Column<int>(type: "int", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomFieldsSettings = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -217,24 +218,13 @@ namespace PersonalCollectionWebApp.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CollectionId = table.Column<int>(type: "int", nullable: false),
-                    CustomString1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CustomString2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CustomString3 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CustomInt1 = table.Column<int>(type: "int", nullable: false),
-                    CustomInt2 = table.Column<int>(type: "int", nullable: false),
-                    CustomInt3 = table.Column<int>(type: "int", nullable: false),
-                    CustomMultiLineText1 = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CustomMultiLineText2 = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CustomMultiLineText3 = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    CustomBool1 = table.Column<bool>(type: "bit", nullable: false),
-                    CustomBool2 = table.Column<bool>(type: "bit", nullable: false),
-                    CustomBool3 = table.Column<bool>(type: "bit", nullable: false),
-                    CustomDateTime1 = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomDateTime2 = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CustomDateTime3 = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CustomStrings = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomTexts = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomInts = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomBools = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomDates = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

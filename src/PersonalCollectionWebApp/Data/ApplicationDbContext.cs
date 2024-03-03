@@ -21,6 +21,11 @@ namespace PersonalCollectionWebApp.Data
 
             modelBuilder.Entity<PersonalCollection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => 
             {
+                builder.OwnsMany(x => x.CustomStrings);
+                builder.OwnsMany(x => x.CustomTexts);
+                builder.OwnsMany(x => x.CustomInts);
+                builder.OwnsMany(x => x.CustomBools);
+                builder.OwnsMany(x => x.CustomDates);
                 builder.ToJson(); 
             });
         }
