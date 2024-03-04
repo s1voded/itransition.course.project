@@ -1,9 +1,11 @@
 ﻿@page "/collections/{CollectionId:int}"
+@using PersonalCollectionWebApp.Components.Shared
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
+@inject IDialogService DialogService
 
 <PageTitle>@collection?.Name</PageTitle>
 
@@ -116,7 +118,19 @@
         NavigationManager.NavigateTo($"/items/{args.Item.Id}");
     }
 
-    private async Task OnDeleteCollection()
+    private void OnDeleteCollection()
+    {
+        var parameters = new DialogParameters<DeleteDialog>();
+        parameters.Add(x => x.ContentText, $"Do you really want to delete collection {collection?.Name}? This process cannot be undone.");
+        parameters.Add(x => x.ButtonText, "Delete");
+        parameters.Add(x => x.Color, Color.Error);
+        parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteCollection));
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };   
+        DialogService.Show<DeleteDialog>($"Delete collection {collection?.Name}", parameters, options);
+    }
+
+    private async Task DeleteCollection()
     {
         if (collection != null)
         {
