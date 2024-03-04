@@ -9,75 +9,82 @@
 
 <PageTitle>@collection?.Name</PageTitle>
 
-@if (canManageCollection && collection != null)
+@if(collection != null)
 {
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddItem">Add item</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditCollection">Edit collection</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
+    @if (canManageCollection)
+    {
+        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddItem">Add item</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditCollection">Edit collection</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
+    }
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+    <MudPaper Class="pa-4" Elevation="1">
+        <MudText>Name: <b>@collection?.Name</b></MudText>
+        <MudText>Theme: <b>@collection?.Theme?.Name</b></MudText>
+        <MudText>Author: <b>@collection?.User.UserName</b></MudText>
+        <MudText>Description:</MudText>
+        @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
+    </MudPaper>
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+    <MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
+        <ToolBarContent>
+            <MudText Typo="Typo.h5">Items</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Added</MudTh>
+            <MudTh>Tags</MudTh>
+            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            {
+                var index = i;
+                @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
+                {
+                    <MudTh>@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTh>
+                }
+            }
+            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            {
+                var index = i;
+                @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
+                {
+                    <MudTh>@collection.CustomFieldsSettings.CustomDates[index].Name</MudTh>
+                }
+            }
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Added">@context.CreatedDate.ToLocalTime()</MudTd>
+            <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
+            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            {
+                var index = i;
+                @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
+                {
+                    <MudTd DataLabel="@collection.CustomFieldsSettings.CustomStrings[index].Name">@context.CustomStrings[index]</MudTd>
+                }
+            }
+            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            {
+                var index = i;
+                @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
+                {
+                    <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDates[index].Name">@context.CustomDates[index]</MudTd>
+                }
+            }
+        </RowTemplate>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        </PagerContent>
+    </MudTable>
 }
-
-<MudDivider DividerType="DividerType.Middle" Class="my-2" />
-
-<MudPaper Class="pa-4" Elevation="1">
-    <MudText>Name: <b>@collection?.Name</b></MudText>
-    <MudText>Theme: <b>@collection?.Theme?.Name</b></MudText>
-    <MudText>Author: <b>@collection?.User.UserName</b></MudText>
-    <MudText >Description:</MudText>
-    @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
-</MudPaper>
-
-<MudDivider DividerType="DividerType.Middle" Class="my-2" />
-
-<MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
-    <ToolBarContent>
-        <MudText Typo="Typo.h5">Items</MudText>
-    </ToolBarContent>
-    <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Added</MudTh>
-        <MudTh>Tags</MudTh>
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
-            {
-                <MudTh>@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTh>
-            }
-        }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
-            {
-                <MudTh>@collection.CustomFieldsSettings.CustomDates[index].Name</MudTh>
-            }
-        }
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Added">@context.CreatedDate.ToLocalTime()</MudTd>
-        <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
-            {
-                <MudTd DataLabel="@collection.CustomFieldsSettings.CustomStrings[index].Name">@context.CustomStrings[index]</MudTd>
-            }
-        }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
-            {
-                <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDates[index].Name">@context.CustomDates[index]</MudTd>
-            }
-        }
-    </RowTemplate>
-    <PagerContent>
-        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
-    </PagerContent>
-</MudTable>
+else
+{
+    <MudText Align="Align.Center">Collection not found.</MudText>
+}
 
 @code {
     [Parameter]

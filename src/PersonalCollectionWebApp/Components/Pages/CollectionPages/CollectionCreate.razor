@@ -10,19 +10,19 @@
 <PageTitle>Collection create</PageTitle>
 <MudText Typo="Typo.h5">Create new collection</MudText>
 
-<CollectionEditCreateComponent 
-    Collection="Collection" 
-    Themes="themes" 
-    CustomFieldsSettings="customFieldsSettings" 
-    OnSubmit="AddCollection" SubmitButtonText="Create">
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+<CollectionEditCreateComponent Collection="collection"
+                               Themes="themes"
+                               CustomFieldsSettings="customFieldsSettings"
+                               OnSubmit="AddCollection" SubmitButtonText="Create">
 </CollectionEditCreateComponent>
 
 @code {
-    [SupplyParameterFromForm]
-    public PersonalCollection Collection { get; set; } = new();
-
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
+
+    public PersonalCollection collection = new();
 
     private IEnumerable<Theme> themes = [];
 
@@ -62,12 +62,12 @@
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (!string.IsNullOrEmpty(userId))
                 {
-                    Collection.UserId = userId;
-                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, Collection, Constants.PolicyCanManageCollection);
+                    collection.UserId = userId;
+                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
                     if (isAuthorized.Succeeded)
                     {
-                        Collection.CustomFieldsSettings = customFieldsSettings;
-                        await CollectionService.AddCollection(Collection);
+                        collection.CustomFieldsSettings = customFieldsSettings;
+                        await CollectionService.AddCollection(collection);
                         NavigationManager.NavigateTo("/collections");
                     }
                     else

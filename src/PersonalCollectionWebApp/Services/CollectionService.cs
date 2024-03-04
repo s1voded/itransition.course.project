@@ -65,9 +65,15 @@ namespace PersonalCollectionWebApp.Services
             return await _itemRepository.GetLastAddedItems(count);
         }
 
-        public async Task AddItemToCollection(Item item)
+        public async Task AddItem(Item item)
         {
             await _itemRepository.Create(item);
+            await _itemRepository.SaveChangesAsync();
+        }
+
+        public async Task UpdateItem(Item item)
+        {
+            _itemRepository.Update(item.Id, item);
             await _itemRepository.SaveChangesAsync();
         }
 

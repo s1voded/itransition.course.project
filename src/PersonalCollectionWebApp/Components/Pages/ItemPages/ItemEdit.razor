@@ -1,0 +1,84 @@
+﻿@page "/items/{ItemId:int}/edit"
+@using PersonalCollectionWebApp.Components.Shared
+@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+@rendermode InteractiveServer
+@inject CollectionService CollectionService
+@inject NavigationManager NavigationManager
+@inject IAuthorizationService AuthorizationService
+
+<PageTitle>Edit @item?.Name</PageTitle>
+
+@if (item != null)
+{
+    if (canManageItem)
+    {
+        <ItemEditCreateComponent Item="item"
+                                 Tags="tags"
+                                 CustomFieldsSettings="item.Collection.CustomFieldsSettings"
+                                 OnSubmit="UpdateItem"
+                                 SubmitButtonText="Update">
+        </ItemEditCreateComponent>
+    }
+    else
+    {
+        <MudText Align="Align.Center">Not authorized.</MudText>
+    }
+}
+else
+{
+    <MudText Align="Align.Center">Item not found.</MudText>
+}
+
+@code {
+    [Parameter]
+    public int ItemId { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    private Item? item;
+    private IEnumerable<Tag> tags;
+    private bool canManageItem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        item = await CollectionService.GetItemWithCollection(ItemId);
+        tags = await CollectionService.GetAllItemTags();
+
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, Constants.PolicyCanManageCollection);
+                canManageItem = isAuthorized.Succeeded;
+            }
+        }
+    }
+
+    public async Task UpdateItem()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, Constants.PolicyCanManageCollection);
+                if (isAuthorized.Succeeded)
+                {
+                    await CollectionService.UpdateItem(item);
+                    NavigationManager.NavigateTo($"/items/{item.Id}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+            }
+        }
+    }
+
+}

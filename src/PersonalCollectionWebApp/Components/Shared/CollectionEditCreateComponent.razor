@@ -2,8 +2,8 @@
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
             <MudForm @bind-IsValid="@formIsValid">
-                <MudTextField @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
-                <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense">
+                <MudTextField @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" />
+                <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter" >
                     @foreach (var theme in Themes)
                     {
                         <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
@@ -23,7 +23,7 @@
                                         <MudCheckBox @bind-Value="CustomFieldsSettings.CustomStrings[index].Enable"></MudCheckBox>
                                     </MudItem>
                                     <MudItem xs="11">
-                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomStrings[index].Name" Label="Custom string field name" Margin="Margin.Dense" Required="CustomFieldsSettings.CustomStrings[index].Enable" Disabled="!CustomFieldsSettings.CustomStrings[index].Enable"></MudTextField>
+                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomStrings[index].Name" Label="Custom string field name" Required="CustomFieldsSettings.CustomStrings[index].Enable" Disabled="!CustomFieldsSettings.CustomStrings[index].Enable"></MudTextField>
                                     </MudItem>
                                 </MudGrid>
                             }
@@ -35,7 +35,7 @@
                                         <MudCheckBox @bind-Value="CustomFieldsSettings.CustomTexts[index].Enable"></MudCheckBox>
                                     </MudItem>
                                     <MudItem xs="11">
-                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomTexts[index].Name" Label="Custom text field name" Margin="Margin.Dense" Required="CustomFieldsSettings.CustomTexts[index].Enable" Disabled="!CustomFieldsSettings.CustomTexts[index].Enable"></MudTextField>
+                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomTexts[index].Name" Label="Custom text field name" Required="CustomFieldsSettings.CustomTexts[index].Enable" Disabled="!CustomFieldsSettings.CustomTexts[index].Enable"></MudTextField>
                                     </MudItem>
                                 </MudGrid>
                             }
@@ -47,7 +47,7 @@
                                         <MudCheckBox @bind-Value="CustomFieldsSettings.CustomInts[index].Enable"></MudCheckBox>
                                     </MudItem>
                                     <MudItem xs="11">
-                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomInts[index].Name" Label="Custom int field name" Margin="Margin.Dense" Required="CustomFieldsSettings.CustomInts[index].Enable" Disabled="!CustomFieldsSettings.CustomInts[index].Enable"></MudTextField>
+                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomInts[index].Name" Label="Custom int field name" Required="CustomFieldsSettings.CustomInts[index].Enable" Disabled="!CustomFieldsSettings.CustomInts[index].Enable"></MudTextField>
                                     </MudItem>
                                 </MudGrid>
                             }
@@ -59,7 +59,7 @@
                                         <MudCheckBox @bind-Value="CustomFieldsSettings.CustomBools[index].Enable"></MudCheckBox>
                                     </MudItem>
                                     <MudItem xs="11">
-                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomBools[index].Name" Label="Custom bool field name" Margin="Margin.Dense" Required="CustomFieldsSettings.CustomBools[index].Enable" Disabled="!CustomFieldsSettings.CustomBools[index].Enable"></MudTextField>
+                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomBools[index].Name" Label="Custom bool field name" Required="CustomFieldsSettings.CustomBools[index].Enable" Disabled="!CustomFieldsSettings.CustomBools[index].Enable"></MudTextField>
                                     </MudItem>
                                 </MudGrid>
                             }
@@ -71,7 +71,7 @@
                                         <MudCheckBox @bind-Value="CustomFieldsSettings.CustomDates[index].Enable"></MudCheckBox>
                                     </MudItem>
                                     <MudItem xs="11">
-                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomDates[index].Name" Label="Custom date field name" Margin="Margin.Dense" Required="CustomFieldsSettings.CustomDates[index].Enable" Disabled="!CustomFieldsSettings.CustomDates[index].Enable"></MudTextField>
+                                        <MudTextField @bind-Value="CustomFieldsSettings.CustomDates[index].Name" Label="Custom date field name" Required="CustomFieldsSettings.CustomDates[index].Enable" Disabled="!CustomFieldsSettings.CustomDates[index].Enable"></MudTextField>
                                     </MudItem>
                                 </MudGrid>
                             }

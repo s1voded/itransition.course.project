@@ -1,4 +1,5 @@
 ﻿@page "/collections/{CollectionId:int}/itemcreate"
+@using PersonalCollectionWebApp.Components.Shared
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
@@ -7,72 +8,29 @@
 
 <PageTitle>Item create</PageTitle>
 
-@if (!canManageCollection)
-{
-    <h3>not authorized</h3>
-}
-
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudPaper Class="pa-4">
-            <MudForm @bind-IsValid="@formIsValid">
-                <MudTextField @bind-Value="Item.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                {
-                    var index = i;
-                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
-                    {
-                        <MudTextField @bind-Value="Item.CustomStrings[index]" Label=@collection.CustomFieldsSettings.CustomStrings[index].Name Margin="Margin.Dense" />
-                    }
-                }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                {
-                    var index = i;
-                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomTexts[index].Enable)
-                    {
-                        <MudTextField @bind-Value="Item.CustomTexts[index]" Label=@collection.CustomFieldsSettings.CustomTexts[index].Name Margin="Margin.Dense" AutoGrow MaxLines="3" Lines="3"/>
-                    }
-                }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                {
-                    var index = i;
-                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomInts[index].Enable)
-                    {
-                        <MudNumericField @bind-Value="Item.CustomInts[index]" Label=@collection.CustomFieldsSettings.CustomInts[index].Name Margin="Margin.Dense" />
-                    }
-                }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                {
-                    var index = i;
-                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomBools[index].Enable)
-                    {
-                        <MudCheckBox @bind-Value="Item.CustomBools[index]" Label=@collection.CustomFieldsSettings.CustomBools[index].Name Margin="Margin.Dense" />
-                    }
-                }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                {
-                    var index = i;
-                    @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
-                    {
-                        <MudDatePicker @bind-Date="Item.CustomDates[index]" Label=@collection.CustomFieldsSettings.CustomDates[index].Name Margin="Margin.Dense" />
-                    }
-                }
-                <div class="d-flex align-center justify-space-between">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="AddItemToCollection">Create</MudButton>
-                </div>
-            </MudForm>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
-
-<MudItem xs="12" sm="6" md="4">
+@* <MudItem xs="12" sm="6" md="4">
     <MudAutocomplete T="Tag" Label="Tags" @bind-Value="selectedTag" SearchFunc="@TagsSearch" ToStringFunc="@(tag => tag?.Name)" SelectValueOnTab CoerceValue="true"/>
 </MudItem>
 
 @if (selectedTag != null)
 {
     <MudChip Tag="selectedTag" Color="Color.Default" OnClose="Closed">@selectedTag.Name</MudChip>
+} *@
+
+@if (canManageItem)
+{
+    <ItemEditCreateComponent Item="item"
+                             Tags="tags"
+                             CustomFieldsSettings="collection?.CustomFieldsSettings"
+                             OnSubmit="AddItem"
+                             SubmitButtonText="Create">
+    </ItemEditCreateComponent>
 }
+else
+{
+    <MudText Align="Align.Center">Not authorized.</MudText>
+}
+
 
 @code {
     [Parameter]
@@ -81,14 +39,12 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    [SupplyParameterFromForm]
-    public Item Item { get; set; } = new();
+    public Item item = new();
 
-    private Tag? selectedTag;
+    //private Tag? selectedTag;
     private PersonalCollection? collection;
     private IEnumerable<Tag> tags;
-    private bool canManageCollection;
-    private bool formIsValid;
+    private bool canManageItem;
 
     protected override async Task OnInitializedAsync()
     {
@@ -103,31 +59,48 @@
             if (user is not null)
             {
                 var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
-                canManageCollection = isAuthorized.Succeeded;
+                canManageItem = isAuthorized.Succeeded;
             }
         }
     }
 
-    public async Task AddItemToCollection()
+    public async Task AddItem()
     {
-        Item.CollectionId = CollectionId;
-        Item.CreatedDate = DateTime.UtcNow;
-        await CollectionService.AddItemToCollection(Item);
-        NavigationManager.NavigateTo($"/collections/{CollectionId}");
-    }
-
-    private async Task<IEnumerable<Tag>> TagsSearch(string value)
-    {
-        // if text is null or empty, show complete list
-        if (string.IsNullOrEmpty(value))
-            return tags;
-        return tags.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    }
-
-    @code {
-        void Closed(MudChip chip)
+        if (authenticationState is not null)
         {
-            selectedTag = null;
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
+                if (isAuthorized.Succeeded)
+                {
+                    item.CollectionId = CollectionId;
+                    item.CreatedDate = DateTime.UtcNow;
+                    await CollectionService.AddItem(item);
+                    NavigationManager.NavigateTo($"/collections/{CollectionId}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
+            }
         }
     }
+
+    // private async Task<IEnumerable<Tag>> TagsSearch(string value)
+    // {
+    //     // if text is null or empty, show complete list
+    //     if (string.IsNullOrEmpty(value))
+    //         return tags;
+    //     return tags.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    // }
+
+    // @code {
+    //     void Closed(MudChip chip)
+    //     {
+    //         selectedTag = null;
+    //     }
+    // }
 }

@@ -9,12 +9,66 @@
 
 <PageTitle>@item?.Name</PageTitle>
 
-<h3>ItemName: @item?.Name</h3>
-
-@if (canManageItem && item != null)
+@if (item != null)
 {
-    <MudButton StartIcon="@Icons.Material.Filled.Add">Edit item</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
+    @if (canManageItem)
+    {
+        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToEditItem">Edit item</MudButton>
+        <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
+    }
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+    <MudPaper Class="pa-4" Elevation="1">
+        <MudText>Name: <b>@item.Name</b></MudText>
+        <MudText>Added: <b>@item.CreatedDate</b></MudText>
+        <MudText>Collection: <b>@item.Collection.Name</b></MudText>
+        <MudText>Tags: <b>СДЕЛАТЬ!</b></MudText>
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomStrings[index].Enable)
+            {
+                <MudText>@item.Collection.CustomFieldsSettings.CustomStrings[index].Name: <b>@item.CustomStrings[index]</b></MudText>
+            }
+        }
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomTexts[index].Enable)
+            {
+                <MudText>@item.Collection.CustomFieldsSettings.CustomTexts[index].Name: <b>@item.CustomTexts[index]</b></MudText>
+            }
+        }
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomInts[index].Enable)
+            {
+                <MudText>@item.Collection.CustomFieldsSettings.CustomInts[index].Name: <b>@item.CustomInts[index]</b></MudText>
+            }
+        }
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomBools[index].Enable)
+            {
+                <MudText>@item.Collection.CustomFieldsSettings.CustomBools[index].Name: <b>@item.CustomBools[index]</b></MudText>
+            }
+        }
+        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        {
+            var index = i;
+            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomDates[index].Enable)
+            {
+                <MudText>@item.Collection.CustomFieldsSettings.CustomDates[index].Name: <b>@item.CustomDates[index]</b></MudText>
+            }
+        }
+    </MudPaper>
+}
+else
+{
+    <MudText Align="Align.Center">Item not found.</MudText>
 }
 
 @code {
@@ -63,5 +117,10 @@
             await CollectionService.DeleteItem(item);
         }
         NavigationManager.NavigateTo($"/collections/{item?.Collection.Id}");
+    }
+
+    private void NavigateToEditItem()
+    {
+        NavigationManager.NavigateTo($"/items/{ItemId}/edit");
     }
 }

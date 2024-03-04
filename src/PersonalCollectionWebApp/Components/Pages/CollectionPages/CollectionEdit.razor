@@ -6,19 +6,26 @@
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 
-@if (canManageCollection && collection != null)
-{
-    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
-}
+<PageTitle>Edit @collection?.Name</PageTitle>
 
 @if (collection != null)
 {
-    <CollectionEditCreateComponent 
-    Collection="collection"
-    Themes="themes" 
-    CustomFieldsSettings="collection?.CustomFieldsSettings" 
-    OnSubmit="UpdateCollection" SubmitButtonText="Update">
-</CollectionEditCreateComponent>
+    @if (canManageCollection)
+    {
+        <CollectionEditCreateComponent Collection="collection"
+                                       Themes="themes"
+                                       CustomFieldsSettings="collection?.CustomFieldsSettings"
+                                       OnSubmit="UpdateCollection" SubmitButtonText="Update">
+        </CollectionEditCreateComponent>
+    }
+    else
+    {
+        <MudText Align="Align.Center">Not authorized.</MudText>
+    }
+}
+else
+{
+    <MudText Align="Align.Center">Collection not found.</MudText>
 }
 
 @code {
