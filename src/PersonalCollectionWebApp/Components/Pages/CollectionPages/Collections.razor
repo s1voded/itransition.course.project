@@ -7,11 +7,11 @@
 
 <PageTitle>Collections</PageTitle>
 
-<p>
-    <a href="Collections/Create">Create New</a>
-</p>
+<MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">Add collection</MudButton>
 
-<MudTable T="PersonalCollection" Items="@collections" Hover=" true" OnRowClick="@CollectionDetails" RowClass="cursor-pointer">
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+<MudTable T="PersonalCollection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<PersonalCollection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
         <MudTh>Theme</MudTh>
@@ -20,7 +20,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>
-        <MudTd DataLabel="Description">@context.Description</MudTd>
+        <MudTd DataLabel="Description">@((MarkupString)context.Description)</MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -48,8 +48,13 @@
         }
     }
 
-    private void CollectionDetails(TableRowClickEventArgs<PersonalCollection> args)
+    private void NavigateToCollectionDetails(TableRowClickEventArgs<PersonalCollection> args)
     {
         NavigationManager.NavigateTo($"/collections/{args.Item.Id}");
+    }
+
+    private void NavigateToAddCollection()
+    {
+        NavigationManager.NavigateTo($"/collections/create");
     }
 }

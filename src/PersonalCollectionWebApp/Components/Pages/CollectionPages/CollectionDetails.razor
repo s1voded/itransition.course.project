@@ -7,16 +7,25 @@
 
 <PageTitle>@collection?.Name</PageTitle>
 
-@if(canManageCollection && collection != null)
+@if (canManageCollection && collection != null)
 {
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddItemToCollection">Add item</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="EditCollection">Edit collection</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddItem">Add item</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditCollection">Edit collection</MudButton>
     <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
 }
 
-<MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@ItemDetails" RowClass="cursor-pointer">
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+<MudPaper Class="pa-4" Elevation="1">
+    <MudText Typo="Typo.h4">@collection?.Name</MudText>
+    @((MarkupString)collection?.Description)
+</MudPaper>
+
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+<MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Collection items</MudText>
+        <MudText Typo="Typo.h5">Items</MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Name</MudTh>
@@ -60,6 +69,9 @@
             }
         }
     </RowTemplate>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+    </PagerContent>
 </MudTable>
 
 @code {
@@ -89,17 +101,17 @@
         }
     }
 
-    private void AddItemToCollection()
+    private void NavigateToAddItem()
     {
         NavigationManager.NavigateTo($"/collections/{CollectionId}/itemcreate");
     }
 
-    private void EditCollection()
+    private void NavigateToEditCollection()
     {
         NavigationManager.NavigateTo($"/collections/{CollectionId}/edit");
     }
 
-    private void ItemDetails(TableRowClickEventArgs<Item> args)
+    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/items/{args.Item.Id}");
     }
