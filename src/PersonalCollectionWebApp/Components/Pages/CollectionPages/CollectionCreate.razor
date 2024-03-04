@@ -2,100 +2,20 @@
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @using System.Security.Claims
+@using PersonalCollectionWebApp.Components.Shared
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
 
 <PageTitle>Collection create</PageTitle>
 <MudText Typo="Typo.h5">Create new collection</MudText>
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudPaper Class="pa-4">
-            <MudForm @bind-IsValid="@formIsValid">
-                <MudTextField @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" Margin="Margin.Dense" />
-                <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense">
-                    @foreach (var theme in themes)
-                    {
-                        <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudDivider DividerType="DividerType.Middle" Class="my-2" />
-                <MarkdownEditor @bind-Value="defaultCollectionDescription" ValueHTMLChanged="@OnMarkdownValueHTMLChanged" MaxHeight="150px" />
-                <MudPaper Class="pa-4">
-                    <MudStack Spacing="2">
-                        <MudButton OnClick="OnExpandCollapseClick">@(expandedCustomFiledsSettings ? "Hide custom fields settings" : "Show custom fields settings")</MudButton>
-                        <MudCollapse Expanded="expandedCustomFiledsSettings">
-                            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                            {
-                                var index = i;
-                                <MudGrid Spacing="2">
-                                    <MudItem xs="1">
-                                        <MudCheckBox @bind-Value="customFieldsSettings.CustomStrings[index].Enable"></MudCheckBox>
-                                    </MudItem>
-                                    <MudItem xs="11">
-                                        <MudTextField @bind-Value="customFieldsSettings.CustomStrings[index].Name" Label="Custom string field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomStrings[index].Enable" Disabled="!customFieldsSettings.CustomStrings[index].Enable"></MudTextField>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                            {
-                                var index = i;
-                                <MudGrid Spacing="2">
-                                    <MudItem xs="1">
-                                        <MudCheckBox @bind-Value="customFieldsSettings.CustomTexts[index].Enable"></MudCheckBox>
-                                    </MudItem>
-                                    <MudItem xs="11">
-                                        <MudTextField @bind-Value="customFieldsSettings.CustomTexts[index].Name" Label="Custom text field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomTexts[index].Enable" Disabled="!customFieldsSettings.CustomTexts[index].Enable"></MudTextField>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                            {
-                                var index = i;
-                                <MudGrid Spacing="2">
-                                    <MudItem xs="1">
-                                        <MudCheckBox @bind-Value="customFieldsSettings.CustomInts[index].Enable"></MudCheckBox>
-                                    </MudItem>
-                                    <MudItem xs="11">
-                                        <MudTextField @bind-Value="customFieldsSettings.CustomInts[index].Name" Label="Custom int field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomInts[index].Enable" Disabled="!customFieldsSettings.CustomInts[index].Enable"></MudTextField>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                            {
-                                var index = i;
-                                <MudGrid Spacing="2">
-                                    <MudItem xs="1">
-                                        <MudCheckBox @bind-Value="customFieldsSettings.CustomBools[index].Enable"></MudCheckBox>
-                                    </MudItem>
-                                    <MudItem xs="11">
-                                        <MudTextField @bind-Value="customFieldsSettings.CustomBools[index].Name" Label="Custom bool field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomBools[index].Enable" Disabled="!customFieldsSettings.CustomBools[index].Enable"></MudTextField>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
-                            {
-                                var index = i;
-                                <MudGrid Spacing="2">
-                                    <MudItem xs="1">
-                                        <MudCheckBox @bind-Value="customFieldsSettings.CustomDates[index].Enable"></MudCheckBox>
-                                    </MudItem>
-                                    <MudItem xs="11">
-                                        <MudTextField @bind-Value="customFieldsSettings.CustomDates[index].Name" Label="Custom date field name" Margin="Margin.Dense" Required="customFieldsSettings.CustomDates[index].Enable" Disabled="!customFieldsSettings.CustomDates[index].Enable"></MudTextField>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                        </MudCollapse>
-                    </MudStack>
-                </MudPaper>
-                <MudDivider DividerType="DividerType.Middle" Class="my-2" />
-                <div class="d-flex align-center justify-space-between">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="AddCollection">Create</MudButton>
-                </div>
-            </MudForm>
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+
+<CollectionEditCreateComponent 
+    Collection="Collection" 
+    Themes="themes" 
+    CustomFieldsSettings="customFieldsSettings" 
+    OnSubmit="AddCollection" SubmitButtonText="Create">
+</CollectionEditCreateComponent>
 
 @code {
     [SupplyParameterFromForm]
@@ -105,9 +25,6 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private IEnumerable<Theme> themes = [];
-    private string defaultCollectionDescription = "#### Description\nCollection";
-    bool expandedCustomFiledsSettings = false;
-    private bool formIsValid;
 
     private CustomFieldsSettings customFieldsSettings = new()
     {
@@ -130,7 +47,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        themes = await CollectionService.GetCollectionThemes();
+        themes = await CollectionService.GetThemes();
     }
 
     public async Task AddCollection()
@@ -160,16 +77,5 @@
                 }
             }
         }
-    }
-
-    Task OnMarkdownValueHTMLChanged(string value)
-    {
-        Collection.Description = value;
-        return Task.CompletedTask;
-    }
-
-    private void OnExpandCollapseClick()
-    {
-        expandedCustomFiledsSettings = !expandedCustomFiledsSettings;
     }
 }

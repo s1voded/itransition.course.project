@@ -1,4 +1,5 @@
 ﻿@page "/collections/{CollectionId:int}/edit"
+@using PersonalCollectionWebApp.Components.Shared
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
@@ -10,6 +11,16 @@
     <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
 }
 
+@if (collection != null)
+{
+    <CollectionEditCreateComponent 
+    Collection="collection"
+    Themes="themes" 
+    CustomFieldsSettings="collection?.CustomFieldsSettings" 
+    OnSubmit="UpdateCollection" SubmitButtonText="Update">
+</CollectionEditCreateComponent>
+}
+
 @code {
     [Parameter]
     public int CollectionId { get; set; }
@@ -18,11 +29,13 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private PersonalCollection? collection;
+    private IEnumerable<Theme> themes = [];
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
-        collection = await CollectionService.GetCollectionWithItems(CollectionId);
+        collection = await CollectionService.GetCollectionById(CollectionId);
+        themes = await CollectionService.GetThemes();
 
         if (authenticationState is not null)
         {
@@ -33,6 +46,29 @@
             {
                 var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
                 canManageCollection = isAuthorized.Succeeded;
+            }
+        }
+    }
+
+    public async Task UpdateCollection()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
+                if (isAuthorized.Succeeded)
+                {
+                    await CollectionService.UpdateCollection(collection);
+                    NavigationManager.NavigateTo($"/collections/{collection.Id}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("/");
+                }
             }
         }
     }

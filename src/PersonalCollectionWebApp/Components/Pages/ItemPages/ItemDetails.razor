@@ -29,7 +29,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        item = await CollectionService.GetItemWithollection(ItemId);
+        item = await CollectionService.GetItemWithCollection(ItemId);
 
         if (authenticationState is not null)
         {

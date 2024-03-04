@@ -48,6 +48,12 @@ namespace PersonalCollectionWebApp.Services
             await _collectionRepository.SaveChangesAsync();
         }
 
+        public async Task UpdateCollection(PersonalCollection collection)
+        {
+            _collectionRepository.Update(collection.Id, collection);
+            await _collectionRepository.SaveChangesAsync();
+        }
+
         public async Task DeleteCollection(PersonalCollection collection)
         {
             _collectionRepository.Delete(collection);
@@ -65,12 +71,12 @@ namespace PersonalCollectionWebApp.Services
             await _itemRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Theme>> GetCollectionThemes()
+        public async Task<IEnumerable<Theme>> GetThemes()
         {
             return await _themeRepository.GetAll().AsNoTracking().ToListAsync();
         }
 
-        public async Task<Item?> GetItemWithollection(int itemId)
+        public async Task<Item?> GetItemWithCollection(int itemId)
         {
             return await _itemRepository.GetItemWithCollection(itemId);
         }

@@ -19,8 +19,11 @@
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudPaper Class="pa-4" Elevation="1">
-    <MudText Typo="Typo.h4">@collection?.Name</MudText>
-    @((MarkupString)collection?.Description)
+    <MudText>Name: <b>@collection?.Name</b></MudText>
+    <MudText>Theme: <b>@collection?.Theme?.Name</b></MudText>
+    <MudText>Author: <b>@collection?.User.UserName</b></MudText>
+    <MudText >Description:</MudText>
+    @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
 </MudPaper>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />

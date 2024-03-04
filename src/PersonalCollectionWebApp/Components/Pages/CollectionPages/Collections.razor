@@ -20,7 +20,7 @@
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>
-        <MudTd DataLabel="Description">@((MarkupString)context.Description)</MudTd>
+        <MudTd DataLabel="Description">@((MarkupString)@Markdig.Markdown.ToHtml(context?.Description ?? string.Empty))</MudTd>
     </RowTemplate>
 </MudTable>
 
