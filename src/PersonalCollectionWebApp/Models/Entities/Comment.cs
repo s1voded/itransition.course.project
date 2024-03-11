@@ -10,5 +10,6 @@ namespace PersonalCollectionWebApp.Models.Entities
         public int ItemId { get; set; }
         public Item Item { get; set; }
         public string Content { get; set; }
+        public DateTime AddedDateTime { get; set; }
     }
 }
