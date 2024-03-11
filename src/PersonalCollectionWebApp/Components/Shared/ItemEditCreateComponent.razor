@@ -43,6 +43,7 @@
                         <MudDatePicker @bind-Date="Item.CustomDates[index]" Label=@CustomFieldsSettings.CustomDates[index].Name />
                     }
                 }
+                <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <div class="d-flex align-center justify-space-between">
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="Submit">@SubmitButtonText</MudButton>
                 </div>
