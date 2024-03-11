@@ -24,7 +24,7 @@
         <MudText>Name: <b>@item.Name</b></MudText>
         <MudText>Added: <b>@item.CreatedDate</b></MudText>
         <MudText>Collection: <b>@item.Collection.Name</b></MudText>
-        <MudText>Tags: <b>СДЕЛАТЬ!</b></MudText>
+        <MudText>Tags: <b>@string.Join(", ", @item.Tags?.Select(t => t.Name))</b></MudText>
         @for (int i = 0; i < Constants.CustomFieldsCount; i++)
         {
             var index = i;

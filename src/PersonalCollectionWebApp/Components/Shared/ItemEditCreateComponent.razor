@@ -1,8 +1,30 @@
-﻿<MudGrid>
+﻿@using PSC.Blazor.Components.AutoComplete
+
+<MudGrid>
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
             <MudForm @bind-IsValid="@formIsValid">
                 <MudTextField @bind-Value="Item.Name" Label="Name" Required="true" RequiredError="Name is required!" />
+                <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+                <Autocomplete SearchMethod="GetTagsLocal"
+                              @bind-Values="_selectedTags"
+                              EnableDropDown="true"
+                              MinimumLength="2"
+                              AddItemOnEmptyResultMethod="ItemAddedMethod"
+                              placeholder="Select tags">
+                    <SelectedTemplate Context="tag">
+                        @tag.Name
+                    </SelectedTemplate>
+                    <HelpTemplate>
+                        Please enter a minimum of 2 characters to perform a search.
+                    </HelpTemplate>
+                    <NotFoundTemplate Context="searchText">
+                        Add "@searchText" as a new tag
+                    </NotFoundTemplate>
+                    <ResultTemplate Context="tag">
+                        @tag.Name
+                    </ResultTemplate>
+                </Autocomplete>
                 @for (int i = 0; i < Constants.CustomFieldsCount; i++)
                 {
                     var index = i;
@@ -60,9 +82,27 @@
     [Parameter] public string SubmitButtonText { get; set; }
 
     private bool formIsValid;
+    private IList<Tag>? _selectedTags;
+
+    protected override void OnInitialized()
+    {
+        _selectedTags = Item.Tags?.ToList();
+    }
 
     async Task Submit()
     {
+        Item.Tags = _selectedTags;
         await OnSubmit.InvokeAsync();
+    }
+
+    public async Task<IEnumerable<Tag>> GetTagsLocal(string searchText)
+    {
+        return await Task.FromResult(Tags.Where(x => x.Name.ToLower().Contains(searchText.ToLower())).ToList());
+    } 
+
+    public Task<Tag> ItemAddedMethod(string searchText)
+    {
+        var newTag = new Tag() { Name = searchText };
+        return Task.FromResult(newTag);
     }
 }

@@ -89,7 +89,7 @@ namespace PersonalCollectionWebApp.Services
 
         public async Task<IEnumerable<Tag>> GetAllItemTags()
         {
-            return await _tagRepository.GetAll().AsNoTracking().ToListAsync();
+            return await _tagRepository.GetAll().ToListAsync();
         }
 
         public async Task DeleteItem(Item item)

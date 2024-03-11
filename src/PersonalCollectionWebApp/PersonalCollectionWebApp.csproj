@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2" />
     <PackageReference Include="MudBlazor" Version="6.16.0" />
+    <PackageReference Include="PSC.Blazor.Components.AutoComplete" Version="6.0.28" />
     <PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="2.0.19" />
   </ItemGroup>
 

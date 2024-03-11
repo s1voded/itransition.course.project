@@ -14,6 +14,7 @@ namespace PersonalCollectionWebApp.Data.Repository
         {
             return await GetAll()
                 .Include(i => i.Collection)
+                .Include(i => i.Tags)
                 .FirstOrDefaultAsync(i => i.Id == itemId);
         }
 

@@ -8,15 +8,6 @@
 
 <PageTitle>Item create</PageTitle>
 
-@* <MudItem xs="12" sm="6" md="4">
-    <MudAutocomplete T="Tag" Label="Tags" @bind-Value="selectedTag" SearchFunc="@TagsSearch" ToStringFunc="@(tag => tag?.Name)" SelectValueOnTab CoerceValue="true"/>
-</MudItem>
-
-@if (selectedTag != null)
-{
-    <MudChip Tag="selectedTag" Color="Color.Default" OnClose="Closed">@selectedTag.Name</MudChip>
-} *@
-
 @if (canManageItem)
 {
     <ItemEditCreateComponent Item="item"
@@ -40,8 +31,6 @@ else
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     public Item item = new();
-
-    //private Tag? selectedTag;
     private PersonalCollection? collection;
     private IEnumerable<Tag> tags;
     private bool canManageItem;
@@ -88,19 +77,4 @@ else
             }
         }
     }
-
-    // private async Task<IEnumerable<Tag>> TagsSearch(string value)
-    // {
-    //     // if text is null or empty, show complete list
-    //     if (string.IsNullOrEmpty(value))
-    //         return tags;
-    //     return tags.Where(x => x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase));
-    // }
-
-    // @code {
-    //     void Closed(MudChip chip)
-    //     {
-    //         selectedTag = null;
-    //     }
-    // }
 }
