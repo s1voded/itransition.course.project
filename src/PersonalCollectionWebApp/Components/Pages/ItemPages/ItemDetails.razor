@@ -3,6 +3,7 @@
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
+@inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 @inject IDialogService DialogService
@@ -69,16 +70,19 @@
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
     <MudStack>
-        <MudPaper Class="pa-4">
-            <MudStack Row="true">
-                <MudStack Justify="Justify.Center" Spacing="0">
-                    <MudText Typo="Typo.subtitle2">sivoded@gmail.com</MudText>
-                    <MudText Typo="Typo.caption">11.03.2024 15:47:01</MudText>
-                    <MudDivider />
-                    <MudText Typo="Typo.body1">comment content</MudText>
+        @foreach (var comment in itemComments)
+        {
+            <MudPaper Class="pa-4">
+                <MudStack Row="true">
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudText Typo="Typo.subtitle2">@comment.User?.UserName</MudText>
+                        <MudText Typo="Typo.caption">@comment.AddedDateTime</MudText>
+                        <MudDivider />
+                        <MudText Typo="Typo.body1">@comment.Content</MudText>
+                    </MudStack>
                 </MudStack>
-            </MudStack>
-        </MudPaper>
+            </MudPaper>
+        }
     </MudStack>
 }
 else
@@ -95,10 +99,12 @@ else
 
     private Item? item;
     private bool canManageItem;
+    private IEnumerable<Comment> itemComments = [];
 
     protected override async Task OnInitializedAsync()
     {
         item = await CollectionService.GetItemWithCollection(ItemId);
+        itemComments = await ReactionsService.GetItemComments(ItemId);
 
         if (authenticationState is not null)
         {

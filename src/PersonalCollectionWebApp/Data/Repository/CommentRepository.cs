@@ -1,4 +1,5 @@
-﻿using PersonalCollectionWebApp.Data.Repository.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PersonalCollectionWebApp.Data.Repository.Interfaces;
 using PersonalCollectionWebApp.Models.Entities;
 
 namespace PersonalCollectionWebApp.Data.Repository
@@ -7,6 +8,15 @@ namespace PersonalCollectionWebApp.Data.Repository
     {
         public CommentRepository(ApplicationDbContext context) : base(context)
         {
+        }
+
+        public async Task<IEnumerable<Comment>> GetItemComments(int itemId)
+        {
+            return await GetAll()
+                .Include(c => c.User)
+                .Where(c => c.ItemId == itemId)
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }
