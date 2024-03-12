@@ -7,7 +7,6 @@ using Microsoft.Extensions.Primitives;
 using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Components.Account.Pages;
 using PersonalCollectionWebApp.Components.Account.Pages.Manage;
-using PersonalCollectionWebApp.Data;
 using System.Security.Claims;
 using System.Text.Json;
 

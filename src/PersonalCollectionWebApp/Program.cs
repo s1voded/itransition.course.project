@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
+using PersonalCollection.Application.Extensions;
 using PersonalCollection.Domain;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
@@ -9,7 +10,6 @@ using PersonalCollection.Persistence.Extensions;
 using PersonalCollectionWebApp;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
-using PersonalCollectionWebApp.Data;
 using PersonalCollectionWebApp.Extensions;
 using PersonalCollectionWebApp.Policies.Requirements;
 
@@ -31,18 +31,7 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PersonalCollectionWebApp")));
-
-builder.Services.AddPersistenceLayer(builder.Configuration);
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
 
 builder.Services.AddAuthorization(options =>
 {
@@ -58,20 +47,13 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddAutoMapper((typeof(Program)));
+builder.Services.AddApplicationLayer();
+builder.Services.AddPersistenceLayer(builder.Configuration);
+
 builder.Services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
-builder.Services.AddRepositories();
-builder.Services.AddMyServices();
 builder.Services.AddHandlersServices();
 
 var app = builder.Build();
-
-//add default data in db if db empty
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    await SeedData.InitializeAsync(services);
-//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

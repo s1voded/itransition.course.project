@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PersonalCollection.Domain.Entities;
-using PersonalCollectionWebApp.Data;
 using PersonalCollectionWebApp.Policies.Requirements;
 
 namespace PersonalCollectionWebApp.Policies.Handlers

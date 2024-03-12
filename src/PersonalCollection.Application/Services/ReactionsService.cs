@@ -1,7 +1,7 @@
 ﻿using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Domain.Entities;
 
-namespace PersonalCollectionWebApp.Services
+namespace PersonalCollection.Application.Services
 {
     public class ReactionsService
     {

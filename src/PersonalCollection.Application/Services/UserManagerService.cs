@@ -2,14 +2,12 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PersonalCollection.Application.Models;
 using PersonalCollection.Domain.Entities;
-using PersonalCollectionWebApp.Data;
-using PersonalCollectionWebApp.Models.Dto;
 using System.Data;
-using System.Linq;
 using System.Security.Claims;
 
-namespace PersonalCollectionWebApp.Services
+namespace PersonalCollection.Application.Services
 {
     public class UserManagerService
     {

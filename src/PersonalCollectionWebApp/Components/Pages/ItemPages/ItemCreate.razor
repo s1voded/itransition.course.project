@@ -1,7 +1,6 @@
 ﻿@attribute [Route(Constants.AppRouteItemCreate)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
-@using PersonalCollectionWebApp.Components.Shared
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService

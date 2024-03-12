@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using PersonalCollection.Domain.Entities;
-using PersonalCollectionWebApp.Data;
 using System.Security.Claims;
 
-namespace PersonalCollectionWebApp.Models.Dto
+namespace PersonalCollection.Application.Models
 {
     public class ApplicationUserDto
     {

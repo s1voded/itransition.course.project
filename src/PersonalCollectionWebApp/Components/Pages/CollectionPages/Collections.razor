@@ -1,7 +1,6 @@
 ﻿@attribute [Route(Constants.AppRouteCollections)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
-@using System.Security.Claims
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 

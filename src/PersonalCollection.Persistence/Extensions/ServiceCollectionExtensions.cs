@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
+using PersonalCollection.Persistence.Repositories;
 
 namespace PersonalCollection.Persistence.Extensions
 {
@@ -10,16 +14,29 @@ namespace PersonalCollection.Persistence.Extensions
         public static void AddPersistenceLayer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext(configuration);
-            //services.AddRepositories();
+            services.AddRepositories();
         }
 
-        public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
+        private static void AddDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString, 
+                builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(connectionString,
-                   builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager()
+                .AddDefaultTokenProviders();
+        }
+
+        private static void AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<ICollectionRepository, CollectionRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IThemeRepository, ThemeRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ILikeRepository, LikeRepository>();
         }
     }
 }
