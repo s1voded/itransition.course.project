@@ -1,7 +1,7 @@
-﻿@page "/items/{ItemId:int}/edit"
-@using PersonalCollectionWebApp.Components.Shared
+﻿@attribute [Route(Constants.AppRouteItemEdit)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
+@using PersonalCollectionWebApp.Components.Shared
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
@@ -71,7 +71,7 @@ else
                 if (isAuthorized.Succeeded)
                 {
                     await CollectionService.UpdateItem(item);
-                    NavigationManager.NavigateTo($"/items/{item.Id}");
+                    NavigationManager.NavigateTo($"/{Constants.NavItems}/{item.Id}");
                 }
                 else
                 {

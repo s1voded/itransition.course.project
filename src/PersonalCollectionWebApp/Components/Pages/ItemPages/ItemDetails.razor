@@ -1,7 +1,8 @@
-﻿@page "/items/{ItemId:int}"
-@using PersonalCollectionWebApp.Components.Shared
+﻿@attribute [Route(Constants.AppRouteItemDetails)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
+@using PersonalCollectionWebApp.Components.Shared
+@using System.Security.Claims
 @inject CollectionService CollectionService
 @inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
@@ -69,6 +70,26 @@
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
+    <AuthorizeView>
+        <Authorized>
+            <MudGrid>
+                <MudItem xs="12" sm="7">
+                    <MudPaper Class="pa-4">
+                        <MudForm @bind-IsValid="@formIsValid">
+                            <MudTextField @bind-Value="commentContent" Label="Comment" Required="true" RequiredError="Comment content is required." />
+                            <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+                            <div class="d-flex align-center justify-space-between">
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="SubmitComment">Send</MudButton>
+                            </div>
+                        </MudForm>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+        </Authorized>
+    </AuthorizeView>
+
+    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
     <MudStack>
         @foreach (var comment in itemComments)
         {
@@ -99,7 +120,10 @@ else
 
     private Item? item;
     private bool canManageItem;
+    private bool formIsValid;
     private IEnumerable<Comment> itemComments = [];
+    private string? commentContent;
+    //private 
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,11 +161,39 @@ else
         {
             await CollectionService.DeleteItem(item);
         }
-        NavigationManager.NavigateTo($"/collections/{item?.Collection.Id}");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{item?.Collection.Id}");
+    }
+
+    private async Task SubmitComment()
+    {
+        if (!string.IsNullOrEmpty(commentContent))
+        {
+            if (authenticationState is not null)
+            {
+                var authState = await authenticationState;
+                var user = authState?.User;
+
+                if (user is not null)
+                {
+                    var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    var comment = new Comment()
+                        {
+                            ItemId = ItemId,
+                            Content = commentContent,
+                            AddedDateTime = DateTime.UtcNow,
+                            UserId = userId
+                        };
+                    commentContent = "";
+
+                    await ReactionsService.AddComment(comment);
+                    itemComments = await ReactionsService.GetItemComments(ItemId);
+                }
+            }            
+        }
     }
 
     private void NavigateToEditItem()
     {
-        NavigationManager.NavigateTo($"/items/{ItemId}/edit");
+        NavigationManager.NavigateTo($"/{Constants.NavItems}/{ItemId}/{Constants.NavEdit}");
     }
 }

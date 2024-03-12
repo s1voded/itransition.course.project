@@ -1,4 +1,4 @@
-﻿@page "/usermanager"
+﻿@attribute [Route(Constants.AppRouteUserManager)]
 @attribute [Authorize(Policy = Constants.PolicyAdminOnly)]
 @rendermode InteractiveServer
 @inject UserManagerService UserManagerService

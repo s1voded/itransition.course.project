@@ -19,5 +19,11 @@ namespace PersonalCollectionWebApp.Services
         {
             return await _commentRepository.GetItemComments(itemId);
         }
+
+        public async Task AddComment(Comment comment)
+        {
+            await _commentRepository.Create(comment);
+            await _commentRepository.SaveChangesAsync();
+        }
     }
 }

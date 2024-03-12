@@ -1,7 +1,7 @@
-﻿@page "/collections/{CollectionId:int}/itemcreate"
-@using PersonalCollectionWebApp.Components.Shared
+﻿@attribute [Route(Constants.AppRouteItemCreate)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
 @rendermode InteractiveServer
+@using PersonalCollectionWebApp.Components.Shared
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
@@ -68,7 +68,7 @@ else
                     item.CollectionId = CollectionId;
                     item.CreatedDate = DateTime.UtcNow;
                     await CollectionService.AddItem(item);
-                    NavigationManager.NavigateTo($"/collections/{CollectionId}");
+                    NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}");
                 }
                 else
                 {

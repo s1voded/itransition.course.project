@@ -1,7 +1,7 @@
-﻿@page "/collections/{CollectionId:int}"
-@using PersonalCollectionWebApp.Components.Shared
+﻿@attribute [Route(Constants.AppRouteCollectionDetails)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
+@using PersonalCollectionWebApp.Components.Shared
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
@@ -115,17 +115,17 @@ else
 
     private void NavigateToAddItem()
     {
-        NavigationManager.NavigateTo($"/collections/{CollectionId}/itemcreate");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}/{Constants.NavCreate}");
     }
 
     private void NavigateToEditCollection()
     {
-        NavigationManager.NavigateTo($"/collections/{CollectionId}/edit");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}/{Constants.NavEdit}");
     }
 
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
-        NavigationManager.NavigateTo($"/items/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
     }
 
     private void OnDeleteCollection()
@@ -146,6 +146,6 @@ else
         {
             await CollectionService.DeleteCollection(collection);
         }
-        NavigationManager.NavigateTo($"/collections");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}");
     }
 }

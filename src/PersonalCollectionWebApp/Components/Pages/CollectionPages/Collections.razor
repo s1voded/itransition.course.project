@@ -1,7 +1,7 @@
-﻿@page "/collections"
+﻿@attribute [Route(Constants.AppRouteCollections)]
 @attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
-@using System.Security.Claims
 @rendermode InteractiveServer
+@using System.Security.Claims
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 
@@ -50,11 +50,11 @@
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<PersonalCollection> args)
     {
-        NavigationManager.NavigateTo($"/collections/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{args.Item.Id}");
     }
 
     private void NavigateToAddCollection()
     {
-        NavigationManager.NavigateTo($"/collections/create");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{Constants.NavCreate}");
     }
 }
