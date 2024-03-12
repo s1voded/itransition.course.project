@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using PersonalCollectionWebApp.Data.Repository;
-using PersonalCollectionWebApp.Data.Repository.Interfaces;
+using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Persistence.Repositories;
 using PersonalCollectionWebApp.Policies.Handlers;
 using PersonalCollectionWebApp.Services;
 

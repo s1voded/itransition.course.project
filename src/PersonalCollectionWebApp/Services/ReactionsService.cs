@@ -1,6 +1,5 @@
-﻿using PersonalCollectionWebApp.Data.Repository;
-using PersonalCollectionWebApp.Data.Repository.Interfaces;
-using PersonalCollectionWebApp.Models.Entities;
+﻿using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollectionWebApp.Services
 {

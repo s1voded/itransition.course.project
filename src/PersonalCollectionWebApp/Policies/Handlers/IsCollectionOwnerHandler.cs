@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Data;
-using PersonalCollectionWebApp.Models.Entities;
 using PersonalCollectionWebApp.Policies.Requirements;
 
 namespace PersonalCollectionWebApp.Policies.Handlers
 {
-    public class IsCollectionOwnerHandler: AuthorizationHandler<AllowedManageCollectionRequirement, PersonalCollection>
+    public class IsCollectionOwnerHandler: AuthorizationHandler<AllowedManageCollectionRequirement, Collection>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -14,7 +14,7 @@ namespace PersonalCollectionWebApp.Policies.Handlers
         {
             _userManager = userManager;
         }
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, PersonalCollection? resource)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, Collection? resource)
         {
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)

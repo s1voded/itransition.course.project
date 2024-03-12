@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Data;
 using System.Security.Claims;
 

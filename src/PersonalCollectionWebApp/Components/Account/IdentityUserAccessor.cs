@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Data;
 
 namespace PersonalCollectionWebApp.Components.Account

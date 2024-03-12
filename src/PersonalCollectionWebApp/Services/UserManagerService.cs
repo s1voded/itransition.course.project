@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Data;
 using PersonalCollectionWebApp.Models.Dto;
 using System.Data;

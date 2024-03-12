@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Data;
 using System.Security.Claims;
 

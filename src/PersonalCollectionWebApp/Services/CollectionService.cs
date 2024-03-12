@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PersonalCollectionWebApp.Data.Repository.Interfaces;
-using PersonalCollectionWebApp.Models.Entities;
+using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollectionWebApp.Services
 {
@@ -22,39 +22,39 @@ namespace PersonalCollectionWebApp.Services
             _tagRepository = tagRepository;
         }
 
-        public async Task<PersonalCollection?> GetCollectionById(int collectionId)
+        public async Task<Collection?> GetCollectionById(int collectionId)
         {
             return await _collectionRepository.GetById(collectionId);
         }
 
-        public async Task<IEnumerable<PersonalCollection>> GetUserCollections(string userId)
+        public async Task<IEnumerable<Collection>> GetUserCollections(string userId)
         {
             return await _collectionRepository.GetUserCollections(userId);
         }
 
-        public async Task<PersonalCollection?> GetCollectionWithItems(int collectionId)
+        public async Task<Collection?> GetCollectionWithItems(int collectionId)
         {
             return await _collectionRepository.GetCollectionWithItems(collectionId);
         }
 
-        public async Task<IEnumerable<PersonalCollection>> GetLargestCollections(int count)
+        public async Task<IEnumerable<Collection>> GetLargestCollections(int count)
         {
             return await _collectionRepository.GetLargestCollections(count);
         }
 
-        public async Task AddCollection(PersonalCollection collection)
+        public async Task AddCollection(Collection collection)
         {
             await _collectionRepository.Create(collection);
             await _collectionRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateCollection(PersonalCollection collection)
+        public async Task UpdateCollection(Collection collection)
         {
             _collectionRepository.Update(collection.Id, collection);
             await _collectionRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteCollection(PersonalCollection collection)
+        public async Task DeleteCollection(Collection collection)
         {
             _collectionRepository.Delete(collection);
             await _collectionRepository.SaveChangesAsync();

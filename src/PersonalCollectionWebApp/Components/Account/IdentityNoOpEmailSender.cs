@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using PersonalCollectionWebApp.Data;
+using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollectionWebApp.Components.Account
 {

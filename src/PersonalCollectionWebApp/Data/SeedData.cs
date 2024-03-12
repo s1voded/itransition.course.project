@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using PersonalCollectionWebApp.Models.Entities;
+using PersonalCollection.Domain.Entities;
+using PersonalCollection.Persistence.Contexts;
 using System.Security.Claims;
 
 namespace PersonalCollectionWebApp.Data

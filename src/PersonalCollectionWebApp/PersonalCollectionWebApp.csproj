@@ -24,7 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <ProjectReference Include="..\PersonalCollection.Application\PersonalCollection.Application.csproj" />
+    <ProjectReference Include="..\PersonalCollection.Persistence\PersonalCollection.Persistence.csproj" />
+    <ProjectReference Include="..\PersonalCollection.Application\PersonalCollection.Application.csproj" />
+    <ProjectReference Include="..\PersonalCollection.Domain\PersonalCollection.Domain.csproj" />
+    <ProjectReference Include="..\PersonalCollection.Persistence\PersonalCollection.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

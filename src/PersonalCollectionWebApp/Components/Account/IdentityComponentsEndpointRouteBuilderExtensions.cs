@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using PersonalCollection.Domain.Entities;
 using PersonalCollectionWebApp.Components.Account.Pages;
 using PersonalCollectionWebApp.Components.Account.Pages.Manage;
 using PersonalCollectionWebApp.Data;

@@ -11,9 +11,9 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable T="PersonalCollection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+<MudTable T="Collection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<PersonalCollection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
         <MudTh>Theme</MudTh>
         <MudTh>Description</MudTh>
     </HeaderContent>
@@ -28,7 +28,7 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
 
-    private IEnumerable<PersonalCollection> collections = [];
+    private IEnumerable<Collection> collections = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -48,7 +48,7 @@
         }
     }
 
-    private void NavigateToCollectionDetails(TableRowClickEventArgs<PersonalCollection> args)
+    private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> args)
     {
         NavigationManager.NavigateTo($"/{Constants.NavCollections}/{args.Item.Id}");
     }
