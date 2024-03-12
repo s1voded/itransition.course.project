@@ -1,5 +1,4 @@
-﻿
-namespace PersonalCollection.Application.Interfaces.Repositories
+﻿namespace PersonalCollection.Application.Interfaces.Repositories
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {

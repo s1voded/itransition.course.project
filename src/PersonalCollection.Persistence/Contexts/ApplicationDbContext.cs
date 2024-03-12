@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Domain.Entities;
-using System.Reflection;
 
 namespace PersonalCollection.Persistence.Contexts
 {

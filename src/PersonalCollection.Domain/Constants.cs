@@ -1,6 +1,4 @@
-﻿using System.CodeDom;
-
-namespace PersonalCollection.Domain
+﻿namespace PersonalCollection.Domain
 {
     public static class Constants
     {

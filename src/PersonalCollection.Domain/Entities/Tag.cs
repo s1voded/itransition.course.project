@@ -1,5 +1,4 @@
-﻿
-namespace PersonalCollection.Domain.Entities
+﻿namespace PersonalCollection.Domain.Entities
 {
     public class Tag
     {

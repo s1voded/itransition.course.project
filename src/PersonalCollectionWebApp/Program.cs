@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using PersonalCollection.Application.Extensions;
 using PersonalCollection.Domain;
 using PersonalCollection.Domain.Entities;
-using PersonalCollection.Persistence.Contexts;
 using PersonalCollection.Persistence.Extensions;
-using PersonalCollectionWebApp;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Extensions;
