@@ -5,6 +5,7 @@ using MudBlazor.Services;
 using PersonalCollection.Domain;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
+using PersonalCollection.Persistence.Extensions;
 using PersonalCollectionWebApp;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
@@ -30,9 +31,12 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(connectionString, b => b.MigrationsAssembly("PersonalCollectionWebApp")));
+
+builder.Services.AddPersistenceLayer(builder.Configuration);
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

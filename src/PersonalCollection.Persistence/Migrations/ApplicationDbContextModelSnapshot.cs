@@ -2,8 +2,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersonalCollection.Persistence.Contexts;
-
 
 #nullable disable
 
@@ -169,7 +170,7 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Data.ApplicationUser", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -237,7 +238,39 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Comment", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Collection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ThemeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ThemeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Collections");
+                });
+
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Comment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -267,7 +300,7 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Item", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -313,7 +346,7 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Like", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Like", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -336,39 +369,7 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.PersonalCollection", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ThemeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ThemeId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Collections");
-                });
-
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Tag", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Tag", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -385,7 +386,7 @@ namespace PersonalCollection.Persistence.Migrations
                     b.ToTable("Tags");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Theme", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Theme", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -404,13 +405,13 @@ namespace PersonalCollection.Persistence.Migrations
 
             modelBuilder.Entity("ItemTag", b =>
                 {
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.Item", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.Item", null)
                         .WithMany()
                         .HasForeignKey("ItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.Tag", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.Tag", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -428,7 +429,7 @@ namespace PersonalCollection.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", null)
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -437,7 +438,7 @@ namespace PersonalCollection.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -452,7 +453,7 @@ namespace PersonalCollection.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -461,87 +462,42 @@ namespace PersonalCollection.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", null)
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Comment", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Collection", b =>
                 {
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Item");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Item", b =>
-                {
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.PersonalCollection", "Collection")
-                        .WithMany("Items")
-                        .HasForeignKey("CollectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Collection");
-                });
-
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.Like", b =>
-                {
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("Item");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.PersonalCollection", b =>
-                {
-                    b.HasOne("PersonalCollectionWebApp.Models.Entities.Theme", "Theme")
+                    b.HasOne("PersonalCollection.Domain.Entities.Theme", "Theme")
                         .WithMany()
                         .HasForeignKey("ThemeId");
 
-                    b.HasOne("PersonalCollectionWebApp.Data.ApplicationUser", "User")
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Collections")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("PersonalCollectionWebApp.Models.Entities.CustomFieldsSettings", "CustomFieldsSettings", b1 =>
+                    b.OwnsOne("PersonalCollection.Domain.Entities.CustomFieldsSettings", "CustomFieldsSettings", b1 =>
                         {
-                            b1.Property<int>("PersonalCollectionId")
+                            b1.Property<int>("CollectionId")
                                 .HasColumnType("int");
 
-                            b1.HasKey("PersonalCollectionId");
+                            b1.HasKey("CollectionId");
 
                             b1.ToTable("Collections");
 
                             b1.ToJson("CustomFieldsSettings");
 
                             b1.WithOwner()
-                                .HasForeignKey("PersonalCollectionId");
+                                .HasForeignKey("CollectionId");
 
-                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomBools", b2 =>
+                            b1.OwnsMany("PersonalCollection.Domain.Entities.CustomField", "CustomBools", b2 =>
                                 {
-                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                    b2.Property<int>("CustomFieldsSettingsCollectionId")
                                         .HasColumnType("int");
 
                                     b2.Property<int>("Id")
@@ -554,17 +510,17 @@ namespace PersonalCollection.Persistence.Migrations
                                     b2.Property<string>("Name")
                                         .HasColumnType("nvarchar(max)");
 
-                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+                                    b2.HasKey("CustomFieldsSettingsCollectionId", "Id");
 
                                     b2.ToTable("Collections");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                        .HasForeignKey("CustomFieldsSettingsCollectionId");
                                 });
 
-                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomDates", b2 =>
+                            b1.OwnsMany("PersonalCollection.Domain.Entities.CustomField", "CustomDates", b2 =>
                                 {
-                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                    b2.Property<int>("CustomFieldsSettingsCollectionId")
                                         .HasColumnType("int");
 
                                     b2.Property<int>("Id")
@@ -577,17 +533,17 @@ namespace PersonalCollection.Persistence.Migrations
                                     b2.Property<string>("Name")
                                         .HasColumnType("nvarchar(max)");
 
-                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+                                    b2.HasKey("CustomFieldsSettingsCollectionId", "Id");
 
                                     b2.ToTable("Collections");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                        .HasForeignKey("CustomFieldsSettingsCollectionId");
                                 });
 
-                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomInts", b2 =>
+                            b1.OwnsMany("PersonalCollection.Domain.Entities.CustomField", "CustomInts", b2 =>
                                 {
-                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                    b2.Property<int>("CustomFieldsSettingsCollectionId")
                                         .HasColumnType("int");
 
                                     b2.Property<int>("Id")
@@ -600,17 +556,17 @@ namespace PersonalCollection.Persistence.Migrations
                                     b2.Property<string>("Name")
                                         .HasColumnType("nvarchar(max)");
 
-                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+                                    b2.HasKey("CustomFieldsSettingsCollectionId", "Id");
 
                                     b2.ToTable("Collections");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                        .HasForeignKey("CustomFieldsSettingsCollectionId");
                                 });
 
-                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomStrings", b2 =>
+                            b1.OwnsMany("PersonalCollection.Domain.Entities.CustomField", "CustomStrings", b2 =>
                                 {
-                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                    b2.Property<int>("CustomFieldsSettingsCollectionId")
                                         .HasColumnType("int");
 
                                     b2.Property<int>("Id")
@@ -623,17 +579,17 @@ namespace PersonalCollection.Persistence.Migrations
                                     b2.Property<string>("Name")
                                         .HasColumnType("nvarchar(max)");
 
-                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+                                    b2.HasKey("CustomFieldsSettingsCollectionId", "Id");
 
                                     b2.ToTable("Collections");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                        .HasForeignKey("CustomFieldsSettingsCollectionId");
                                 });
 
-                            b1.OwnsMany("PersonalCollectionWebApp.Models.Entities.CustomField", "CustomTexts", b2 =>
+                            b1.OwnsMany("PersonalCollection.Domain.Entities.CustomField", "CustomTexts", b2 =>
                                 {
-                                    b2.Property<int>("CustomFieldsSettingsPersonalCollectionId")
+                                    b2.Property<int>("CustomFieldsSettingsCollectionId")
                                         .HasColumnType("int");
 
                                     b2.Property<int>("Id")
@@ -646,12 +602,12 @@ namespace PersonalCollection.Persistence.Migrations
                                     b2.Property<string>("Name")
                                         .HasColumnType("nvarchar(max)");
 
-                                    b2.HasKey("CustomFieldsSettingsPersonalCollectionId", "Id");
+                                    b2.HasKey("CustomFieldsSettingsCollectionId", "Id");
 
                                     b2.ToTable("Collections");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("CustomFieldsSettingsPersonalCollectionId");
+                                        .HasForeignKey("CustomFieldsSettingsCollectionId");
                                 });
 
                             b1.Navigation("CustomBools");
@@ -672,14 +628,59 @@ namespace PersonalCollection.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Data.ApplicationUser", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Comment", b =>
+                {
+                    b.HasOne("PersonalCollection.Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Item", b =>
+                {
+                    b.HasOne("PersonalCollection.Domain.Entities.Collection", "Collection")
+                        .WithMany("Items")
+                        .HasForeignKey("CollectionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collection");
+                });
+
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Like", b =>
+                {
+                    b.HasOne("PersonalCollection.Domain.Entities.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PersonalCollection.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("Claims");
 
                     b.Navigation("Collections");
                 });
 
-            modelBuilder.Entity("PersonalCollectionWebApp.Models.Entities.PersonalCollection", b =>
+            modelBuilder.Entity("PersonalCollection.Domain.Entities.Collection", b =>
                 {
                     b.Navigation("Items");
                 });

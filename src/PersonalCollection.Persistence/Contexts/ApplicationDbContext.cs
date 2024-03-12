@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Domain.Entities;
+using System.Reflection;
 
 namespace PersonalCollection.Persistence.Contexts
 {
@@ -9,6 +10,7 @@ namespace PersonalCollection.Persistence.Contexts
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             modelBuilder.Entity<ApplicationUser>(b =>
             {
