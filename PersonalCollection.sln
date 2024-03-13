@@ -5,15 +5,9 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollectionWebApp", "src\PersonalCollectionWebApp\PersonalCollectionWebApp.csproj", "{3B755CA6-0419-4C14-A060-734CB61AFC3E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{D26E08AD-23A1-4CA2-88B1-5DAB11A515B4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5FC007C4-0D44-43B9-A530-644049AF2B88}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Domain", "src\PersonalCollection.Domain\PersonalCollection.Domain.csproj", "{CCAD1978-2963-42B4-BC28-7D404A2E4329}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Application", "src\PersonalCollection.Application\PersonalCollection.Application.csproj", "{9BF20A51-15A6-4742-88EF-447B8A96E3E0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{3D08F100-5C96-484C-A85A-A35CA37AF74E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Persistence", "src\PersonalCollection.Persistence\PersonalCollection.Persistence.csproj", "{60211229-EACA-453A-8B6B-7FE524817CEC}"
 EndProject
@@ -42,12 +36,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3B755CA6-0419-4C14-A060-734CB61AFC3E} = {D26E08AD-23A1-4CA2-88B1-5DAB11A515B4}
-		{CCAD1978-2963-42B4-BC28-7D404A2E4329} = {5FC007C4-0D44-43B9-A530-644049AF2B88}
-		{9BF20A51-15A6-4742-88EF-447B8A96E3E0} = {5FC007C4-0D44-43B9-A530-644049AF2B88}
-		{60211229-EACA-453A-8B6B-7FE524817CEC} = {3D08F100-5C96-484C-A85A-A35CA37AF74E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55AF5B48-2588-4483-89BD-0CA6664DF7ED}

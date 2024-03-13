@@ -13,7 +13,7 @@
     {
         if (!string.IsNullOrEmpty(searchString))
         {
-            NavigationManager.NavigateTo($"/search?SearchString={searchString}");
+            NavigationManager.NavigateTo($"/search?SearchString={searchString}", true);
             searchString = "";
         }
     }
