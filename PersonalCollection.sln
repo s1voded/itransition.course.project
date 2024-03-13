@@ -9,13 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5FC007C4-0D44-43B9-A530-644049AF2B88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalCollection.Domain", "src\PersonalCollection.Domain\PersonalCollection.Domain.csproj", "{CCAD1978-2963-42B4-BC28-7D404A2E4329}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Domain", "src\PersonalCollection.Domain\PersonalCollection.Domain.csproj", "{CCAD1978-2963-42B4-BC28-7D404A2E4329}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalCollection.Application", "src\PersonalCollection.Application\PersonalCollection.Application.csproj", "{9BF20A51-15A6-4742-88EF-447B8A96E3E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Application", "src\PersonalCollection.Application\PersonalCollection.Application.csproj", "{9BF20A51-15A6-4742-88EF-447B8A96E3E0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{3D08F100-5C96-484C-A85A-A35CA37AF74E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonalCollection.Persistence", "src\PersonalCollection.Persistence\PersonalCollection.Persistence.csproj", "{60211229-EACA-453A-8B6B-7FE524817CEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalCollection.Persistence", "src\PersonalCollection.Persistence\PersonalCollection.Persistence.csproj", "{60211229-EACA-453A-8B6B-7FE524817CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

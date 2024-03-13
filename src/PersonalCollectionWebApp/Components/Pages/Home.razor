@@ -56,6 +56,10 @@
     </RowTemplate>
 </MudTable>
 
+<MudAppBar Color="Color.Transparent" Fixed="false" Dense="true">
+    <MudSpacer />
+    <MudAutocomplete T="string" Label="Search" Dense="true" Margin=Margin.Dense Variant="Variant.Outlined" SearchFunc="@SearchItem" @bind-Value="selectedItem" />
+</MudAppBar>
 
 @code {
     private IEnumerable<Item> lastAddedItems = [];
@@ -77,5 +81,15 @@
     private void ItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
+    }
+
+    private string selectedItem;
+    private async Task<IEnumerable<string>> SearchItem(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return new string[0];
+
+        var items = await CollectionService.SearchItems(value);
+        return items.Select(i => i.Name);        
     }
 }
