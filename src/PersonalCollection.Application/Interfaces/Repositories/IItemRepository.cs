@@ -7,5 +7,6 @@ namespace PersonalCollection.Application.Interfaces.Repositories
         public Task<IEnumerable<Item>> GetLastAddedItems(int count);
 
         public Task<Item?> GetItemWithCollection(int itemId);
+        public Task<IEnumerable<Item>> SearchItems(string search);
     }
 }

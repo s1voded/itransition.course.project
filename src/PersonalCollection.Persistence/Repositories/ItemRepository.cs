@@ -2,6 +2,7 @@
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PersonalCollection.Persistence.Repositories
 {
@@ -27,6 +28,13 @@ namespace PersonalCollection.Persistence.Repositories
                 .OrderByDescending(i => i.CreatedDate)
                 .Take(count)
                 .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Item>> SearchItems(string search)
+        {
+            return await GetAll()
+                .Where(e => EF.Functions.Contains(e.Name, search))
                 .ToListAsync();
         }
     }

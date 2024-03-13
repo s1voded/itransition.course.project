@@ -11,9 +11,9 @@ namespace PersonalCollection.Application.Services
         private readonly IThemeRepository _themeRepository;
         private readonly ITagRepository _tagRepository;
 
-        public CollectionService(ICollectionRepository collectionRepository, 
-            IItemRepository itemRepository, 
-            IThemeRepository themeRepository, 
+        public CollectionService(ICollectionRepository collectionRepository,
+            IItemRepository itemRepository,
+            IThemeRepository themeRepository,
             ITagRepository tagRepository)
         {
             _collectionRepository = collectionRepository;
@@ -96,6 +96,11 @@ namespace PersonalCollection.Application.Services
         {
             _itemRepository.Delete(item);
             await _itemRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Item>> SearchItems(string searchString)
+        {
+            return await _itemRepository.SearchItems(searchString);
         }
     }
 }
