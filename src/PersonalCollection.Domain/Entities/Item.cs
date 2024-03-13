@@ -11,6 +11,7 @@ namespace PersonalCollection.Domain.Entities
         public int CollectionId { get; set; } // Required foreign key property
         public Collection Collection { get; set; } = null!; // Required reference navigation to principal
         public ICollection<Tag>? Tags { get; set; } = [];
+        public ICollection<Comment>? Comments { get; set; } = [];
 
         public string?[] CustomStrings { get; set; } = new string?[Constants.CustomFieldsCount];
         public string?[] CustomTexts { get; set; } = new string?[Constants.CustomFieldsCount];

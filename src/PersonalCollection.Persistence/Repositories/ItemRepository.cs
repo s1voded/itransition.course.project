@@ -34,7 +34,19 @@ namespace PersonalCollection.Persistence.Repositories
         public async Task<IEnumerable<Item>> SearchItems(string search)
         {
             return await GetAll()
-                .Where(e => EF.Functions.Contains(e.Name, search))
+                .Include(i => i.Collection)
+                .Include(i => i.Tags)
+                .Include(i => i.Comments)
+                .Where(i => 
+                EF.Functions.Contains(i.Name, search) || 
+                EF.Functions.Contains(i.CustomStrings, search) ||
+                EF.Functions.Contains(i.CustomTexts, search) ||
+                EF.Functions.Contains(i.CustomInts, search) ||
+                EF.Functions.Contains(i.CustomDates, search) ||
+                EF.Functions.Contains(i.Collection.Name, search) ||
+                EF.Functions.Contains(i.Collection.Description, search) ||
+                i.Tags.Any(t => EF.Functions.Contains(t.Name, search)) ||
+                i.Comments.Any(c => EF.Functions.Contains(c.Content, search)))
                 .ToListAsync();
         }
     }

@@ -71,11 +71,11 @@
 
     private void CollectionDetails(TableRowClickEventArgs<Collection> collection)
     {
-        NavigationManager.NavigateTo($"/collections/{collection.Item.Id}");
+        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{collection.Item.Id}");
     }
 
     private void ItemDetails(TableRowClickEventArgs<Item> args)
     {
-        NavigationManager.NavigateTo($"/items/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
     }
 }
