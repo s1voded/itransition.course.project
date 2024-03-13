@@ -6,10 +6,9 @@
     </div>
 
     <main>
-        <MudAppBar Color="Color.Transparent" Fixed="false" Dense="true">
-            <MudSpacer />
-            <MudAutocomplete T="string" Label="Search" Dense="true" Margin=Margin.Dense Variant="Variant.Outlined" />
-        </MudAppBar>
+        <div class="top-row px-4">
+            <SearchAppBar />
+        </div>
 
         <article class="content px-4">
             @Body
@@ -24,6 +23,6 @@
 </div>
 
 <MudThemeProvider/>
-<MudPopoverProvider @rendermode="InteractiveServer" />
-<MudDialogProvider @rendermode="InteractiveServer" />
-<MudSnackbarProvider @rendermode="InteractiveServer" />
+<MudPopoverProvider @rendermode=InteractiveServer />
+<MudDialogProvider @rendermode=InteractiveServer />
+<MudSnackbarProvider @rendermode=InteractiveServer />

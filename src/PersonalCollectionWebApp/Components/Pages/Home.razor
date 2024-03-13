@@ -6,7 +6,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@ItemDetails" RowClass="cursor-pointer">
+<MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Last added items</MudText>
     </ToolBarContent>
@@ -32,7 +32,7 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@CollectionDetails" RowClass="cursor-pointer">
+<MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Largest collections</MudText>
     </ToolBarContent>
@@ -56,11 +56,6 @@
     </RowTemplate>
 </MudTable>
 
-<MudAppBar Color="Color.Transparent" Fixed="false" Dense="true">
-    <MudSpacer />
-    <MudAutocomplete T="string" Label="Search" Dense="true" Margin=Margin.Dense Variant="Variant.Outlined" SearchFunc="@SearchItem" @bind-Value="selectedItem" />
-</MudAppBar>
-
 @code {
     private IEnumerable<Item> lastAddedItems = [];
     private IEnumerable<Collection> largestCollections = [];
@@ -73,23 +68,13 @@
         largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
     }
 
-    private void CollectionDetails(TableRowClickEventArgs<Collection> collection)
+    private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)
     {
         NavigationManager.NavigateTo($"/{Constants.NavCollections}/{collection.Item.Id}");
     }
 
-    private void ItemDetails(TableRowClickEventArgs<Item> args)
+    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
-    }
-
-    private string selectedItem;
-    private async Task<IEnumerable<string>> SearchItem(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-            return new string[0];
-
-        var items = await CollectionService.SearchItems(value);
-        return items.Select(i => i.Name);        
     }
 }

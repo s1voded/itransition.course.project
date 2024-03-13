@@ -35,6 +35,7 @@ namespace PersonalCollection.Persistence.Repositories
         {
             return await GetAll()
                 .Include(i => i.Collection)
+                .ThenInclude(c => c.User)
                 .Include(i => i.Tags)
                 .Include(i => i.Comments)
                 .Where(i => 

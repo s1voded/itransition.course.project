@@ -1,0 +1,20 @@
+﻿@rendermode InteractiveServer
+@inject NavigationManager NavigationManager
+
+<div class="input-group">
+    <input @bind="searchString" type="text" class="form-control" placeholder="Search items" aria-label="Search items" aria-describedby="button-addon2">
+    <button @onclick="NavigateToSearchItems" class="btn btn-outline-secondary" type="button" id="button-addon2">Search</button>
+</div>
+
+@code {
+    private string searchString;
+
+    private void NavigateToSearchItems()
+    {
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            NavigationManager.NavigateTo($"/search?SearchString={searchString}");
+            searchString = "";
+        }
+    }
+}
