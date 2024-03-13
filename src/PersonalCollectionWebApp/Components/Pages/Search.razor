@@ -34,13 +34,16 @@
 
 @code {
     [SupplyParameterFromQuery]
-    public string SearchString { get; set; }
+    public string? SearchString { get; set; }
 
     private IEnumerable<Item> foundItems = [];
 
     protected override async Task OnInitializedAsync()
     {
-        foundItems = await CollectionService.SearchItems(SearchString);
+        if (!string.IsNullOrEmpty(SearchString))
+        {
+            foundItems = await CollectionService.SearchItems(SearchString);
+        }     
     }
 
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
