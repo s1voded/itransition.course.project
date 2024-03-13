@@ -52,6 +52,7 @@ namespace PersonalCollection.Persistence.Repositories
                 EF.Functions.Contains(i.Collection.User.UserName, searchCondition) ||
                 i.Tags.Any(t => EF.Functions.Contains(t.Name, searchCondition)) ||
                 i.Comments.Any(c => EF.Functions.Contains(c.Content, searchCondition)))
+                .AsNoTracking()
                 .ToListAsync();
         }
     }

@@ -22,10 +22,6 @@
         <MudText Align="Align.Center">Not authorized.</MudText>
     }
 }
-else
-{
-    <MudText Align="Align.Center">Collection not found.</MudText>
-}
 
 @code {
     [Parameter]
@@ -42,6 +38,11 @@ else
     {
         collection = await CollectionService.GetCollectionById(CollectionId);
         themes = await CollectionService.GetThemes();
+
+        if (collection is null)
+        {
+            NavigationManager.NavigateTo("/notfound");
+        }
 
         if (authenticationState is not null)
         {

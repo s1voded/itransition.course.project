@@ -80,10 +80,6 @@
         </PagerContent>
     </MudTable>
 }
-else
-{
-    <MudText Align="Align.Center">Collection not found.</MudText>
-}
 
 @code {
     [Parameter]
@@ -98,6 +94,11 @@ else
     protected override async Task OnInitializedAsync()
     {
         collection = await CollectionService.GetCollectionWithItems(CollectionId);
+
+        if (collection is null)
+        {
+            NavigationManager.NavigateTo("/notfound");
+        }
 
         if (authenticationState is not null)
         {

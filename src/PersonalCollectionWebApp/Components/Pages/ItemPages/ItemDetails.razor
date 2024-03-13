@@ -105,10 +105,6 @@
         }
     </MudStack>
 }
-else
-{
-    <MudText Align="Align.Center">Item not found.</MudText>
-}
 
 @code {
     [Parameter]
@@ -141,6 +137,11 @@ else
 
         item = await CollectionService.GetItemWithCollection(ItemId);
         await GetComments();
+
+        if (item is null)
+        {
+            NavigationManager.NavigateTo("/notfound");
+        }
 
         if (authenticationState is not null)
         {
