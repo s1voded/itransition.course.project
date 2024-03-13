@@ -29,5 +29,11 @@
         public const string AppRouteItemCreate = $"/{NavCollections}/{NavCollectionId}/{NavCreate}";
         public const string AppRouteItemDetails = $"/{NavItems}/{NavItemId}";
         public const string AppRouteItemEdit = $"/{NavItems}/{NavItemId}/{NavEdit}";
+
+        public const string HubName = "/commentshub";
+        public const string HubSendCommentsUpdate = "SendCommentsUpdate";
+        public const string HubReceiveCommentsUpdate = "ReceiveCommentsUpdate";
+        public const string HubJoinGroup = "JoinGroup";
+        public const string HubLeaveGroup = "LeaveGroup";
     }
 }

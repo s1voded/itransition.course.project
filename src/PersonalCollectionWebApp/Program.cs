@@ -8,6 +8,7 @@ using PersonalCollection.Persistence.Extensions;
 using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Extensions;
+using PersonalCollectionWebApp.Hubs;
 using PersonalCollectionWebApp.Policies.Requirements;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,5 +75,7 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapHub<CommentsHub>(Constants.HubName);
 
 app.Run();
