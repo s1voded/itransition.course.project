@@ -2,7 +2,6 @@
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace PersonalCollection.Persistence.Repositories
 {
@@ -31,15 +30,25 @@ namespace PersonalCollection.Persistence.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Item>> SearchItemsByTag(string tagName)
+        {
+            return await GetAll()
+                .Include(i => i.Collection)
+                .ThenInclude(c => c.User)
+                .Include(i => i.Tags)
+                .Where(i => i.Tags.Any(t => t.Name == tagName))
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Item>> SearchItems(string search)
         {
             var searchCondition = $"\"{search}\"";
 
             return await GetAll()
-                .Include(i => i.Collection).ThenInclude(c => c.User)
-                .Include(i => i.Collection).ThenInclude(c => c.Theme)
+                .Include(i => i.Collection)
+                .ThenInclude(c => c.User)
                 .Include(i => i.Tags)
-                .Include(i => i.Comments)
                 .Where(i => 
                 EF.Functions.Contains(i.Name, searchCondition) || 
                 EF.Functions.Contains(i.CustomStrings, searchCondition) ||

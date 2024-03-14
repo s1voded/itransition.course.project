@@ -108,5 +108,10 @@ namespace PersonalCollection.Application.Services
         {
             return await _itemRepository.SearchItems(searchString);
         }
+
+        public async Task<IEnumerable<Item>> SearchItemsByTag(string tagName)
+        {
+            return await _itemRepository.SearchItemsByTag(tagName);
+        }
     }
 }

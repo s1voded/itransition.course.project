@@ -56,6 +56,19 @@
     </RowTemplate>
 </MudTable>
 
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+
+<MudPaper Class="pa-4" Elevation="1">
+    <MudText Typo="Typo.h6">Tags</MudText>
+    <MudStack Row="true">
+        @foreach (var tag in tagsWithUsedCount)
+        {
+            <MudLink Href="@GetHref(tag.Name)">@tag.Name</MudLink>
+        }
+    </MudStack>
+</MudPaper>
+
+
 @code {
     private IEnumerable<Item> lastAddedItems = [];
     private IEnumerable<Collection> largestCollections = [];
@@ -78,5 +91,10 @@
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
+    }
+
+    private string GetHref(string tagName)
+    {
+        return $"/search?SearchTag={tagName}";
     }
 }
