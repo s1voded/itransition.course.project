@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteCollections)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+﻿@attribute [Route(AppRouteCollections)]
+@attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
@@ -49,11 +49,11 @@
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> args)
     {
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{NavCollections}/{args.Item.Id}");
     }
 
     private void NavigateToAddCollection()
     {
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{Constants.NavCreate}");
+        NavigationManager.NavigateTo($"/{NavCollections}/{NavCreate}");
     }
 }

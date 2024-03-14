@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteUserManager)]
-@attribute [Authorize(Policy = Constants.PolicyAdminOnly)]
+﻿@attribute [Route(AppRouteUserManager)]
+@attribute [Authorize(Policy = PolicyAdminOnly)]
 @rendermode InteractiveServer
 @inject UserManagerService UserManagerService
 @inject IAuthorizationService AuthorizationService
@@ -73,18 +73,18 @@
 
             if (user is not null)
             {
-                if ((await AuthorizationService.AuthorizeAsync(user, Constants.PolicyAdminOnly)).Succeeded)
+                if ((await AuthorizationService.AuthorizeAsync(user, PolicyAdminOnly)).Succeeded)
                 {
                     foreach (var selectedUser in selectedUsers)
                     {
                         switch (changeType)
                         {
                             case ChangeType.SetAdmin:
-                                await UserManagerService.AddUserRole(selectedUser.Id, Constants.AdminRole);
+                                await UserManagerService.AddUserRole(selectedUser.Id, AdminRole);
                                 break;
 
                             case ChangeType.RemoveAdmin:
-                                await UserManagerService.RemoveUserRole(selectedUser.Id, Constants.AdminRole);
+                                await UserManagerService.RemoveUserRole(selectedUser.Id, AdminRole);
                                 break;
 
                             case ChangeType.Block:

@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteItemEdit)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+﻿@attribute [Route(AppRouteItemEdit)]
+@attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
@@ -45,20 +45,12 @@
             NavigationManager.NavigateTo("/notfound");
         }
 
-        if (authenticationState is not null)
-        {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, Constants.PolicyCanManageCollection);
-                canManageItem = isAuthorized.Succeeded;
-            }
-        }
+        await DoActionItem(ActionType.CanManageInit);
     }
 
-    public async Task UpdateItem()
+    public async Task UpdateItem() => await DoActionItem(ActionType.Update);
+
+    private async Task DoActionItem(ActionType action)
     {
         if (authenticationState is not null)
         {
@@ -67,18 +59,22 @@
 
             if (user is not null)
             {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, Constants.PolicyCanManageCollection);
-                if (isAuthorized.Succeeded)
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, PolicyCanManageCollection);
+                switch (action)
                 {
-                    await CollectionService.UpdateItem(item);
-                    NavigationManager.NavigateTo($"/{Constants.NavItems}/{item.Id}");
-                }
-                else
-                {
-                    NavigationManager.NavigateTo("/");
+                    case ActionType.CanManageInit:
+                        canManageItem = isAuthorized.Succeeded;
+                        break;
+
+                    case ActionType.Update:
+                        if (isAuthorized.Succeeded)
+                        {
+                            await CollectionService.UpdateItem(item);
+                            NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");
+                        }
+                        break;
                 }
             }
         }
     }
-
 }

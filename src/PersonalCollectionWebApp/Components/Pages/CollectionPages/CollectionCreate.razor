@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteCollectionCreate)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+﻿@attribute [Route(AppRouteCollectionCreate)]
+@attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
@@ -26,11 +26,11 @@
 
     private CustomFieldsSettings customFieldsSettings = new()
     {
-            CustomStrings = GetInitCustomFields(Constants.CustomFieldsCount),
-            CustomTexts = GetInitCustomFields(Constants.CustomFieldsCount),
-            CustomInts = GetInitCustomFields(Constants.CustomFieldsCount),
-            CustomBools = GetInitCustomFields(Constants.CustomFieldsCount),
-            CustomDates = GetInitCustomFields(Constants.CustomFieldsCount),
+            CustomStrings = GetInitCustomFields(CustomFieldsCount),
+            CustomTexts = GetInitCustomFields(CustomFieldsCount),
+            CustomInts = GetInitCustomFields(CustomFieldsCount),
+            CustomBools = GetInitCustomFields(CustomFieldsCount),
+            CustomDates = GetInitCustomFields(CustomFieldsCount),
     };
 
     private static List<CustomField> GetInitCustomFields(int count)
@@ -61,12 +61,12 @@
                 if (!string.IsNullOrEmpty(userId))
                 {
                     collection.UserId = userId;
-                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
+                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
                     if (isAuthorized.Succeeded)
                     {
                         collection.CustomFieldsSettings = customFieldsSettings;
                         await CollectionService.AddCollection(collection);
-                        NavigationManager.NavigateTo($"/{Constants.NavCollections}");
+                        NavigationManager.NavigateTo($"/{NavCollections}");
                     }
                     else
                     {

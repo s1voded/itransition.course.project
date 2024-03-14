@@ -1,5 +1,5 @@
 ﻿@page "/"
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
+@attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
@@ -85,16 +85,16 @@
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)
     {
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{collection.Item.Id}");
+        NavigationManager.NavigateTo($"/{NavCollections}/{collection.Item.Id}");
     }
 
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
-        NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }
 
     private string GetHref(string tagName)
     {
-        return $"/search?SearchTag={tagName}";
+        return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
     }
 }

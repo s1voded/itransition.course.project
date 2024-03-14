@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteItemCreate)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlocked)]
+﻿@attribute [Route(AppRouteItemCreate)]
+@attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode InteractiveServer
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
@@ -39,20 +39,12 @@ else
         tags = await CollectionService.GetAllItemTags();
         collection = await CollectionService.GetCollectionById(CollectionId);
 
-        if (authenticationState is not null)
-        {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
-                canManageItem = isAuthorized.Succeeded;
-            }
-        }
+        await DoActionItem(ActionType.CanManageInit);
     }
 
-    public async Task AddItem()
+    public async Task AddItem() => await DoActionItem(ActionType.Add);
+
+    private async Task DoActionItem(ActionType action)
     {
         if (authenticationState is not null)
         {
@@ -61,17 +53,22 @@ else
 
             if (user is not null)
             {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
-                if (isAuthorized.Succeeded)
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
+                switch (action)
                 {
-                    item.CollectionId = CollectionId;
-                    item.CreatedDate = DateTime.UtcNow;
-                    await CollectionService.AddItem(item);
-                    NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}");
-                }
-                else
-                {
-                    NavigationManager.NavigateTo("/");
+                    case ActionType.CanManageInit:
+                        canManageItem = isAuthorized.Succeeded;
+                        break;
+
+                    case ActionType.Add:
+                        if (isAuthorized.Succeeded)
+                        {
+                            item.CollectionId = CollectionId;
+                            item.CreatedDate = DateTime.UtcNow;
+                            await CollectionService.AddItem(item);
+                            NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}");
+                        }
+                        break;
                 }
             }
         }

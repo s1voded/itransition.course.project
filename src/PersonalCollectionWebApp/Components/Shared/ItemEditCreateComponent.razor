@@ -26,7 +26,7 @@
                         @tag.Name
                     </ResultTemplate>
                 </Autocomplete>
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                @for (int i = 0; i < CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (CustomFieldsSettings != null && CustomFieldsSettings.CustomStrings[index].Enable)
@@ -34,7 +34,7 @@
                         <MudTextField @bind-Value="Item.CustomStrings[index]" Label=@CustomFieldsSettings.CustomStrings[index].Name />
                     }
                 }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                @for (int i = 0; i < CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (CustomFieldsSettings != null && CustomFieldsSettings.CustomTexts[index].Enable)
@@ -42,7 +42,7 @@
                         <MudTextField @bind-Value="Item.CustomTexts[index]" Label=@CustomFieldsSettings.CustomTexts[index].Name AutoGrow MaxLines="3" Lines="3" />
                     }
                 }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                @for (int i = 0; i < CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (CustomFieldsSettings != null && CustomFieldsSettings.CustomInts[index].Enable)
@@ -50,7 +50,7 @@
                         <MudNumericField @bind-Value="Item.CustomInts[index]" Label=@CustomFieldsSettings.CustomInts[index].Name />
                     }
                 }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                @for (int i = 0; i < CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (CustomFieldsSettings != null && CustomFieldsSettings.CustomBools[index].Enable)
@@ -58,7 +58,7 @@
                         <MudCheckBox @bind-Value="Item.CustomBools[index]" Label=@CustomFieldsSettings.CustomBools[index].Name />
                     }
                 }
-                @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                @for (int i = 0; i < CustomFieldsCount; i++)
                 {
                     var index = i;
                     @if (CustomFieldsSettings != null && CustomFieldsSettings.CustomDates[index].Enable)

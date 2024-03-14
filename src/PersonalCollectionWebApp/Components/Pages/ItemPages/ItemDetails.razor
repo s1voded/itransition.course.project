@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteItemDetails)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
+﻿@attribute [Route(AppRouteItemDetails)]
+@attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject ReactionsService ReactionsService
@@ -18,27 +18,6 @@
         <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
     }
 
-    <MudTooltip>
-        <ChildContent>
-            <MudIconButton Color="Color.Inherit" Edge="Edge.End" OnClick="OnLikeItem">
-                @if (itemLiked)
-                {
-                    <MudIcon Icon="@Icons.Material.Filled.Favorite" />
-                }
-                else
-                {
-                    <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
-                }
-            </MudIconButton>
-        </ChildContent>      
-        <TooltipContent>
-            @foreach (var like in itemLikes)
-            {
-                <MudText Typo="Typo.body2">@like.User?.UserName</MudText>
-            }
-        </TooltipContent>
-    </MudTooltip>
-
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
     <MudPaper Class="pa-4" Elevation="1">
@@ -46,7 +25,7 @@
         <MudText>Added: <b>@item.CreatedDate</b></MudText>
         <MudText>Collection: <b>@item.Collection.Name</b></MudText>
         <MudText>Tags: <b>@string.Join(", ", @item.Tags?.Select(t => t.Name))</b></MudText>
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        @for (int i = 0; i < CustomFieldsCount; i++)
         {
             var index = i;
             @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomStrings[index].Enable)
@@ -54,7 +33,7 @@
                 <MudText>@item.Collection.CustomFieldsSettings.CustomStrings[index].Name: <b>@item.CustomStrings[index]</b></MudText>
             }
         }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        @for (int i = 0; i < CustomFieldsCount; i++)
         {
             var index = i;
             @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomTexts[index].Enable)
@@ -62,7 +41,7 @@
                 <MudText>@item.Collection.CustomFieldsSettings.CustomTexts[index].Name: <b>@item.CustomTexts[index]</b></MudText>
             }
         }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        @for (int i = 0; i < CustomFieldsCount; i++)
         {
             var index = i;
             @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomInts[index].Enable)
@@ -70,7 +49,7 @@
                 <MudText>@item.Collection.CustomFieldsSettings.CustomInts[index].Name: <b>@item.CustomInts[index]</b></MudText>
             }
         }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        @for (int i = 0; i < CustomFieldsCount; i++)
         {
             var index = i;
             @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomBools[index].Enable)
@@ -78,7 +57,7 @@
                 <MudText>@item.Collection.CustomFieldsSettings.CustomBools[index].Name: <b>@item.CustomBools[index]</b></MudText>
             }
         }
-        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+        @for (int i = 0; i < CustomFieldsCount; i++)
         {
             var index = i;
             @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomDates[index].Enable)
@@ -92,6 +71,26 @@
 
     <AuthorizeView>
         <Authorized>
+            <MudTooltip>
+                <ChildContent>
+                    <MudIconButton Color="Color.Inherit" Edge="Edge.End" OnClick="OnLikeItem">
+                        @if (itemLiked)
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Favorite" />
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
+                        }
+                    </MudIconButton>
+                </ChildContent>
+                <TooltipContent>
+                    @foreach (var like in itemLikes)
+                    {
+                        <MudText Typo="Typo.body2">@like.User?.UserName</MudText>
+                    }
+                </TooltipContent>
+            </MudTooltip>
             <MudGrid>
                 <MudItem xs="12" sm="7">
                     <MudPaper Class="pa-4">
@@ -146,17 +145,17 @@
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri(Constants.HubName))
+            .WithUrl(NavigationManager.ToAbsoluteUri(HubName))
             .Build();
 
-        hubConnection.On(Constants.HubReceiveCommentsUpdate, async () =>
+        hubConnection.On(HubReceiveCommentsUpdate, async () =>
         {
             await GetComments();
             await InvokeAsync(StateHasChanged);
         });
 
         await hubConnection.StartAsync();
-        await hubConnection.InvokeAsync(Constants.HubJoinGroup, ItemId);
+        await hubConnection.InvokeAsync(HubJoinGroup, ItemId);
 
         item = await CollectionService.GetItemWithCollection(ItemId);
         await GetComments();
@@ -176,7 +175,7 @@
                 var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 await GetLikes(userId);
 
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, Constants.PolicyCanManageCollection);
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, item?.Collection, PolicyCanManageCollection);
                 canManageItem = isAuthorized.Succeeded;
             }
         }
@@ -211,7 +210,7 @@
         {
             await CollectionService.DeleteItem(item);
         }
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{item?.Collection.Id}");
+        NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
     }
 
     private async Task SubmitComment()
@@ -276,14 +275,14 @@
 
     private void NavigateToEditItem()
     {
-        NavigationManager.NavigateTo($"/{Constants.NavItems}/{ItemId}/{Constants.NavEdit}");
+        NavigationManager.NavigateTo($"/{NavItems}/{ItemId}/{NavEdit}");
     }
 
     private async Task SendUpdateComments()
     {
         if (hubConnection is not null)
         {
-            await hubConnection.SendAsync(Constants.HubSendCommentsUpdate, ItemId);
+            await hubConnection.SendAsync(HubSendCommentsUpdate, ItemId);
         }
     }
 
@@ -294,7 +293,7 @@
     {
         if (hubConnection is not null)
         {
-            await hubConnection.InvokeAsync(Constants.HubLeaveGroup, ItemId);
+            await hubConnection.InvokeAsync(HubLeaveGroup, ItemId);
             await hubConnection.DisposeAsync();
         }
     }

@@ -1,4 +1,4 @@
-﻿@page "/search"
+﻿@attribute [Route(AppRouteSearch)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
@@ -49,6 +49,6 @@
 
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
-        NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
+        NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }
 }

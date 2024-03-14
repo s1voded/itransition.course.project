@@ -16,7 +16,7 @@
                 <MarkdownEditor @bind-Value="Collection.Description" MaxHeight="150px" />
                 <MudExpansionPanels MultiExpansion="true">
                     <MudExpansionPanel Text="String fields">
-                        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                        @for (int i = 0; i < CustomFieldsCount; i++)
                         {
                             var index = i;
                             <MudGrid Spacing="2">
@@ -30,7 +30,7 @@
                         }
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Text fields">
-                        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                        @for (int i = 0; i < CustomFieldsCount; i++)
                         {
                             var index = i;
                             <MudGrid Spacing="2">
@@ -44,7 +44,7 @@
                         }
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Int fields">
-                        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                        @for (int i = 0; i < CustomFieldsCount; i++)
                         {
                             var index = i;
                             <MudGrid Spacing="2">
@@ -58,7 +58,7 @@
                         }
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Bool fields">
-                        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                        @for (int i = 0; i < CustomFieldsCount; i++)
                         {
                             var index = i;
                             <MudGrid Spacing="2">
@@ -72,7 +72,7 @@
                         }
                     </MudExpansionPanel>
                     <MudExpansionPanel Text="Date fields">
-                        @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+                        @for (int i = 0; i < CustomFieldsCount; i++)
                         {
                             var index = i;
                             <MudGrid Spacing="2">
@@ -108,10 +108,5 @@
     async Task Submit()
     {
         await OnSubmit.InvokeAsync();
-    }
-
-    private void OnExpandCollapseClick()
-    {
-        expandedCustomFiledsSettings = !expandedCustomFiledsSettings;
     }
 }

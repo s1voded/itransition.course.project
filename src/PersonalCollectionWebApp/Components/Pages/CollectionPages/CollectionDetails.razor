@@ -1,5 +1,5 @@
-﻿@attribute [Route(Constants.AppRouteCollectionDetails)]
-@attribute [Authorize(Policy = Constants.PolicyUserNotBlockedOrAnonymous)]
+﻿@attribute [Route(AppRouteCollectionDetails)]
+@attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
@@ -37,7 +37,7 @@
             <MudTh>Name</MudTh>
             <MudTh>Added</MudTh>
             <MudTh>Tags</MudTh>
-            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
@@ -45,7 +45,7 @@
                     <MudTh>@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTh>
                 }
             }
-            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
@@ -58,7 +58,7 @@
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Added">@context.CreatedDate.ToLocalTime()</MudTd>
             <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
-            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
@@ -66,7 +66,7 @@
                     <MudTd DataLabel="@collection.CustomFieldsSettings.CustomStrings[index].Name">@context.CustomStrings[index]</MudTd>
                 }
             }
-            @for (int i = 0; i < Constants.CustomFieldsCount; i++)
+            @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
@@ -100,32 +100,7 @@
             NavigationManager.NavigateTo("/notfound");
         }
 
-        if (authenticationState is not null)
-        {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, Constants.PolicyCanManageCollection);
-                canManageCollection = isAuthorized.Succeeded;
-            }
-        }
-    }
-
-    private void NavigateToAddItem()
-    {
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}/{Constants.NavCreate}");
-    }
-
-    private void NavigateToEditCollection()
-    {
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}/{CollectionId}/{Constants.NavEdit}");
-    }
-
-    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
-    {
-        NavigationManager.NavigateTo($"/{Constants.NavItems}/{args.Item.Id}");
+        await DoActionCollection(ActionType.CanManageInit);
     }
 
     private void OnDeleteCollection()
@@ -140,12 +115,48 @@
         DialogService.Show<DeleteDialog>($"Delete collection {collection?.Name}", parameters, options);
     }
 
-    private async Task DeleteCollection()
+    private async Task DeleteCollection() => await DoActionCollection(ActionType.Delete);
+
+    private async Task DoActionCollection(ActionType action)
     {
-        if (collection != null)
+        if (authenticationState is not null)
         {
-            await CollectionService.DeleteCollection(collection);
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user is not null)
+            {
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
+                switch (action)
+                {
+                    case ActionType.CanManageInit:
+                        canManageCollection = isAuthorized.Succeeded;
+                        break;
+
+                    case ActionType.Delete:
+                        if (isAuthorized.Succeeded)
+                        {
+                            await CollectionService.DeleteCollection(collection);
+                            NavigationManager.NavigateTo($"/{NavCollections}");
+                        }
+                        break;
+                }
+            }
         }
-        NavigationManager.NavigateTo($"/{Constants.NavCollections}");
+    }
+
+    private void NavigateToAddItem()
+    {
+        NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}/{NavCreate}");
+    }
+
+    private void NavigateToEditCollection()
+    {
+        NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}/{NavEdit}");
+    }
+
+    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
+    {
+        NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }
 }
