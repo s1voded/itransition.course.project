@@ -34,15 +34,15 @@
             <MudText Typo="Typo.h5">Items</MudText>
         </ToolBarContent>
         <HeaderContent>
-            <MudTh>Name</MudTh>
-            <MudTh>Added</MudTh>
-            <MudTh>Tags</MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.CreatedDate)">Added</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Tags?.Count)">Tags</MudTableSortLabel></MudTh>
             @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomStrings[index].Enable)
                 {
-                    <MudTh>@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.CustomStrings[index])">@collection.CustomFieldsSettings.CustomStrings[index].Name</MudTableSortLabel></MudTh>
                 }
             }
             @for (int i = 0; i < CustomFieldsCount; i++)
@@ -50,7 +50,7 @@
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
                 {
-                    <MudTh>@collection.CustomFieldsSettings.CustomDates[index].Name</MudTh>
+                    <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.CustomDates[index])">@collection.CustomFieldsSettings.CustomDates[index].Name</MudTableSortLabel></MudTh>
                 }
             }
         </HeaderContent>

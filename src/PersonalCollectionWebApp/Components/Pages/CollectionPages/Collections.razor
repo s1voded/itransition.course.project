@@ -13,7 +13,7 @@
 <MudTable T="Collection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
         <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-        <MudTh>Theme</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Theme?.Name)">Theme</MudTableSortLabel></MudTh>
         <MudTh>Description</MudTh>
     </HeaderContent>
     <RowTemplate>

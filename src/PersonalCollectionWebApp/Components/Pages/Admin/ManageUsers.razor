@@ -23,9 +23,9 @@
     <HeaderContent>
         <MudTh>Id</MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
-        <MudTh>Email</MudTh>
-        <MudTh>Role</MudTh>
-        <MudTh>Block</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Email)">Email</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Roles.Count)">Role</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.IsBlocked)">Block</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
