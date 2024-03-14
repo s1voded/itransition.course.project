@@ -59,6 +59,7 @@
 @code {
     private IEnumerable<Item> lastAddedItems = [];
     private IEnumerable<Collection> largestCollections = [];
+    private IEnumerable<TagDto> tagsWithUsedCount = [];
     private int countLargestCollections = 5;
     private int countLastAddedItems = 5;
 
@@ -66,6 +67,7 @@
     {
         lastAddedItems = await CollectionService.GetLastAddedItems(countLastAddedItems);
         largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
+        tagsWithUsedCount = await CollectionService.GetTagsWithUsedCount();
     }
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)

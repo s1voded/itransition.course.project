@@ -22,7 +22,10 @@ namespace PersonalCollection.Application.Services
 
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
-            return await _userManager.Users.Include(u => u.Claims).ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider).ToListAsync();
+            return await _userManager.Users
+                .Include(u => u.Claims)
+                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         public async Task AddUserRole(string userId, string role)
@@ -66,12 +69,16 @@ namespace PersonalCollection.Application.Services
 
         private async Task<ApplicationUser?> GetUserByIdWithClaims(string userId)
         {
-            return await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
+            return await _userManager.Users
+                .Include(u => u.Claims)
+                .FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         private bool UserHasClaim(ApplicationUser user, string claimType, string claimValue)
         {
-            return user.Claims.Where(c => c.ClaimType == claimType).Any(c => c.ClaimValue == claimValue);
+            return user.Claims
+                .Where(c => c.ClaimType == claimType)
+                .Any(c => c.ClaimValue == claimValue);
         }
     }
 }

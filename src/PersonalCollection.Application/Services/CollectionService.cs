@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Application.Models;
 using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Application.Services
@@ -90,6 +91,11 @@ namespace PersonalCollection.Application.Services
         public async Task<IEnumerable<Tag>> GetAllItemTags()
         {
             return await _tagRepository.GetAll().ToListAsync();
+        }
+
+        public async Task<IEnumerable<TagDto>> GetTagsWithUsedCount()
+        {
+            return await _tagRepository.GetTagsWithUsedCount();
         }
 
         public async Task DeleteItem(Item item)
