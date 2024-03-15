@@ -21,7 +21,6 @@ namespace PersonalCollection.Persistence.Repositories
                     Name = t.Name,
                     Count = t.Items.Count()
                 })
-                .OrderByDescending(x => x.Count)
                 .ToListAsync();
         }
     }

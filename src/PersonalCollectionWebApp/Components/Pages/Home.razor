@@ -59,13 +59,11 @@
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudPaper Class="pa-4" Elevation="1">
-    <MudText Typo="Typo.h6">Tags</MudText>
-    <MudStack Row="true">
-        @foreach (var tag in tagsWithUsedCount)
-        {
-            <MudLink Href="@GetHref(tag.Name)">@tag.Name</MudLink>
-        }
-    </MudStack>
+    <MudText Typo="Typo.h6" Class="pa-2">Tags</MudText>
+    @foreach (var tag in tagsWithUsedCount)
+    {
+        <MudLink Href="@GetHref(tag.Name)" Style=@GetFontSizeForTag(tag) Class="pa-2">@tag.Name</MudLink>
+    }
 </MudPaper>
 
 
@@ -96,5 +94,21 @@
     private string GetHref(string tagName)
     {
         return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
+    }
+
+    private string GetFontSizeForTag(TagDto tag)
+    {
+        var maxFontSize = 30;
+        var minFontSize = 12;
+        var minCount = tagsWithUsedCount.Min(t => t.Count);
+        var maxCount = tagsWithUsedCount.Max(t => t.Count);
+        var fontSize = minFontSize;
+
+        if (tag.Count > minCount)
+        {
+            fontSize = (maxFontSize * (tag.Count - minCount)) / (maxCount - minCount);     
+        }
+
+        return $"font-size: {fontSize}px;";
     }
 }
