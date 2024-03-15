@@ -73,16 +73,18 @@
         <Authorized>
             <MudTooltip>
                 <ChildContent>
-                    <MudIconButton Color="Color.Inherit" Edge="Edge.End" OnClick="OnLikeItem">
-                        @if (itemLiked)
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.Favorite" />
-                        }
-                        else
-                        {
-                            <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
-                        }
-                    </MudIconButton>
+                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true>
+                        <MudIconButton Color="Color.Inherit" OnClick="OnLikeItem">
+                            @if (itemLiked)
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Favorite" />
+                            }
+                            else
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
+                            }
+                        </MudIconButton>
+                    </MudBadge>
                 </ChildContent>
                 <TooltipContent>
                     @foreach (var like in itemLikes)
@@ -105,6 +107,21 @@
                 </MudItem>
             </MudGrid>
         </Authorized>
+        <NotAuthorized>
+            <MudTooltip>
+                <ChildContent>
+                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true>
+                        <MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.FavoriteBorder" Disabled />
+                    </MudBadge>
+                </ChildContent>
+                <TooltipContent>
+                    @foreach (var like in itemLikes)
+                    {
+                        <MudText Typo="Typo.body2">@like.User?.UserName</MudText>
+                    }
+                </TooltipContent>
+            </MudTooltip>
+        </NotAuthorized>
     </AuthorizeView>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
