@@ -98,17 +98,18 @@
 
     private string GetFontSizeForTag(TagDto tag)
     {
-        var maxFontSize = 30;
         var minFontSize = 12;
+        var maxFontSize = 30;
         var minCount = tagsWithUsedCount.Min(t => t.Count);
         var maxCount = tagsWithUsedCount.Max(t => t.Count);
-        var fontSize = minFontSize;
 
-        if (tag.Count > minCount)
-        {
-            fontSize = (maxFontSize * (tag.Count - minCount)) / (maxCount - minCount);     
-        }
-
+        var fontSize = Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);
         return $"font-size: {fontSize}px;";
+    }
+
+    private int Scale(int value, int min, int max, int minScale, int maxScale)
+    {
+        var scaled = minScale + (double)(value - min) / (max - min) * (maxScale - minScale);
+        return Convert.ToInt32(scaled);
     }
 }
