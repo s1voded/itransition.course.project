@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Home> locale
 
 <PageTitle>Home</PageTitle>
 
@@ -34,7 +35,7 @@
 
 <MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Largest collections</MudText>
+        <MudText Typo="Typo.h6">@locale["Largest"]</MudText>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 25%;" />

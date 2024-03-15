@@ -18,6 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.3" />
     <PackageReference Include="MudBlazor" Version="6.16.0" />
     <PackageReference Include="PSC.Blazor.Components.AutoComplete" Version="6.0.28" />
     <PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="2.0.19" />
