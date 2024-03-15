@@ -46,7 +46,9 @@
             CanManageInit,
             Add,
             Update,
-            Delete
+            Delete,
+            Like,
+            Comment
         }
     }
 }

@@ -36,13 +36,16 @@
             var authState = await authenticationState;
             var user = authState.User;
 
-            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            if (user is not null)
             {
-                var userId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-                if(!string.IsNullOrEmpty(userId))
+                if (user.Identity is not null && user.Identity.IsAuthenticated)
                 {
-                    collections = await CollectionService.GetUserCollections(userId);
-                }          
+                    var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (!string.IsNullOrEmpty(userId))
+                    {
+                        collections = await CollectionService.GetUserCollections(userId);
+                    }
+                }
             }
         }
     }
