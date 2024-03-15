@@ -9,7 +9,7 @@
 
 <MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Last added items</MudText>
+        <MudText Typo="Typo.h6">@locale["Last added items"]</MudText>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 25%;" />
@@ -18,10 +18,10 @@
         <col style="width: 25%;" />
     </ColGroup>
     <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Collection</MudTh>
-        <MudTh>Author</MudTh>
-        <MudTh>Added</MudTh>
+        <MudTh>@locale["Name"]</MudTh>
+        <MudTh>@locale["Collection"]</MudTh>
+        <MudTh>@locale["Author"]</MudTh>
+        <MudTh>@locale["Added"]</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -35,7 +35,7 @@
 
 <MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@locale["Largest"]</MudText>
+        <MudText Typo="Typo.h6">@locale["Largest collections"]</MudText>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 25%;" />
@@ -44,10 +44,10 @@
         <col style="width: 25%;" />
     </ColGroup>
     <HeaderContent>
-        <MudTh>Name</MudTh>
-        <MudTh>Theme</MudTh>
-        <MudTh>Author</MudTh>
-        <MudTh>Items count</MudTh>
+        <MudTh>@locale["Name"]</MudTh>
+        <MudTh>@locale["Theme"]</MudTh>
+        <MudTh>@locale["Author"]</MudTh>
+        <MudTh>@locale["Items count"]</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -60,7 +60,7 @@
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudPaper Class="pa-4" Elevation="1">
-    <MudText Typo="Typo.h6" Class="pa-2">Tags</MudText>
+    <MudText Typo="Typo.h6" Class="pa-2">@locale["Tags"]</MudText>
     @foreach (var tag in tagsWithUsedCount)
     {
         <MudLink Href="@GetHref(tag.Name)" Style=@GetFontSizeForTag(tag) Class="pa-2">@tag.Name</MudLink>

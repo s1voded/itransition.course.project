@@ -117,31 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Added" xml:space="preserve">
-    <value>Added</value>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
   </data>
-  <data name="Author" xml:space="preserve">
-    <value>Author</value>
-  </data>
-  <data name="Collection" xml:space="preserve">
-    <value>Collection</value>
-  </data>
-  <data name="Items count" xml:space="preserve">
-    <value>Items count</value>
-  </data>
-  <data name="Largest collections" xml:space="preserve">
-    <value>Largest collections</value>
-  </data>
-  <data name="Last added items" xml:space="preserve">
-    <value>Last added items</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="Tags" xml:space="preserve">
-    <value>Tags</value>
-  </data>
-  <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
+  <data name="Search items" xml:space="preserve">
+    <value>Search items</value>
   </data>
 </root>

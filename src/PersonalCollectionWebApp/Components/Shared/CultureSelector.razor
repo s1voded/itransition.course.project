@@ -1,17 +1,12 @@
 ﻿@using System.Globalization
 @inject NavigationManager Navigation
 
-<p>
-    <label>
-        Select your locale:
-        <select @bind="Culture">
-            @foreach (var culture in supportedCultures)
-            {
-                <option value="@culture">@culture.DisplayName</option>
-            }
-        </select>
-    </label>
-</p>
+<MudSelect @bind-Value="Culture" Label="Select your locale:" AdornmentIcon="@Icons.Material.Filled.Language" Dense=true>
+    @foreach (var culture in supportedCultures)
+    {
+        <MudSelectItem Value=@culture>@culture.DisplayName</MudSelectItem>
+    }
+</MudSelect>
 
 @code
 {
