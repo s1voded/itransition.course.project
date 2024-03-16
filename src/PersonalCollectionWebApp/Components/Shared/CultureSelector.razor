@@ -1,20 +1,15 @@
 ﻿@using System.Globalization
 @inject NavigationManager Navigation
 
-<MudSelect @bind-Value="Culture" Label="Select your locale:" AdornmentIcon="@Icons.Material.Filled.Language" Dense=true>
-    @foreach (var culture in supportedCultures)
-    {
-        <MudSelectItem Value=@culture>@culture.DisplayName</MudSelectItem>
-    }
-</MudSelect>
+<MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+    <MudButton OnClick="() => Culture = enCulture">EN</MudButton>
+    <MudButton OnClick="() => Culture = ruCulture">RU</MudButton>
+</MudButtonGroup>
 
 @code
 {
-    private CultureInfo[] supportedCultures = new[]
-    {
-        new CultureInfo("en-US"),
-        new CultureInfo("ru-RU"),
-    };
+    private CultureInfo ruCulture = new CultureInfo("ru-RU");
+    private CultureInfo enCulture = new CultureInfo("en-US");
 
     protected override void OnInitialized()
     {

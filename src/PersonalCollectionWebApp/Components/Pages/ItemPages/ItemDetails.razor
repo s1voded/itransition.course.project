@@ -14,8 +14,10 @@
 {
     @if (canManageItem)
     {
-        <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditItem">Edit item</MudButton>
-        <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
+        <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+            <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditItem">Edit item</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteItem">Delete item</MudButton>
+        </MudButtonGroup>
     }
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />

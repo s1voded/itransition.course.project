@@ -3,9 +3,9 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
-@inject IStringLocalizer<Home> locale
+@inject IStringLocalizer<Main> locale
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@locale["Main"]</PageTitle>
 
 <MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>

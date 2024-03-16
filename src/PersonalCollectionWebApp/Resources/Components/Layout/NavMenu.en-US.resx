@@ -117,31 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Added" xml:space="preserve">
-    <value>Добавлен</value>
+  <data name="Collections" xml:space="preserve">
+    <value>Collections</value>
   </data>
-  <data name="Author" xml:space="preserve">
-    <value>Автор</value>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
   </data>
-  <data name="Collection" xml:space="preserve">
-    <value>Коллекция</value>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
   </data>
-  <data name="Items count" xml:space="preserve">
-    <value>Кол-во айтемов</value>
+  <data name="Main" xml:space="preserve">
+    <value>Main</value>
   </data>
-  <data name="Largest collections" xml:space="preserve">
-    <value>Самые большие коллекции</value>
+  <data name="Personal Collections" xml:space="preserve">
+    <value>Personal Collections</value>
   </data>
-  <data name="Last added items" xml:space="preserve">
-    <value>Последние добавленные айтемы</value>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
   </data>
-  <data name="Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="Tags" xml:space="preserve">
-    <value>Тэги</value>
-  </data>
-  <data name="Theme" xml:space="preserve">
-    <value>Тема</value>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
   </data>
 </root>

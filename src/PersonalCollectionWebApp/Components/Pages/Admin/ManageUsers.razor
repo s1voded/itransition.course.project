@@ -6,13 +6,21 @@
 
 <PageTitle>Manage users</PageTitle>
 
-<MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">Set admin</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Remove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Block" OnClick="@(args => ChangeUser(ChangeType.Block))">Block</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Unarchive" OnClick="@(args => ChangeUser(ChangeType.Unblock))">Unblock</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="@(args => ChangeUser(ChangeType.Delete))">Delete</MudButton>
+<MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+    <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">Set admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PersonRemove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
 </MudButtonGroup>
+
+<MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+    <MudButton StartIcon="@Icons.Material.Filled.Lock" OnClick="@(args => ChangeUser(ChangeType.Block))">Block</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.LockOpen" OnClick="@(args => ChangeUser(ChangeType.Unblock))">Unblock</MudButton>
+</MudButtonGroup>
+
+<MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+    <MudButton StartIcon="@Icons.Material.Filled.PersonOff" OnClick="@(args => ChangeUser(ChangeType.Delete))">Delete</MudButton>
+</MudButtonGroup>
+
+<MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>

@@ -12,9 +12,11 @@
 {
     @if (canManageCollection)
     {
-        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddItem">Add item</MudButton>
-        <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditCollection">Edit collection</MudButton>
-        <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
+        <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+            <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddItem">Add item</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditCollection">Edit collection</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick="OnDeleteCollection">Delete collection</MudButton>
+        </MudButtonGroup>
     }
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
