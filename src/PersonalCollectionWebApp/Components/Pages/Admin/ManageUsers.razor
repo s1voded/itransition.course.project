@@ -1,6 +1,6 @@
 ﻿@attribute [Route(AppRouteUserManager)]
 @attribute [Authorize(Policy = PolicyAdminOnly)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject UserManagerService UserManagerService
 @inject IAuthorizationService AuthorizationService
 
@@ -42,6 +42,7 @@
 @code {
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
+
     private HashSet<ApplicationUserDto> selectedUsers = [];
     private IEnumerable<ApplicationUserDto> users = [];
     private string? searchString;

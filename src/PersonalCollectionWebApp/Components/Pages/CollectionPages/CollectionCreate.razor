@@ -1,6 +1,6 @@
 ﻿@attribute [Route(AppRouteCollectionCreate)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
@@ -21,7 +21,6 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     public Collection collection = new();
-
     private IEnumerable<Theme> themes = [];
 
     private CustomFieldsSettings customFieldsSettings = new()

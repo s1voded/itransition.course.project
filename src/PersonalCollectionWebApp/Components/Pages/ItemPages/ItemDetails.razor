@@ -1,6 +1,6 @@
 ﻿@attribute [Route(AppRouteItemDetails)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
@@ -152,13 +152,10 @@
 
     private HubConnection? hubConnection;
     private Item? item;
-    private bool canManageItem;
-    private bool formIsValid;
+    private bool canManageItem, formIsValid, itemLiked;
     private IEnumerable<Comment> itemComments = [];
     private IEnumerable<Like> itemLikes = [];
-    private string? commentContent;
-    private bool itemLiked;
-    private string? userId;
+    private string? commentContent, userId;
 
     protected override async Task OnInitializedAsync()
     {
@@ -213,7 +210,6 @@
     private async Task DeleteItem() => await DoActionItem(ActionType.Delete);
     private async Task SubmitComment() => await DoActionItem(ActionType.Comment);
     private async Task OnLikeItem() => await DoActionItem(ActionType.Like);
-
 
     private async Task DoActionItem(ActionType action)
     {

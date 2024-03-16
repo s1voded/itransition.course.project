@@ -1,5 +1,5 @@
 ﻿@attribute [Route(AppRouteSearch)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 

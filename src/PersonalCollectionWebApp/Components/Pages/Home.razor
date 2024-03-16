@@ -1,6 +1,6 @@
 ﻿@page "/"
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Home> locale
@@ -72,8 +72,7 @@
     private IEnumerable<Item> lastAddedItems = [];
     private IEnumerable<Collection> largestCollections = [];
     private IEnumerable<TagDto> tagsWithUsedCount = [];
-    private int countLargestCollections = 5;
-    private int countLastAddedItems = 5;
+    private int countLargestCollections = 5, countLastAddedItems = 5;
 
     protected override async Task OnInitializedAsync()
     {

@@ -1,9 +1,9 @@
 ﻿@using PersonalCollectionWebApp.Components.Layout
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<MainLayout> locale
 
-<div class="input-group" Style="width: 300px;">
+<div class="input-group" Style="width: 500px;">
     <input @bind="searchString" type="text" class="form-control" placeholder=@locale["Search items"] aria-label="Search items" aria-describedby="button-addon2">
     <button @onclick="NavigateToSearchItems" class="btn btn-outline-secondary" type="button" id="button-addon2">@locale["Search"]</button>
 </div>

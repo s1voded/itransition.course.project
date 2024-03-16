@@ -1,6 +1,6 @@
 ﻿@attribute [Route(AppRouteItemCreate)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
