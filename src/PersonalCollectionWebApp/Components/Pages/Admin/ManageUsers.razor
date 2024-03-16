@@ -3,44 +3,45 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject UserManagerService UserManagerService
 @inject IAuthorizationService AuthorizationService
-
-<PageTitle>Manage users</PageTitle>
+@inject IStringLocalizer<ManageUsers> locale
+  
+<PageTitle>@locale["Manage users"]</PageTitle>
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">Set admin</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.PersonRemove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">Remove admin</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PersonAdd" OnClick="@(args => ChangeUser(ChangeType.SetAdmin))">@locale["Set admin"]</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PersonRemove" OnClick="@(args => ChangeUser(ChangeType.RemoveAdmin))">@locale["Remove admin"]</MudButton>
 </MudButtonGroup>
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.Lock" OnClick="@(args => ChangeUser(ChangeType.Block))">Block</MudButton>
-    <MudButton StartIcon="@Icons.Material.Filled.LockOpen" OnClick="@(args => ChangeUser(ChangeType.Unblock))">Unblock</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Lock" OnClick="@(args => ChangeUser(ChangeType.Block))">@locale["Block"]</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.LockOpen" OnClick="@(args => ChangeUser(ChangeType.Unblock))">@locale["Unblock"]</MudButton>
 </MudButtonGroup>
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.PersonOff" OnClick="@(args => ChangeUser(ChangeType.Delete))">Delete</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PersonOff" OnClick="@(args => ChangeUser(ChangeType.Delete))">@locale["Delete"]</MudButton>
 </MudButtonGroup>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
-        <MudText Typo="Typo.h4">Users</MudText>
+        <MudText Typo="Typo.h4">@locale["Users"]</MudText>
         <MudSpacer />
-        <MudTextField Immediate="true" @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+        <MudTextField Immediate="true" @bind-Value="searchString" Placeholder=@locale["Search users"] Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">Username</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Email)">Email</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Roles.Count)">Role</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.IsBlocked)">Block</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">@locale["Username"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Email)">@locale["Email"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Roles.Count)">@locale["Role"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.IsBlocked)">@locale["Status"]</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Id">@context.Id</MudTd>
         <MudTd DataLabel="Username">@context.UserName</MudTd>
         <MudTd DataLabel="Email">@context.Email</MudTd>
         <MudTd DataLabel="Role">@string.Join(",", context.Roles)</MudTd>
-        <MudTd DataLabel="Block">@context.IsBlocked</MudTd>
+        <MudTd DataLabel="Status">@(context.IsBlocked ? locale["Blocked"] : "")</MudTd>
     </RowTemplate>
     <PagerContent>
         <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
