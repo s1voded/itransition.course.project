@@ -1,21 +1,17 @@
-﻿<MudDialog>
+﻿@inject IStringLocalizer<DeleteDialog> locale
+
+<MudDialog>
     <DialogContent>
-        <MudText>@ContentText</MudText>
+        <MudText>@($"{locale["Do you really want to delete"]} {ContentText}? {locale["This process cannot be undone."]}")</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton OnClick="Cancel">@locale["Cancel"]</MudButton>
+        <MudButton Color="Color.Error" Variant="Variant.Filled" OnClick="Submit">@locale["Delete"]</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-
     [Parameter] public string ContentText { get; set; }
-
-    [Parameter] public string ButtonText { get; set; }
-
-    [Parameter] public Color Color { get; set; }
-
     [Parameter] public EventCallback OnDelete { get; set; }
 
     async Task Submit() 

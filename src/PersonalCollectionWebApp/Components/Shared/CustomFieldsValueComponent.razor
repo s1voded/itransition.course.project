@@ -1,0 +1,15 @@
+﻿@typeparam T
+
+@for (int i = 0; i < CustomFieldsCount; i++)
+{
+    var index = i;
+    @if (CustomFields[index].Enable)
+    {
+        <MudText>@CustomFields[index].Name: <b>@ItemCustomField[index]</b></MudText>
+    }
+}
+
+@code {
+    [Parameter] public T[] ItemCustomField { get; set; }
+    [Parameter] public List<CustomField> CustomFields { get; set; }
+}

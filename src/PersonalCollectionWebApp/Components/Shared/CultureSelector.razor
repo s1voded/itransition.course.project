@@ -2,14 +2,14 @@
 @inject NavigationManager Navigation
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton OnClick="() => Culture = enCulture">EN</MudButton>
-    <MudButton OnClick="() => Culture = ruCulture">RU</MudButton>
+    <MudButton OnClick="() => Culture = enCulture" Disabled=@(Culture.Name == EN)>EN</MudButton>
+    <MudButton OnClick="() => Culture = ruCulture" Disabled=@(Culture.Name == RU)>RU</MudButton>
 </MudButtonGroup>
 
 @code
 {
-    private CultureInfo ruCulture = new CultureInfo("ru-RU");
-    private CultureInfo enCulture = new CultureInfo("en-US");
+    private CultureInfo ruCulture = new CultureInfo(RU);
+    private CultureInfo enCulture = new CultureInfo(EN);
 
     protected override void OnInitialized()
     {

@@ -41,6 +41,9 @@
         public const string HubJoinGroup = "JoinGroup";
         public const string HubLeaveGroup = "LeaveGroup";
 
+        public const string RU = "ru-RU";
+        public const string EN = "en-US";
+
         public enum ActionType
         {
             CanManageInit,

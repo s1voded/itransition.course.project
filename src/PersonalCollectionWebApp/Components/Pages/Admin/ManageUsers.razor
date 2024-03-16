@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject UserManagerService UserManagerService
 @inject IAuthorizationService AuthorizationService
+@inject IDialogService DialogService
 @inject IStringLocalizer<ManageUsers> locale
   
 <PageTitle>@locale["Manage users"]</PageTitle>
@@ -18,7 +19,7 @@
 </MudButtonGroup>
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.PersonOff" OnClick="@(args => ChangeUser(ChangeType.Delete))">@locale["Delete"]</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.PersonOff" OnClick=OnDeleteUser>@locale["Delete"]</MudButton>
 </MudButtonGroup>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
@@ -73,6 +74,23 @@
     {
         users = await UserManagerService.GetAllUsers();
     }
+
+    private void OnDeleteUser()
+    {
+        if (selectedUsers.Count > 0)
+        {
+            var deleteContentText = selectedUsers.Count == 1 ? $"user {selectedUsers.First().UserName}" : $"{selectedUsers.Count} users";
+
+            var parameters = new DialogParameters<DeleteDialog>();
+            parameters.Add(x => x.ContentText, deleteContentText);
+            parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteUser));
+
+            var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+            DialogService.Show<DeleteDialog>($"Delete {deleteContentText}", parameters, options);
+        }
+    }
+
+    private async Task DeleteUser() => await ChangeUser(ChangeType.Delete);
 
     private async Task ChangeUser(ChangeType changeType)
     {

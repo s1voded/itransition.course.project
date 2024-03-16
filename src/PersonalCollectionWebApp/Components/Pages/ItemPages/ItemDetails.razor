@@ -27,46 +27,14 @@
         <MudText>Added: <b>@item.CreatedDate</b></MudText>
         <MudText>Collection: <b>@item.Collection.Name</b></MudText>
         <MudText>Tags: <b>@string.Join(", ", @item.Tags?.Select(t => t.Name))</b></MudText>
-        @for (int i = 0; i < CustomFieldsCount; i++)
+        @if (item.Collection.CustomFieldsSettings != null)
         {
-            var index = i;
-            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomStrings[index].Enable)
-            {
-                <MudText>@item.Collection.CustomFieldsSettings.CustomStrings[index].Name: <b>@item.CustomStrings[index]</b></MudText>
-            }
+            <CustomFieldsValueComponent T="string" CustomFields=@item.Collection.CustomFieldsSettings.CustomStrings ItemCustomField=@item.CustomStrings />
+            <CustomFieldsValueComponent T="string" CustomFields=@item.Collection.CustomFieldsSettings.CustomTexts ItemCustomField=@item.CustomTexts />
+            <CustomFieldsValueComponent T="int?" CustomFields=@item.Collection.CustomFieldsSettings.CustomInts ItemCustomField=@item.CustomInts />
+            <CustomFieldsValueComponent T="bool" CustomFields=@item.Collection.CustomFieldsSettings.CustomBools ItemCustomField=@item.CustomBools />
+            <CustomFieldsValueComponent T="DateTime?" CustomFields=@item.Collection.CustomFieldsSettings.CustomDates ItemCustomField=@item.CustomDates />
         }
-        @for (int i = 0; i < CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomTexts[index].Enable)
-            {
-                <MudText>@item.Collection.CustomFieldsSettings.CustomTexts[index].Name: <b>@item.CustomTexts[index]</b></MudText>
-            }
-        }
-        @for (int i = 0; i < CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomInts[index].Enable)
-            {
-                <MudText>@item.Collection.CustomFieldsSettings.CustomInts[index].Name: <b>@item.CustomInts[index]</b></MudText>
-            }
-        }
-        @for (int i = 0; i < CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomBools[index].Enable)
-            {
-                <MudText>@item.Collection.CustomFieldsSettings.CustomBools[index].Name: <b>@item.CustomBools[index]</b></MudText>
-            }
-        }
-        @for (int i = 0; i < CustomFieldsCount; i++)
-        {
-            var index = i;
-            @if (item.Collection.CustomFieldsSettings != null && item.Collection.CustomFieldsSettings.CustomDates[index].Enable)
-            {
-                <MudText>@item.Collection.CustomFieldsSettings.CustomDates[index].Name: <b>@item.CustomDates[index]</b></MudText>
-            }
-        }  
     </MudPaper>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
@@ -199,14 +167,13 @@
 
     private void OnDeleteItem()
     {
+        var deleteContentText = $"item {item?.Name}";
         var parameters = new DialogParameters<DeleteDialog>();
-        parameters.Add(x => x.ContentText, $"Do you really want to delete item {item?.Name}? This process cannot be undone.");
-        parameters.Add(x => x.ButtonText, "Delete");
-        parameters.Add(x => x.Color, Color.Error);
+        parameters.Add(x => x.ContentText, deleteContentText);
         parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteItem));
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        DialogService.Show<DeleteDialog>($"Delete item {item?.Name}", parameters, options);
+        DialogService.Show<DeleteDialog>($"Delete {deleteContentText}", parameters, options);
     }
 
     private async Task DeleteItem() => await DoActionItem(ActionType.Delete);

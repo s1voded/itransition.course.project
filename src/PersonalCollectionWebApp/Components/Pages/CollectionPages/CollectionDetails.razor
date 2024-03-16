@@ -107,14 +107,13 @@
 
     private void OnDeleteCollection()
     {
+        var deleteContentText = $"collection {collection?.Name}";
         var parameters = new DialogParameters<DeleteDialog>();
-        parameters.Add(x => x.ContentText, $"Do you really want to delete collection {collection?.Name}? This process cannot be undone.");
-        parameters.Add(x => x.ButtonText, "Delete");
-        parameters.Add(x => x.Color, Color.Error);
+        parameters.Add(x => x.ContentText, deleteContentText);
         parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteCollection));
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };   
-        DialogService.Show<DeleteDialog>($"Delete collection {collection?.Name}", parameters, options);
+        DialogService.Show<DeleteDialog>($"Delete {deleteContentText}", parameters, options);
     }
 
     private async Task DeleteCollection() => await DoActionCollection(ActionType.Delete);

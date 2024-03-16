@@ -14,7 +14,8 @@
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> @locale["Main"]
+                <MudIcon Icon="@Icons.Material.Filled.Home" />
+                <MudText Class="pa-2">@locale["Main"]</MudText>
             </NavLink>
         </div>
 
@@ -32,7 +33,8 @@
         <AuthorizeView Roles=@Constants.AdminRole>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="usermanager">
-                    <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> @locale["Users"]
+                    <MudIcon Icon="@Icons.Material.Filled.PersonSearch" />
+                    <MudText Class="pa-2">@locale["Users"]</MudText>
             </NavLink>
         </div>
         </AuthorizeView>
