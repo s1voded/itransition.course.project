@@ -10,6 +10,7 @@
         public ICollection<Item> Items { get; } = []; // Collection navigation containing dependents
         public string Name { get; set; }
         public string Description { get; set; }
+        public string? Image { get; set; }
         public CustomFieldsSettings? CustomFieldsSettings { get; set; }
     }
 

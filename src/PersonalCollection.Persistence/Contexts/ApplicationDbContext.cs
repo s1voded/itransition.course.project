@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Persistence.Contexts
@@ -26,8 +27,13 @@ namespace PersonalCollection.Persistence.Contexts
                 builder.OwnsMany(x => x.CustomInts);
                 builder.OwnsMany(x => x.CustomBools);
                 builder.OwnsMany(x => x.CustomDates);
-                builder.ToJson(); 
+                builder.ToJson();
             });
+
+            modelBuilder.Entity<Theme>().HasData(
+                new Theme { Id = 1, Name = "Other" },
+                new Theme { Id = 2, Name = "Books" },
+                new Theme { Id = 3, Name = "Stamps" });
         }
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Item> Items { get; set; }
