@@ -17,6 +17,7 @@ namespace PersonalCollection.Application.Extensions
             services.AddScoped<CollectionService>();
             services.AddScoped<UserManagerService>();
             services.AddScoped<ReactionsService>();
+            services.AddScoped<ImageStorageService>();
         }
     }
 }

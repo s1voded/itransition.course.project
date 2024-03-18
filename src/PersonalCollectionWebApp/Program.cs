@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MudBlazor.Services;
 using PersonalCollection.Application.Extensions;
+using PersonalCollection.Application.Models.Config;
 using PersonalCollection.Domain;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Extensions;
@@ -53,6 +54,8 @@ builder.Services.AddPersistenceLayer(builder.Configuration);
 
 builder.Services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
 builder.Services.AddHandlersServices();
+
+builder.Services.Configure<DropboxConfig>(builder.Configuration.GetSection(nameof(DropboxConfig)));
 
 var app = builder.Build();
 
