@@ -1,4 +1,5 @@
 ﻿@attribute [Route(AppRouteSearch)]
+@attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager

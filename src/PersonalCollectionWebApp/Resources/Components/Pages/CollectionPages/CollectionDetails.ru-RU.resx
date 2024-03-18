@@ -117,25 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Collections" xml:space="preserve">
-    <value>My collections</value>
+  <data name="Add item" xml:space="preserve">
+    <value>Добавить айтем</value>
   </data>
-  <data name="Login" xml:space="preserve">
-    <value>Login</value>
+  <data name="Added" xml:space="preserve">
+    <value>Добавлен</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Logout</value>
+  <data name="Author" xml:space="preserve">
+    <value>Автор</value>
   </data>
-  <data name="Main" xml:space="preserve">
-    <value>Main</value>
+  <data name="collection" xml:space="preserve">
+    <value>коллекцию</value>
   </data>
-  <data name="Personal Collections" xml:space="preserve">
-    <value>Personal Collections</value>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
   </data>
-  <data name="Register" xml:space="preserve">
-    <value>Register</value>
+  <data name="Delete collection" xml:space="preserve">
+    <value>Удалить коллекцию</value>
   </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Edit collection" xml:space="preserve">
+    <value>Редактировать коллекцию</value>
+  </data>
+  <data name="Items" xml:space="preserve">
+    <value>Айтемы</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Тэги</value>
+  </data>
+  <data name="Theme" xml:space="preserve">
+    <value>Тема</value>
   </data>
 </root>

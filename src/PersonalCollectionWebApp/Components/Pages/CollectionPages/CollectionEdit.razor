@@ -4,8 +4,9 @@
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
+@inject IStringLocalizer<CollectionEdit> locale
 
-<PageTitle>Edit @collection?.Name</PageTitle>
+<PageTitle>@locale["Edit"] @collection?.Name</PageTitle>
 
 @if (collection != null)
 {
@@ -14,7 +15,7 @@
         <CollectionEditCreateComponent Collection="collection"
                                        Themes="themes"
                                        CustomFieldsSettings="collection?.CustomFieldsSettings"
-                                       OnSubmit="UpdateCollection" SubmitButtonText="Update">
+                                       OnSubmit="UpdateCollection" SubmitButtonText=@locale["Update"]>
         </CollectionEditCreateComponent>
     }
     else

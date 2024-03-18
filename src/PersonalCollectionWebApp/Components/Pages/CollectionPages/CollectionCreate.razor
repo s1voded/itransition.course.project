@@ -4,16 +4,17 @@
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
 @inject IAuthorizationService AuthorizationService
+@inject IStringLocalizer<CollectionCreate> locale
 
-<PageTitle>Collection create</PageTitle>
-<MudText Typo="Typo.h5">Create new collection</MudText>
+<PageTitle>@locale["Collection create"]</PageTitle>
+<MudText Typo="Typo.h5">@locale["Create new collection"]</MudText>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <CollectionEditCreateComponent Collection="collection"
                                Themes="themes"
                                CustomFieldsSettings="customFieldsSettings"
-                               OnSubmit="AddCollection" SubmitButtonText="Create">
+                               OnSubmit="AddCollection" SubmitButtonText=@locale["Create"]>
 </CollectionEditCreateComponent>
 
 @code {

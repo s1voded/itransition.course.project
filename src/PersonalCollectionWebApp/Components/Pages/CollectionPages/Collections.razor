@@ -3,20 +3,21 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Collections> locale
 
-<PageTitle>Collections</PageTitle>
+<PageTitle>@locale["Collections"]</PageTitle>
 
 <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">Add collection</MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">@locale["Add collection"]</MudButton>
 </MudButtonGroup>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudTable T="Collection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Theme?.Name)">Theme</MudTableSortLabel></MudTh>
-        <MudTh>Description</MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Theme?.Name)">@locale["Theme"]</MudTableSortLabel></MudTh>
+        <MudTh>@locale["Description"]</MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
