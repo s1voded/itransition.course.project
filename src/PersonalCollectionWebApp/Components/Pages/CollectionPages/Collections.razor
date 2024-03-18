@@ -15,11 +15,17 @@
 
 <MudTable T="Collection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <HeaderContent>
+        <MudTh></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Theme?.Name)">@locale["Theme"]</MudTableSortLabel></MudTh>
         <MudTh>@locale["Description"]</MudTh>
     </HeaderContent>
     <RowTemplate>
+        <MudTd>
+            <MudAvatar Rounded="true" Color="Color.Transparent">
+                <ImageComponent FileName="@context.Image"/>
+            </MudAvatar>
+        </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>
         <MudTd DataLabel="Description">@((MarkupString)@Markdig.Markdown.ToHtml(context?.Description ?? string.Empty))</MudTd>
