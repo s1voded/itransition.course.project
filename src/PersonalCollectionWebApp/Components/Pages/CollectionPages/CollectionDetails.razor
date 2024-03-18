@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject ImageStorageService ImageStorageService
 @inject IAuthorizationService AuthorizationService
 @inject IDialogService DialogService
 @inject IStringLocalizer<CollectionDetails> locale
@@ -23,6 +24,7 @@
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
     <MudPaper Class="pa-4" Elevation="1">
+        <MudImage Src=@imageSource Elevation="25" Class="rounded-lg ma-4" />
         <MudText>@locale["Name"]: <b>@collection?.Name</b></MudText>
         <MudText>@locale["Theme"]: <b>@collection?.Theme?.Name</b></MudText>
         <MudText>@locale["Author"]: <b>@collection?.User.UserName</b></MudText>
@@ -93,6 +95,7 @@
 
     private Collection? collection;
     private bool canManageCollection;
+    private string imageSource;
 
     protected override async Task OnInitializedAsync()
     {
@@ -101,6 +104,11 @@
         if (collection is null)
         {
             NavigationManager.NavigateTo("/notfound");
+        }
+
+        if(!string.IsNullOrEmpty(collection.Image))
+        {
+            await GetImage(collection.Image);
         }
 
         await DoActionCollection(ActionType.CanManageInit);
@@ -145,6 +153,13 @@
                 }
             }
         }
+    }
+
+    private async Task GetImage(string fileName)
+    {
+        var bytes = await ImageStorageService.Download(fileName);
+        var imagesrc = Convert.ToBase64String(bytes);
+        imageSource = string.Format("data:image;base64,{0}", imagesrc);
     }
 
     private void NavigateToAddItem()
