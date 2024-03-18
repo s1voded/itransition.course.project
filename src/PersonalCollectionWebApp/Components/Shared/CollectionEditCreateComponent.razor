@@ -13,27 +13,31 @@
                         <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
                     }
                 </MudSelect>
-                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadImage">
-                    <ButtonTemplate>
-                        <MudButton HtmlTag="label"
-                                   Variant="Variant.Filled"
-                                   Color="Color.Primary"
-                                   for="@context.Id">
-                            Upload Image
-                        </MudButton>
-                    </ButtonTemplate>
-                    <SelectedTemplate>
-                        @if (context != null)
-                        {
-                            <MudText>@context.Name</MudText>
-                            <MudImage Src=@imageSource Elevation="25" Class="rounded-lg" />
-                        }
-                        else
-                        {
-                            <MudText>No File</MudText>
-                        }
-                    </SelectedTemplate>
-                </MudFileUpload>
+
+                @if (!string.IsNullOrEmpty(Collection.Image))
+                {
+                    <ImageComponent FileName=@Collection.Image />
+                    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick=OnDeleteImage>Delete</MudButton>
+                }
+                else
+                {
+                    <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadImage">
+                        <ButtonTemplate>
+                            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" for="@context.Id">Upload Image</MudButton>
+                        </ButtonTemplate>
+                        <SelectedTemplate>
+                            @if (context != null)
+                            {
+                                <MudText>@context.Name</MudText>
+                            }
+                            else
+                            {
+                                <MudText>No File</MudText>
+                            }
+                        </SelectedTemplate>
+                    </MudFileUpload>
+                }
+               
                 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <MarkdownEditor @bind-Value="Collection.Description" MaxHeight="150px" />
                 <MudExpansionPanels MultiExpansion="true">
@@ -60,7 +64,6 @@
     [Parameter] public string SubmitButtonText { get; set; }
 
     private bool formIsValid;
-    private string? imageSource;
 
     async Task Submit()
     {
@@ -70,12 +73,13 @@
     private async Task UploadImage(IBrowserFile file)
     {
         var fileName = $"{Guid.NewGuid()}_{file.Name}";
-        Collection.Image = fileName;
-
         await ImageStorageService.Upload(fileName, file.OpenReadStream(2097152));
+        Collection.Image = fileName;
+    }
 
-        var bytes = await ImageStorageService.Download(fileName);
-        var imagesrc = Convert.ToBase64String(bytes);
-        imageSource = string.Format("data:image;base64,{0}", imagesrc);
+    private async Task OnDeleteImage()
+    {
+        await ImageStorageService.Delete(Collection.Image);
+        Collection.Image = null;
     }
 }

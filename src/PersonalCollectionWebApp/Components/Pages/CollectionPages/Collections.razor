@@ -22,9 +22,12 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd>
-            <MudAvatar Rounded="true" Color="Color.Transparent">
-                <ImageComponent FileName="@context.Image"/>
-            </MudAvatar>
+            @if (!string.IsNullOrEmpty(context.Image))
+            {
+                <MudAvatar Rounded="true" Color="Color.Transparent">
+                    <ImageComponent FileName="@context.Image" />
+                </MudAvatar>
+            }
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>

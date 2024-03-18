@@ -3,13 +3,16 @@
 <MudImage ObjectFit=ObjectFit.ScaleDown Src=@imageSource Height="200" Width="400" Elevation="25" Class="rounded-lg ma-4" />
 
 @code {
-    [Parameter] public string FileName { get; set; }
+    [Parameter] public string? FileName { get; set; }
 
     private string imageSource;
 
     protected override async Task OnInitializedAsync()
     {
-        await GetImage(FileName);
+        if (!string.IsNullOrEmpty(FileName))
+        {
+            await GetImage(FileName);
+        }   
     }
 
     private async Task GetImage(string fileName)
