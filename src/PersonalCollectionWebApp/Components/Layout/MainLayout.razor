@@ -6,11 +6,11 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
-            <CultureSelector @rendermode="InteractiveServer" />
+        <MudAppBar Dense=true Color="Color.Transparent" Fixed=false>
+            <CultureSelector />
             <MudSpacer />
             <SearchAppBar />
-        </div>
+        </MudAppBar>
 
         <article class="content px-4">
             @Body
