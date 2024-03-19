@@ -144,10 +144,7 @@
 
         item = await CollectionService.GetItemWithCollection(ItemId);
 
-        if (item is null)
-        {
-            NavigationManager.NavigateTo("/notfound");
-        }
+        if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
 
         await DoActionItem(ActionType.CanManageInit);
         await GetComments();

@@ -12,7 +12,6 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 //builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-//builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddPresentationLayer();
 builder.Services.AddApplicationLayer(builder.Configuration);

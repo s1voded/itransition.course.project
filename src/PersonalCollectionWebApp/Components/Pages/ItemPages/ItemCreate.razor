@@ -9,16 +9,13 @@
 
 @if (canManageItem)
 {
-    <ItemEditCreateComponent Item="item"
-                             Tags="tags"
-                             CustomFieldsSettings="collection?.CustomFieldsSettings"
-                             OnSubmit="AddItem"
-                             SubmitButtonText="Create">
+    <ItemEditCreateComponent 
+        Item="item"
+        Tags="tags"
+        CustomFieldsSettings="collection?.CustomFieldsSettings"
+        OnSubmit="AddItem"
+        SubmitButtonText="Create">
     </ItemEditCreateComponent>
-}
-else
-{
-    <MudText Align="Align.Center">Not authorized.</MudText>
 }
 
 
@@ -54,6 +51,8 @@ else
             if (user is not null)
             {
                 var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
+                if (!isAuthorized.Succeeded) NavigateToAccessDenied();
+
                 switch (action)
                 {
                     case ActionType.CanManageInit:
@@ -72,5 +71,12 @@ else
                 }
             }
         }
+    }
+
+    private void NavigateToAccessDenied()
+    {
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        var uriEscaped = Uri.EscapeDataString(uri);
+        NavigationManager.NavigateTo($"{AppRouteAccessDenied}?ReturnUrl={uriEscaped}", forceLoad: true);
     }
 }

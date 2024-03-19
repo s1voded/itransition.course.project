@@ -31,6 +31,8 @@
         public const string AppRouteItemDetails = $"/{NavItems}/{NavItemId}";
         public const string AppRouteItemEdit = $"/{NavItems}/{NavItemId}/{NavEdit}";
         public const string AppRouteSearch = $"/{NavSearch}";
+        public const string AppRouteNotFound = "/notfound";
+        public const string AppRouteAccessDenied = "/Account/AccessDenied";
 
         public const string ParameterSearchTag = "SearchTag";
         public const string ParameterSearchString = "SearchString";

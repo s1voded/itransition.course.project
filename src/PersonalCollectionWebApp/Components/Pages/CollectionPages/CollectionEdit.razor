@@ -12,15 +12,13 @@
 {
     @if (canManageCollection)
     {
-        <CollectionEditCreateComponent Collection="collection"
-                                       Themes="themes"
-                                       CustomFieldsSettings="collection?.CustomFieldsSettings"
-                                       OnSubmit="UpdateCollection" SubmitButtonText=@locale["Update"]>
+        <CollectionEditCreateComponent 
+            Collection="collection"
+            Themes="themes"
+            CustomFieldsSettings="collection?.CustomFieldsSettings"
+            OnSubmit="UpdateCollection" 
+            SubmitButtonText=@locale["Update"]>
         </CollectionEditCreateComponent>
-    }
-    else
-    {
-        <MudText Align="Align.Center">Not authorized.</MudText>
     }
 }
 
@@ -40,10 +38,7 @@
         collection = await CollectionService.GetCollectionById(CollectionId);
         themes = await CollectionService.GetThemes();
 
-        if (collection is null)
-        {
-            NavigationManager.NavigateTo("/notfound");
-        }
+        if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
 
         await DoActionCollection(ActionType.CanManageInit);
     }
@@ -60,6 +55,8 @@
             if (user is not null)
             {
                 var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
+                if (!isAuthorized.Succeeded) NavigateToAccessDenied();
+
                 switch (action)
                 {
                     case ActionType.CanManageInit:
@@ -76,5 +73,12 @@
                 }
             }
         }
+    }
+
+    private void NavigateToAccessDenied()
+    {
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        var uriEscaped = Uri.EscapeDataString(uri);
+        NavigationManager.NavigateTo($"{AppRouteAccessDenied}?ReturnUrl={uriEscaped}", forceLoad: true);
     }
 }

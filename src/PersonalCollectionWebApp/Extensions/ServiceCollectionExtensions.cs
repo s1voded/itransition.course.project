@@ -40,6 +40,8 @@ namespace PersonalCollectionWebApp.Extensions
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
+
+            services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
         }
 
         private static void AddAuthorizationWithPolicies(this IServiceCollection services)
