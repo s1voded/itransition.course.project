@@ -17,7 +17,7 @@
 
     private async Task GetImage(string fileName)
     {
-        var bytes = await ImageStorageService.Download(fileName);
+        var bytes = await ImageStorageService.DownloadAsync(fileName);
         var imagesrc = Convert.ToBase64String(bytes);
         imageSource = string.Format("data:image;base64,{0}", imagesrc);
     }

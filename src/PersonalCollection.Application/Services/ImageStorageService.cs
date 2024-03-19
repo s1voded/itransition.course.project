@@ -1,41 +1,48 @@
-﻿using Dropbox.Api.Files;
-using Dropbox.Api;
-using Microsoft.Extensions.Options;
-using PersonalCollection.Application.Models.Config;
+﻿using Azure.Storage.Blobs;
 
 namespace PersonalCollection.Application.Services
 {
     public class ImageStorageService
     {
-        private readonly IOptions<DropboxConfig> _dropboxConfig;
+        private readonly BlobServiceClient _blobServiceClient;
 
-        public ImageStorageService(IOptions<DropboxConfig> dropboxConfig)
+        public ImageStorageService(BlobServiceClient blobServiceClient)
         {
-            _dropboxConfig = dropboxConfig;
+            _blobServiceClient = blobServiceClient;
         }
 
-        public async Task Upload(string fileName, Stream stream)
+        public async Task UploadAsync(string fileName, Stream stream)
         {
-            var path = $"/{_dropboxConfig.Value.Folder}/{fileName}";
-
-            using var dbx = new DropboxClient(_dropboxConfig.Value.Token);
-            var updated = await dbx.Files.UploadAsync(path, WriteMode.Overwrite.Instance, body: stream);
+            try
+            {
+                var blobClient = GetBlobClient(fileName);
+                await blobClient.UploadAsync(stream, true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
-        public async Task<byte[]> Download(string fileName)
+        public async Task<byte[]> DownloadAsync(string fileName)
         {
-            var path = $"/{_dropboxConfig.Value.Folder}/{fileName}";
-
-            using var dbx = new DropboxClient(_dropboxConfig.Value.Token);
-            using var response = await dbx.Files.DownloadAsync(path);
-            return await response.GetContentAsByteArrayAsync();
+            var blobClient = GetBlobClient(fileName);
+            var downloadResult = await blobClient.DownloadContentAsync();
+            var blobContents = downloadResult.Value.Content.ToArray();
+            return blobContents;
         }
 
-        public async Task Delete(string fileName)
+        public async Task DeleteAsync(string fileName)
         {
-            var path = $"/{_dropboxConfig.Value.Folder}/{fileName}";
-            using var dbx = new DropboxClient(_dropboxConfig.Value.Token);
-            var result = await dbx.Files.DeleteV2Async(path);
+            var blobClient = GetBlobClient(fileName);
+            await blobClient.DeleteAsync();
+        }
+
+        private BlobClient GetBlobClient(string fileName) 
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient("images");
+            var blobClient = containerClient.GetBlobClient(fileName);
+            return blobClient;
         }
     }
 }

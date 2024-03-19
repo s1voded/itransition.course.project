@@ -73,13 +73,13 @@
     private async Task UploadImage(IBrowserFile file)
     {
         var fileName = $"{Guid.NewGuid()}_{file.Name}";
-        await ImageStorageService.Upload(fileName, file.OpenReadStream(2097152));
+        await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
         Collection.Image = fileName;
     }
 
     private async Task OnDeleteImage()
     {
-        await ImageStorageService.Delete(Collection.Image);
+        await ImageStorageService.DeleteAsync(Collection.Image);
         Collection.Image = null;
     }
 }
