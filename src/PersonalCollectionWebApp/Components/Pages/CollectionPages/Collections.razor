@@ -14,6 +14,12 @@
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudTable T="Collection" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+    <ColGroup>
+        <col style="width: 4%;" />
+        <col style="width: 32%;" />
+        <col style="width: 32%;" />
+        <col style="width: 32%;" />
+    </ColGroup>
     <HeaderContent>
         <MudTh></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<Collection, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
@@ -24,7 +30,7 @@
         <MudTd>
             @if (!string.IsNullOrEmpty(context.Image))
             {
-                <MudAvatar Rounded="true" Color="Color.Transparent">
+                <MudAvatar Rounded="true" Color="Color.Transparent" Size="Size.Large">
                     <ImageComponent FileName="@context.Image" />
                 </MudAvatar>
             }

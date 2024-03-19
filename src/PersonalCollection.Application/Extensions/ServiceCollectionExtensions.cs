@@ -1,6 +1,9 @@
 ﻿using Azure.Identity;
 using Azure.Storage.Blobs;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using PersonalCollection.Application.Models.Config;
 using PersonalCollection.Application.Services;
 using System.Reflection;
 
@@ -8,14 +11,16 @@ namespace PersonalCollection.Application.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddApplicationLayer(this IServiceCollection services)
+        public static void AddApplicationLayer(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<AzureBlobConfig>(configuration.GetSection(nameof(AzureBlobConfig)));
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMyServices();
-            services.AddSingleton<BlobServiceClient>(x =>
-                new BlobServiceClient(
-                new Uri("https://collectionimages.blob.core.windows.net"),
-                new DefaultAzureCredential()));
+            services.AddSingleton(sp =>
+            {
+                var serviceUri = sp.GetService<IOptions<AzureBlobConfig>>().Value.ServiceUri;
+                return new BlobServiceClient(new Uri(serviceUri), new DefaultAzureCredential());
+            });
         }
 
 

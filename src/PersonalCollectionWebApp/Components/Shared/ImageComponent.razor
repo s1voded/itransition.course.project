@@ -5,7 +5,7 @@
 @code {
     [Parameter] public string? FileName { get; set; }
 
-    private string imageSource;
+    private string? imageSource;
 
     protected override async Task OnInitializedAsync()
     {
@@ -17,8 +17,6 @@
 
     private async Task GetImage(string fileName)
     {
-        var bytes = await ImageStorageService.DownloadAsync(fileName);
-        var imagesrc = Convert.ToBase64String(bytes);
-        imageSource = string.Format("data:image;base64,{0}", imagesrc);
+        imageSource = await ImageStorageService.DownloadAsync(fileName);
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using MudBlazor.Services;
 using PersonalCollection.Application.Extensions;
+using PersonalCollection.Application.Models.Config;
 using PersonalCollection.Domain;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Extensions;
@@ -48,7 +49,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.AddControllers();
 
-builder.Services.AddApplicationLayer();
+builder.Services.AddApplicationLayer(builder.Configuration);
 builder.Services.AddPersistenceLayer(builder.Configuration);
 
 builder.Services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
