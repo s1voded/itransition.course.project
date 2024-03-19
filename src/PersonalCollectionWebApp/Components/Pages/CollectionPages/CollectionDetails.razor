@@ -22,17 +22,19 @@
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-    <MudPaper Class="pa-4" Elevation="1">
+    <MudStack Justify=Justify.FlexStart AlignItems=AlignItems.Center Row=true>
+        <MudPaper Class="pa-4" Elevation="1">
+            <MudText>@locale["Name"]: <b>@collection?.Name</b></MudText>
+            <MudText>@locale["Theme"]: <b>@collection?.Theme?.Name</b></MudText>
+            <MudText>@locale["Author"]: <b>@collection?.User.UserName</b></MudText>
+            <MudText>@locale["Description"]:</MudText>
+            @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
+        </MudPaper>
         @if (!string.IsNullOrEmpty(collection?.Image))
         {
             <ImageComponent FileName=@collection?.Image />
-        }          
-        <MudText>@locale["Name"]: <b>@collection?.Name</b></MudText>
-        <MudText>@locale["Theme"]: <b>@collection?.Theme?.Name</b></MudText>
-        <MudText>@locale["Author"]: <b>@collection?.User.UserName</b></MudText>
-        <MudText>@locale["Description"]:</MudText>
-        @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
-    </MudPaper>
+        }
+    </MudStack>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
