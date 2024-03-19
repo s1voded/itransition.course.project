@@ -1,16 +1,9 @@
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using MudBlazor.Services;
 using PersonalCollection.Application.Extensions;
-using PersonalCollection.Application.Models.Config;
 using PersonalCollection.Domain;
-using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Extensions;
 using PersonalCollectionWebApp.Components;
-using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Extensions;
 using PersonalCollectionWebApp.Hubs;
-using PersonalCollectionWebApp.Policies.Requirements;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,42 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<IdentityUserAccessor>();
-builder.Services.AddScoped<IdentityRedirectManager>();
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+//builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
-    .AddIdentityCookies();
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy(Constants.PolicyCanManageCollection, policy =>
-        policy.AddRequirements(new AllowedManageCollectionRequirement(), new UserNotBlockedRequirement(false)));
-    options.AddPolicy(Constants.PolicyAdminOnly, policy =>
-        policy.AddRequirements(new IsAdminRequirement()));
-    options.AddPolicy(Constants.PolicyUserNotBlocked, policy =>
-        policy.AddRequirements(new UserNotBlockedRequirement(false)));
-    options.AddPolicy(Constants.PolicyUserNotBlockedOrAnonymous, policy =>
-        policy.AddRequirements(new UserNotBlockedRequirement(true)));
-});
-
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
-
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddControllers();
-
+builder.Services.AddPresentationLayer();
 builder.Services.AddApplicationLayer(builder.Configuration);
 builder.Services.AddPersistenceLayer(builder.Configuration);
-
-builder.Services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
-builder.Services.AddHandlersServices();
 
 var app = builder.Build();
 
