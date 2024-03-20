@@ -69,7 +69,7 @@
                 <TooltipContent>
                     @foreach (var like in itemLikes)
                     {
-                        <MudText Typo="Typo.body2">@like.User?.UserName</MudText>
+                        <MudText Typo="Typo.body2">@GetReactionUserName(like.User)</MudText>
                     }
                 </TooltipContent>
             </MudTooltip>
@@ -97,7 +97,7 @@
                 <TooltipContent>
                     @foreach (var like in itemLikes)
                     {
-                        <MudText Typo="Typo.body2">@like.User?.UserName</MudText>
+                        <MudText Typo="Typo.body2">@GetReactionUserName(like.User)</MudText>
                     }
                 </TooltipContent>
             </MudTooltip>
@@ -112,7 +112,7 @@
             <MudPaper Class="pa-4">
                 <MudStack Row="true">
                     <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudText Typo="Typo.subtitle2">@comment.User?.UserName</MudText>
+                        <MudText Typo="Typo.subtitle2">@GetReactionUserName(comment.User)</MudText>
                         <MudText Typo="Typo.caption">@comment.AddedDateTime</MudText>
                         <MudDivider />
                         <MudText Typo="Typo.body1">@comment.Content</MudText>
@@ -174,13 +174,13 @@
 
     private void OnDeleteItem()
     {
-        var deleteContentText = $"item {item?.Name}";
+        var deleteContentText = $"{locale["item"]} {item?.Name}";
         var parameters = new DialogParameters<DeleteDialog>();
         parameters.Add(x => x.ContentText, deleteContentText);
         parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteItem));
 
         var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-        DialogService.Show<DeleteDialog>($"Delete {deleteContentText}", parameters, options);
+        DialogService.Show<DeleteDialog>($"{locale["Delete"]} {deleteContentText}", parameters, options);
     }
 
     private async Task DeleteItem() => await DoActionItem(ActionType.Delete);
@@ -236,6 +236,8 @@
             }
         }
     }
+
+    private string? GetReactionUserName(ApplicationUser? user) => user != null ? user.UserName : locale["deleted user"];
 
     private void NavigateToEditItem()
     {

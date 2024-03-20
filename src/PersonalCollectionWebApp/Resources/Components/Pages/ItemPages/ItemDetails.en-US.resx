@@ -129,11 +129,20 @@
   <data name="Comment content is required" xml:space="preserve">
     <value>Comment content is required.</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="Delete item" xml:space="preserve">
     <value>Delete item</value>
   </data>
+  <data name="deleted user" xml:space="preserve">
+    <value>deleted user</value>
+  </data>
   <data name="Edit item" xml:space="preserve">
     <value>Edit item</value>
+  </data>
+  <data name="item" xml:space="preserve">
+    <value>item</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
