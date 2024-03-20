@@ -14,18 +14,18 @@ namespace PersonalCollection.Persistence.Contexts
             modelBuilder.Entity<ApplicationUser>(b =>
             {
                 // Each User can have many UserClaims
-                b.HasMany(e => e.Claims)
+                b.HasMany(u => u.Claims)
                     .WithOne()
                     .HasForeignKey(uc => uc.UserId)
                     .IsRequired();
 
-                b.HasMany(e => e.Comments)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(uc => uc.UserId);
+                b.HasMany(u => u.Comments)
+                    .WithOne(c => c.User)
+                    .HasForeignKey(c => c.UserId);
 
-                b.HasMany(e => e.Likes)
-                    .WithOne(e => e.User)
-                    .HasForeignKey(uc => uc.UserId);
+                b.HasMany(u => u.Likes)
+                    .WithOne(l => l.User)
+                    .HasForeignKey(l => l.UserId);
             });
 
             modelBuilder.Entity<Collection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => 

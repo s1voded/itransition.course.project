@@ -12,15 +12,13 @@ namespace PersonalCollection.Application.Services
 {
     public class UserManagerService
     {
-        private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper, IUserRepository userRepository)
+        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
@@ -63,10 +61,17 @@ namespace PersonalCollection.Application.Services
 
         public async Task DeleteUser(string userId)
         {
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.Users
+                .Include(u => u.Comments)
+                .Include(u => u.Likes)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
             if (user != null)
             {
-                await _userRepository.ClearUserReactions(user.UserName);
+                //https://learn.microsoft.com/ru-ru/ef/core/saving/cascade-delete#cascading-nulls
+                user.Comments.Clear();
+                user.Likes.Clear();              
+
                 await _userManager.DeleteAsync(user);
             }
         }
