@@ -4,19 +4,20 @@
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
+@inject IStringLocalizer<ItemEdit> locale
 
-<PageTitle>Edit @item?.Name</PageTitle>
+<PageTitle>@locale["Edit"] @item?.Name</PageTitle>
 
 @if (item != null)
 {
     if (canManageItem)
     {
         <ItemEditCreateComponent 
-            Item="item"
-            Tags="tags"
-            CustomFieldsSettings="item.Collection.CustomFieldsSettings"
-            OnSubmit="UpdateItem"
-            SubmitButtonText="Update">
+            Item=@item
+            Tags=@tags
+            CustomFieldsSettings=@item.Collection.CustomFieldsSettings
+            OnSubmit=@UpdateItem
+            SubmitButtonText=@locale["Update"]>
         </ItemEditCreateComponent>
     }
 }

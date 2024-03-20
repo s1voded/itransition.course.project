@@ -13,10 +13,10 @@
     @if (canManageCollection)
     {
         <CollectionEditCreateComponent 
-            Collection="collection"
-            Themes="themes"
-            CustomFieldsSettings="collection?.CustomFieldsSettings"
-            OnSubmit="UpdateCollection" 
+            Collection=@collection
+            Themes=@themes
+            CustomFieldsSettings=@collection?.CustomFieldsSettings
+            OnSubmit=@UpdateCollection
             SubmitButtonText=@locale["Update"]>
         </CollectionEditCreateComponent>
     }

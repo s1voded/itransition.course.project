@@ -1,9 +1,10 @@
 using PersonalCollection.Application.Extensions;
 using PersonalCollection.Domain;
 using PersonalCollection.Persistence.Extensions;
-using PersonalCollectionWebApp.Components;
 using PersonalCollectionWebApp.Extensions;
 using PersonalCollectionWebApp.Hubs;
+using PersonalCollectionWebApp.Components;
+using static PersonalCollection.Domain.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +37,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-var supportedCultures = new[] { "en-US", "ru-RU" };
+var supportedCultures = new[] { EN, RU };
 var localizationOptions = new RequestLocalizationOptions()
-    .SetDefaultCulture(supportedCultures[0])
+    .SetDefaultCulture(EN)
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures);
 
