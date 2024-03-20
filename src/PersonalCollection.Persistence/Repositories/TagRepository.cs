@@ -15,6 +15,7 @@ namespace PersonalCollection.Persistence.Repositories
         public async Task<IEnumerable<TagDto>> GetTagsWithUsedCount()
         {
             return await GetAll()
+                .Where(t => t.Items.Count() > 0)
                 .Select(t => new TagDto
                 {
                     Id = t.Id,
