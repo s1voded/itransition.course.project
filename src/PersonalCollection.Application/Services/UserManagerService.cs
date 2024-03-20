@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Application.Models;
 using PersonalCollection.Domain.Entities;
 using System.Data;
@@ -11,13 +12,15 @@ namespace PersonalCollection.Application.Services
 {
     public class UserManagerService
     {
+        private readonly IUserRepository _userRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
-        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper, IUserRepository userRepository)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
@@ -63,6 +66,7 @@ namespace PersonalCollection.Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
+                await _userRepository.ClearUserReactions(user.UserName);
                 await _userManager.DeleteAsync(user);
             }
         }

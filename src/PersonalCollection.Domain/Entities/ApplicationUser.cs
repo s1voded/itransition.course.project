@@ -10,6 +10,8 @@ namespace PersonalCollection.Domain.Entities
 
         //https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0#add-navigation-properties
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
     }
 
 }
