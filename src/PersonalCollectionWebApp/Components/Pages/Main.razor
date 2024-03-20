@@ -73,7 +73,7 @@
     <MudText Typo="Typo.h6" Class="pa-2">@locale["Tags"]</MudText>
     @foreach (var tag in tagsWithUsedCount)
     {
-        <MudLink Href="@GetHref(tag.Name)" Style=@GetFontSizeForTag(tag) Class="pa-2">@tag.Name</MudLink>
+        <MudLink Href="@GetTagSearchHref(tag.Name)" Style=@GetFontSizeForTag(tag) Class="pa-2">@tag.Name</MudLink>
     }
 </MudPaper>
 
@@ -101,7 +101,7 @@
         NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }
 
-    private string GetHref(string tagName)
+    private string GetTagSearchHref(string tagName)
     {
         return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
     }

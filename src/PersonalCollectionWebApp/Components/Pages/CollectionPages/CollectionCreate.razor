@@ -68,7 +68,7 @@
                     {
                         collection.CustomFieldsSettings = customFieldsSettings;
                         await CollectionService.AddCollection(collection);
-                        NavigationManager.NavigateTo($"/{NavCollections}");
+                        NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
                     }
                     else
                     {

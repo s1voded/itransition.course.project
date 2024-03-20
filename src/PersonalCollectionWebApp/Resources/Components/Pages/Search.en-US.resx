@@ -117,32 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Add item" xml:space="preserve">
-    <value>Add item</value>
-  </data>
   <data name="Added" xml:space="preserve">
     <value>Added</value>
   </data>
   <data name="Author" xml:space="preserve">
     <value>Author</value>
   </data>
-  <data name="collection" xml:space="preserve">
-    <value>collection</value>
+  <data name="Collection" xml:space="preserve">
+    <value>Collection</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="Delete collection" xml:space="preserve">
-    <value>Delete collection</value>
-  </data>
-  <data name="Description" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="Edit collection" xml:space="preserve">
-    <value>Edit collection</value>
-  </data>
-  <data name="Items" xml:space="preserve">
-    <value>Items</value>
+  <data name="Found items" xml:space="preserve">
+    <value>Found items</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -150,10 +135,10 @@
   <data name="Rows per page" xml:space="preserve">
     <value>Rows per page:</value>
   </data>
+  <data name="Search items" xml:space="preserve">
+    <value>Search items</value>
+  </data>
   <data name="Tags" xml:space="preserve">
     <value>Tags</value>
-  </data>
-  <data name="Theme" xml:space="preserve">
-    <value>Theme</value>
   </data>
 </root>

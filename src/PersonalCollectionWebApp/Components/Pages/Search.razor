@@ -3,19 +3,20 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject IStringLocalizer<Search> locale
 
-<PageTitle>Search items</PageTitle>
+<PageTitle>@locale["Search items"]</PageTitle>
 
 <MudTable T="Item" Items="@foundItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">Found items</MudText>
+        <MudText Typo="Typo.h6">@locale["Found items"]</MudText>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Name)">Name</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Collection.Name)">Collection</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Collection.User?.UserName)">Author</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.CreatedDate)">Added</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Tags?.Count)">Tags</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Collection.Name)">@locale["Collection"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Collection.User?.UserName)">@locale["Author"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.CreatedDate)">@locale["Added"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<Item, object>(x=>x.Tags?.Count)">@locale["Tags"]</MudTableSortLabel></MudTh>
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -25,7 +26,7 @@
         <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
     </RowTemplate>
     <PagerContent>
-        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" />
+        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }" RowsPerPageString=@locale["Rows per page"] />
     </PagerContent>
 </MudTable>
 

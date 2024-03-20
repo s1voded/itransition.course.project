@@ -26,8 +26,17 @@
     <MudPaper Class="pa-4" Elevation="1">
         <MudText>@locale["Name"]: <b>@item.Name</b></MudText>
         <MudText>@locale["Added"]: <b>@item.CreatedDate</b></MudText>
-        <MudText>@locale["Collection"]: <b>@item.Collection.Name</b></MudText>
-        <MudText>@locale["Tags"]: <b>@string.Join(", ", @item.Tags?.Select(t => t.Name))</b></MudText>
+        <MudText>
+            @locale["Collection"]:
+            <MudLink Href=@($"/{NavCollections}/{item.Collection.Id}") Class="pa-1">@item.Collection.Name</MudLink>
+        </MudText>
+        <MudText>
+            @locale["Tags"]:
+            @foreach(var tag in item.Tags)
+            {
+                <MudLink Href=@GetTagSearchHref(tag.Name) Class="pa-1">@tag.Name</MudLink>
+            }
+        </MudText>
         @if (item.Collection.CustomFieldsSettings != null)
         {
             <CustomFieldsValueComponent T="string" CustomFields=@item.Collection.CustomFieldsSettings.CustomStrings ItemCustomField=@item.CustomStrings />
@@ -231,6 +240,11 @@
     private void NavigateToEditItem()
     {
         NavigationManager.NavigateTo($"/{NavItems}/{ItemId}/{NavEdit}");
+    }
+
+    private string GetTagSearchHref(string tagName)
+    {
+        return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
     }
 
     private async Task SendUpdateComments()
