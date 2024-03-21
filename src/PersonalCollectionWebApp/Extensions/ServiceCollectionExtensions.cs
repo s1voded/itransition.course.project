@@ -18,7 +18,6 @@ namespace PersonalCollectionWebApp.Extensions
         {
             services.AddIdentityServices();
             services.AddAuthorizationWithPolicies();
-            services.AddScoped<AuthService>();
             services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllers(); //controller for change culture
@@ -26,6 +25,7 @@ namespace PersonalCollectionWebApp.Extensions
 
         private static void AddIdentityServices(this IServiceCollection services)
         {
+            services.AddScoped<AuthService>();
             services.AddCascadingAuthenticationState();
             services.AddScoped<IdentityUserAccessor>();
             services.AddScoped<IdentityRedirectManager>();

@@ -119,13 +119,7 @@
 
     private int Scale(int value, int min, int max, int minScale, int maxScale)
     {
-        if(min != max)
-        {
-            return minScale + (value - min) / (max - min) * (maxScale - minScale);
-        }
-        else
-        {
-            return (maxScale + minScale) / 2;
-        }
+        if (min != max) return minScale + (value - min) / (max - min) * (maxScale - minScale);
+        else return (maxScale + minScale) / 2;
     }
 }

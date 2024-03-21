@@ -3,7 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IStringLocalizer<CollectionEdit> locale
 
 <PageTitle>@locale["Edit"] @collection?.Name</PageTitle>
@@ -16,7 +16,7 @@
             Collection=@collection
             Themes=@themes
             CustomFieldsSettings=@collection?.CustomFieldsSettings
-            OnSubmit=@UpdateCollection
+            OnSubmit=@OnUpdateCollection
             SubmitButtonText=@locale["Update"]>
         </CollectionEditCreateComponent>
     }
@@ -25,9 +25,6 @@
 @code {
     [Parameter]
     public int CollectionId { get; set; }
-
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
 
     private Collection? collection;
     private IEnumerable<Theme> themes = [];
@@ -39,39 +36,15 @@
         themes = await CollectionService.GetThemes();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-
-        await DoActionCollection(ActionType.CanManageInit);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
     }
 
-    public async Task UpdateCollection() => await DoActionCollection(ActionType.Update);
-
-    private async Task DoActionCollection(ActionType action)
+    private async Task OnUpdateCollection()
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsAllowManageCollection(collection))
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
-                if (!isAuthorized.Succeeded) NavigateToAccessDenied();
-
-                switch (action)
-                {
-                    case ActionType.CanManageInit:
-                        canManageCollection = isAuthorized.Succeeded;
-                        break;
-
-                    case ActionType.Update:
-                        if (isAuthorized.Succeeded)
-                        {
-                            await CollectionService.UpdateCollection(collection);
-                            NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
-                        }
-                        break;
-                }
-            }
+            await CollectionService.UpdateCollection(collection);
+            NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
         }
     }
 

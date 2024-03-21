@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
 @inject IStringLocalizer<Collections> locale
 
 <PageTitle>@locale["Collections"]</PageTitle>
@@ -42,30 +43,18 @@
 </MudTable>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     private IEnumerable<Collection> collections = [];
 
     protected override async Task OnInitializedAsync()
     {
-        if (authenticationState is not null)
+        if(await AuthService.IsUserAuthenticated())
         {
-            var authState = await authenticationState;
-            var user = authState.User;
-
-            if (user is not null)
+            var userId = await AuthService.GetCurrentUserId();
+            if (!string.IsNullOrEmpty(userId))
             {
-                if (user.Identity is not null && user.Identity.IsAuthenticated)
-                {
-                    var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    if (!string.IsNullOrEmpty(userId))
-                    {
-                        collections = await CollectionService.GetUserCollections(userId);
-                    }
-                }
+                collections = await CollectionService.GetUserCollections(userId);
             }
-        }
+        }        
     }
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> args)

@@ -45,15 +45,5 @@
 
         public const string RU = "ru-RU";
         public const string EN = "en-US";
-
-        public enum ActionType
-        {
-            CanManageInit,
-            Add,
-            Update,
-            Delete,
-            Like,
-            Comment
-        }
     }
 }

@@ -3,18 +3,18 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IStringLocalizer<ItemCreate> locale
 
 <PageTitle>@locale["Item create"]</PageTitle>
 
-@if (canManageItem)
+@if (canManageCollection)
 {
     <ItemEditCreateComponent 
         Item=@item
         Tags=@tags
         CustomFieldsSettings=@collection?.CustomFieldsSettings
-        OnSubmit=@AddItem
+        OnSubmit=@OnAddItem
         SubmitButtonText=@locale["Create"]>
     </ItemEditCreateComponent>
 }
@@ -24,53 +24,29 @@
     [Parameter]
     public int CollectionId { get; set; }
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     public Item item = new();
     private Collection? collection;
     private IEnumerable<Tag> tags;
-    private bool canManageItem;
+    private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
         tags = await CollectionService.GetAllItemTags();
         collection = await CollectionService.GetCollectionById(CollectionId);
 
-        await DoActionItem(ActionType.CanManageInit);
+        if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
     }
 
-    public async Task AddItem() => await DoActionItem(ActionType.Add);
-
-    private async Task DoActionItem(ActionType action)
+    public async Task OnAddItem()
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsAllowManageCollection(collection))
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
+            item.CollectionId = CollectionId;
+            item.CreatedDate = DateTime.UtcNow;
+            await CollectionService.AddItem(item);
+            NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}");
 
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
-                if (!isAuthorized.Succeeded) NavigateToAccessDenied();
-
-                switch (action)
-                {
-                    case ActionType.CanManageInit:
-                        canManageItem = isAuthorized.Succeeded;
-                        break;
-
-                    case ActionType.Add:
-                        if (isAuthorized.Succeeded)
-                        {
-                            item.CollectionId = CollectionId;
-                            item.CreatedDate = DateTime.UtcNow;
-                            await CollectionService.AddItem(item);
-                            NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}");
-                        }
-                        break;
-                }
-            }
         }
     }
 

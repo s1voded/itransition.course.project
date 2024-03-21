@@ -3,7 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IDialogService DialogService
 @inject ImageStorageService ImageStorageService
 @inject IStringLocalizer<CollectionDetails> locale
@@ -41,7 +41,7 @@
         {
             @if (canManageCollection)
             {
-                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadImage">
+                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="OnUploadImage">
                     <ButtonTemplate>
                         <MudIconButton HtmlTag="label" Color="Color.Info" for="@context.Id" Icon="@Icons.Material.Filled.AddAPhoto" />
                     </ButtonTemplate>
@@ -119,20 +119,15 @@
     [Parameter]
     public int CollectionId { get; set; }
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     private Collection? collection;
     private bool canManageCollection;
-    private string imageSource;
 
     protected override async Task OnInitializedAsync()
     {
         collection = await CollectionService.GetCollectionWithItems(CollectionId);
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-
-        await DoActionCollection(ActionType.CanManageInit);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
     }
 
     private void OnDeleteCollection()
@@ -146,57 +141,34 @@
         DialogService.Show<DeleteDialog>($"{locale["Delete"]} {deleteContentText}", parameters, options);
     }
 
-    private async Task DeleteCollection() => await DoActionCollection(ActionType.Delete);
-
-    private async Task DoActionCollection(ActionType action)
+    private async Task DeleteCollection()
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsAllowManageCollection(collection))
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
-            {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
-                switch (action)
-                {
-                    case ActionType.CanManageInit:
-                        canManageCollection = isAuthorized.Succeeded;
-                        break;
-
-                    case ActionType.Delete:
-                        if (isAuthorized.Succeeded)
-                        {
-                            await CollectionService.DeleteCollection(collection);
-                            NavigationManager.NavigateTo($"/{NavCollections}");
-                        }
-                        break;
-
-                    case ActionType.Update:
-                        if (isAuthorized.Succeeded)
-                        {
-                            await CollectionService.UpdateCollection(collection);
-                            //NavigationManager.NavigateTo($"/{NavCollections}");
-                        }
-                        break;
-                }
-            }
+            await CollectionService.DeleteCollection(collection);
+            NavigationManager.NavigateTo($"/{NavCollections}");
         }
     }
 
-    private async Task UploadImage(IBrowserFile file)
+    private async Task OnUploadImage(IBrowserFile file)
     {
-        var fileName = $"{Guid.NewGuid()}_{file.Name}";
-        await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
-        collection.Image = fileName;
-        await DoActionCollection(ActionType.Update);
+        if (await AuthService.IsAllowManageCollection(collection))
+        {
+            var fileName = $"{Guid.NewGuid()}_{file.Name}";
+            await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
+            collection.Image = fileName;
+            await CollectionService.UpdateCollection(collection);
+        }
     }
 
     private async Task OnDeleteImage()
     {
-        await ImageStorageService.DeleteAsync(collection.Image);
-        collection.Image = null;
-        await DoActionCollection(ActionType.Update);
+        if (await AuthService.IsAllowManageCollection(collection))
+        {
+            await ImageStorageService.DeleteAsync(collection.Image);
+            collection.Image = null;
+            await CollectionService.UpdateCollection(collection);
+        }
     }
 
     private void NavigateToAddItem()

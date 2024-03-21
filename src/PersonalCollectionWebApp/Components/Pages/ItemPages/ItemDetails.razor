@@ -4,7 +4,7 @@
 @inject CollectionService CollectionService
 @inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IDialogService DialogService
 @inject IStringLocalizer<ItemDetails> locale
 @implements IAsyncDisposable
@@ -13,7 +13,7 @@
 
 @if (item != null)
 {
-    @if (canManageItem)
+    @if (canManageCollection)
     {
         <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
             <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="NavigateToEditItem">@locale["Edit item"]</MudButton>
@@ -53,7 +53,7 @@
         <Authorized>
             <MudTooltip>
                 <ChildContent>
-                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true>
+                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true Visible=@(itemLikes.Count() > 0)>
                         <MudIconButton Color="Color.Inherit" OnClick="OnLikeItem">
                             @if (itemLiked)
                             {
@@ -80,7 +80,7 @@
                             <MudTextField @bind-Value="commentContent" Label=@locale["Comment"] Required="true" RequiredError=@locale["Comment content is required"] />
                             <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                             <div class="d-flex align-center justify-space-between">
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="SubmitComment">@locale["Send"]</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="OnSubmitComment">@locale["Send"]</MudButton>
                             </div>
                         </MudForm>
                     </MudPaper>
@@ -90,7 +90,7 @@
         <NotAuthorized>
             <MudTooltip>
                 <ChildContent>
-                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true>
+                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true Visible=@(itemLikes.Count() > 0)>
                         <MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.FavoriteBorder" Disabled />
                     </MudBadge>
                 </ChildContent>
@@ -127,38 +127,23 @@
     [Parameter]
     public int ItemId { get; set; }
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     private HubConnection? hubConnection;
     private Item? item;
-    private bool canManageItem, formIsValid, itemLiked;
+    private bool canManageCollection, formIsValid, itemLiked;
     private IEnumerable<Comment> itemComments = [];
     private IEnumerable<Like> itemLikes = [];
     private string? commentContent, userId;
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri(HubName))
-            .Build();
-
-        hubConnection.On(HubReceiveCommentsUpdate, async () =>
-        {
-            await GetComments();
-            await InvokeAsync(StateHasChanged);
-        });
-
-        await hubConnection.StartAsync();
-        await hubConnection.InvokeAsync(HubJoinGroup, ItemId);
+        await InitHubConnection();
 
         item = await CollectionService.GetItemWithCollection(ItemId);
-
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
+        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
 
-        await DoActionItem(ActionType.CanManageInit);
         await GetComments();
-        await GetLikes(userId);
+        await GetLikes();
     }
 
     private async Task GetComments()
@@ -166,10 +151,15 @@
         itemComments = await ReactionsService.GetItemComments(ItemId);
     }
 
-    private async Task GetLikes(string? userId)
+    private async Task GetLikes()
     {
         itemLikes = await ReactionsService.GetItemLikes(ItemId);
-        itemLiked = itemLikes.Any(l => l.User?.Id == userId);
+
+        var userId = await AuthService.GetCurrentUserId();
+        if (!string.IsNullOrEmpty(userId))
+        {
+            itemLiked = itemLikes.Any(l => l.User?.Id == userId);
+        }
     }
 
     private void OnDeleteItem()
@@ -183,57 +173,47 @@
         DialogService.Show<DeleteDialog>($"{locale["Delete"]} {deleteContentText}", parameters, options);
     }
 
-    private async Task DeleteItem() => await DoActionItem(ActionType.Delete);
-    private async Task SubmitComment() => await DoActionItem(ActionType.Comment);
-    private async Task OnLikeItem() => await DoActionItem(ActionType.Like);
-
-    private async Task DoActionItem(ActionType action)
+    private async Task DeleteItem()
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsAllowManageCollection(item.Collection))
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
+            await CollectionService.DeleteItem(item);
+            NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
+        }
+    }
 
-            if (user is not null)
+    private async Task OnSubmitComment()
+    {
+        if(await AuthService.IsUserAuthenticated())
+        {
+            var userId = await AuthService.GetCurrentUserId();
+            if (!string.IsNullOrEmpty(userId))
             {
-                userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                switch (action)
-                {
-                    case ActionType.CanManageInit:
-                        canManageItem = (await AuthorizationService.AuthorizeAsync(user, item?.Collection, PolicyCanManageCollection)).Succeeded;
-                        break;
-
-                    case ActionType.Delete:
-                        if ((await AuthorizationService.AuthorizeAsync(user, item?.Collection, PolicyCanManageCollection)).Succeeded)
-                        {
-                            await CollectionService.DeleteItem(item);
-                            NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
-                        }
-                        break;
-
-                    case ActionType.Comment:
-                        if (!string.IsNullOrEmpty(commentContent))
-                        {
-                            var comment = new Comment() { ItemId = ItemId, Content = commentContent, AddedDateTime = DateTime.UtcNow, UserId = userId };
-                            commentContent = "";
-                            await ReactionsService.AddComment(comment);
-                            await SendUpdateComments();
-                            await GetComments();
-                        }
-                        break;
-
-                    case ActionType.Like:
-                        var myLike = await ReactionsService.GetLikeForItemByUser(ItemId, userId);
-                        if (myLike != null) await ReactionsService.DeleteLike(myLike);
-                        else
-                        {
-                            var newLike = new Like() { ItemId = ItemId, UserId = userId };
-                            await ReactionsService.AddLike(newLike);
-                        }
-                        await GetLikes(userId);
-                        break;
-                }
+                var comment = new Comment() { ItemId = ItemId, Content = commentContent, AddedDateTime = DateTime.UtcNow, UserId = userId };
+                commentContent = "";
+                await ReactionsService.AddComment(comment);
+                await SendUpdateComments();
+                await GetComments();
             }
+        }
+    }
+
+    private async Task OnLikeItem()
+    {
+        if (await AuthService.IsUserAuthenticated())
+        {
+            var userId = await AuthService.GetCurrentUserId();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                var myLike = await ReactionsService.GetLikeForItemByUser(ItemId, userId);
+                if (myLike != null) await ReactionsService.DeleteLike(myLike);
+                else
+                {
+                    var newLike = new Like() { ItemId = ItemId, UserId = userId };
+                    await ReactionsService.AddLike(newLike);
+                }
+                await GetLikes();
+            }                
         }
     }
 
@@ -247,6 +227,22 @@
     private string GetTagSearchHref(string tagName)
     {
         return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
+    }
+
+    private async Task InitHubConnection()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri(HubName))
+            .Build();
+
+        hubConnection.On(HubReceiveCommentsUpdate, async () =>
+        {
+            await GetComments();
+            await InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+        await hubConnection.InvokeAsync(HubJoinGroup, ItemId);
     }
 
     private async Task SendUpdateComments()
