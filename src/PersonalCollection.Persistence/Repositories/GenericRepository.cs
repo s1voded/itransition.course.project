@@ -14,7 +14,7 @@ namespace PersonalCollection.Persistence.Repositories
         public IQueryable<TEntity> GetAll() => _context.Set<TEntity>();
         public async Task<TEntity?> GetById(int id) => await _context.Set<TEntity>().FindAsync(id);
         public async Task Create(TEntity entity) => await _context.Set<TEntity>().AddAsync(entity);
-        public void Update(int id, TEntity entity) => _context.Set<TEntity>().Update(entity);
+        public void Update(TEntity entity) => _context.Set<TEntity>().Update(entity);
         public void Delete(TEntity entity) => _context.Set<TEntity>().Remove(entity);
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }

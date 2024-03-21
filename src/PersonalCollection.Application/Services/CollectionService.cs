@@ -51,7 +51,7 @@ namespace PersonalCollection.Application.Services
 
         public async Task UpdateCollection(Collection collection)
         {
-            _collectionRepository.Update(collection.Id, collection);
+            _collectionRepository.Update(collection);
             await _collectionRepository.SaveChangesAsync();
         }
 
@@ -74,7 +74,7 @@ namespace PersonalCollection.Application.Services
 
         public async Task UpdateItem(Item item)
         {
-            _itemRepository.Update(item.Id, item);
+            _itemRepository.Update(item);
             await _itemRepository.SaveChangesAsync();
         }
 
