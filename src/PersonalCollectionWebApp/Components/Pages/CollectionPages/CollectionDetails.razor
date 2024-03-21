@@ -146,6 +146,10 @@
         if (await AuthService.IsAllowManageCollection(collection))
         {
             await CollectionService.DeleteCollection(collection);
+            if (!string.IsNullOrEmpty(collection.Image))
+            {
+                await ImageStorageService.DeleteAsync(collection.Image);
+            }
             NavigationManager.NavigateTo($"/{NavCollections}");
         }
     }
