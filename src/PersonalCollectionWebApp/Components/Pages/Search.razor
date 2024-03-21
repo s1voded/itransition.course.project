@@ -1,7 +1,7 @@
 ﻿@attribute [Route(AppRouteSearch)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject CollectionService CollectionService
+@inject ItemService ItemService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Search> locale
 
@@ -43,12 +43,12 @@
     {
         if (!string.IsNullOrEmpty(SearchString))
         {
-            foundItems = await CollectionService.SearchItems(SearchString);
+            foundItems = await ItemService.SearchItems(SearchString);
         }
 
         if (!string.IsNullOrEmpty(SearchTag))
         {
-            foundItems = await CollectionService.SearchItemsByTag(SearchTag);
+            foundItems = await ItemService.SearchItemsByTag(SearchTag);
         }
     }
 

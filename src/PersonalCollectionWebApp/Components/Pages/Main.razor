@@ -2,6 +2,7 @@
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
+@inject ItemService ItemService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Main> locale
 
@@ -86,9 +87,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        lastAddedItems = await CollectionService.GetLastAddedItems(countLastAddedItems);
         largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
-        tagsWithUsedCount = await CollectionService.GetTagsWithUsedCount();
+        lastAddedItems = await ItemService.GetLastAddedItems(countLastAddedItems);
+        tagsWithUsedCount = await ItemService.GetTagsWithUsedCount();
     }
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)

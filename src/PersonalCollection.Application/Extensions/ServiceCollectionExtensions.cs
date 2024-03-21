@@ -27,6 +27,7 @@ namespace PersonalCollection.Application.Extensions
         private static void AddMyServices(this IServiceCollection services)
         {
             services.AddScoped<CollectionService>();
+            services.AddScoped<ItemService>();
             services.AddScoped<UserManagerService>();
             services.AddScoped<ReactionsService>();
             services.AddScoped<ImageStorageService>();

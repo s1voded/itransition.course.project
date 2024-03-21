@@ -14,20 +14,9 @@ namespace PersonalCollection.Application.Services
             _likeRepository = likeRepository;
         }
 
-        public async Task<IEnumerable<Comment>> GetItemComments(int itemId)
-        {
-            return await _commentRepository.GetItemComments(itemId);
-        }
-
-        public async Task<IEnumerable<Like>> GetItemLikes(int itemId)
-        {
-            return await _likeRepository.GetItemLikes(itemId);
-        }
-
-        public async Task<Like?> GetLikeForItemByUser(int itemId, string userId)
-        {
-            return await _likeRepository.GetLikeForItemByUser(itemId, userId);
-        }
+        public async Task<IEnumerable<Comment>> GetItemComments(int itemId) => await _commentRepository.GetItemComments(itemId);
+        public async Task<IEnumerable<Like>> GetItemLikes(int itemId) => await _likeRepository.GetItemLikes(itemId);
+        public async Task<Like?> GetLikeForItemByUser(int itemId, string userId) => await _likeRepository.GetLikeForItemByUser(itemId, userId);
 
         public async Task AddLike(Like like)
         {

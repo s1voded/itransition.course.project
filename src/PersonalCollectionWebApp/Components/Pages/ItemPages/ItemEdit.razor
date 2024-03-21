@@ -1,7 +1,7 @@
 ﻿@attribute [Route(AppRouteItemEdit)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject CollectionService CollectionService
+@inject ItemService ItemService
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
 @inject IStringLocalizer<ItemEdit> locale
@@ -32,8 +32,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        item = await CollectionService.GetItemWithCollection(ItemId);
-        tags = await CollectionService.GetAllItemTags();
+        item = await ItemService.GetItemWithCollection(ItemId);
+        tags = await ItemService.GetAllItemTags();
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
@@ -43,7 +43,7 @@
     {
         if (await AuthService.IsAllowManageCollection(item.Collection))
         {
-            await CollectionService.UpdateItem(item);
+            await ItemService.UpdateItem(item);
             NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");
         }
     }

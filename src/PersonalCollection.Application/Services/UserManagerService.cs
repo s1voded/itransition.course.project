@@ -27,10 +27,8 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task UpdateUsersBlockStatus(string[] userIds, bool status)
-        {
-            await _userRepository.ExecuteUpdateUsersBlockStatus(userIds, status);
-        }
+        public async Task UpdateUsersBlockStatus(string[] userIds, bool status) => await _userRepository.ExecuteUpdateUsersBlockStatus(userIds, status);
+        public async Task DeleteUsers(string[] userIds) => await _userRepository.ExecuteDeleteUsers(userIds);
 
         public async Task AddUsersClaim(string[] userIds, string claimType, string claimValue)
         {
@@ -42,11 +40,6 @@ namespace PersonalCollection.Application.Services
         {
             await _userRepository.RemoveUsersClaim(userIds, claimType, claimValue);
             await _userRepository.SaveChangesAsync();
-        }
-
-        public async Task DeleteUsers(string[] userIds)
-        {
-            await _userRepository.ExecuteDeleteUsers(userIds);
         }
     }
 }

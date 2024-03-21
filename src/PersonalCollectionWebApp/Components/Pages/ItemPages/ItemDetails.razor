@@ -1,7 +1,7 @@
 ﻿@attribute [Route(AppRouteItemDetails)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject CollectionService CollectionService
+@inject ItemService ItemService
 @inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
@@ -138,7 +138,7 @@
     {
         await InitHubConnection();
 
-        item = await CollectionService.GetItemWithCollection(ItemId);
+        item = await ItemService.GetItemWithCollection(ItemId);
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
 
@@ -177,7 +177,7 @@
     {
         if (await AuthService.IsAllowManageCollection(item.Collection))
         {
-            await CollectionService.DeleteItem(item);
+            await ItemService.DeleteItem(item);
             NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
         }
     }

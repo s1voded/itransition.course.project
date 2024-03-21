@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
+@inject ItemService ItemService
 @inject AuthService AuthService
 @inject IStringLocalizer<ItemCreate> locale
 
@@ -31,8 +32,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        tags = await CollectionService.GetAllItemTags();
         collection = await CollectionService.GetCollectionById(CollectionId);
+        tags = await ItemService.GetAllItemTags();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection);
@@ -44,7 +45,7 @@
         {
             item.CollectionId = CollectionId;
             item.CreatedDate = DateTime.UtcNow;
-            await CollectionService.AddItem(item);
+            await ItemService.AddItem(item);
             NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}");
 
         }
