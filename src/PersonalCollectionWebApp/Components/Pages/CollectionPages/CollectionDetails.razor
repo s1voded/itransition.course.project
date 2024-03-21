@@ -5,6 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject IAuthorizationService AuthorizationService
 @inject IDialogService DialogService
+@inject ImageStorageService ImageStorageService
 @inject IStringLocalizer<CollectionDetails> locale
 
 <PageTitle>@collection?.Name</PageTitle>
@@ -30,9 +31,33 @@
             <MudText>@locale["Description"]:</MudText>
             @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
         </MudPaper>
-        @if (!string.IsNullOrEmpty(collection?.Image))
+        @if (!string.IsNullOrEmpty(collection.Image))
         {
-            <ImageComponent FileName=@collection?.Image />
+            <MudBadge Icon="@Icons.Material.Filled.Delete" Color="Color.Error" Overlap="true" Visible=@canManageCollection OnClick=@OnDeleteImage BadgeClass="cursor-pointer">
+                <ImageComponent FileName=@collection.Image />
+            </MudBadge>
+        }
+        else
+        {
+            @if (canManageCollection)
+            {
+                <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadImage">
+                    <ButtonTemplate>
+                        <MudIconButton HtmlTag="label" Color="Color.Info" for="@context.Id" Icon="@Icons.Material.Filled.AddAPhoto" />
+                    </ButtonTemplate>
+                    <SelectedTemplate>
+                        @if (context != null)
+                        {
+                            <MudText>@context.Name</MudText>
+                            <MudProgressCircular Size="Size.Small" Color="Color.Default" Indeterminate="true" />
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.caption">no image file</MudText>
+                        }
+                    </SelectedTemplate>
+                </MudFileUpload>
+            }
         }
     </MudStack>
 
@@ -146,9 +171,32 @@
                             NavigationManager.NavigateTo($"/{NavCollections}");
                         }
                         break;
+
+                    case ActionType.Update:
+                        if (isAuthorized.Succeeded)
+                        {
+                            await CollectionService.UpdateCollection(collection);
+                            //NavigationManager.NavigateTo($"/{NavCollections}");
+                        }
+                        break;
                 }
             }
         }
+    }
+
+    private async Task UploadImage(IBrowserFile file)
+    {
+        var fileName = $"{Guid.NewGuid()}_{file.Name}";
+        await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
+        collection.Image = fileName;
+        await DoActionCollection(ActionType.Update);
+    }
+
+    private async Task OnDeleteImage()
+    {
+        await ImageStorageService.DeleteAsync(collection.Image);
+        collection.Image = null;
+        await DoActionCollection(ActionType.Update);
     }
 
     private void NavigateToAddItem()

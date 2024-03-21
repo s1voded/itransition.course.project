@@ -7,6 +7,7 @@ using PersonalCollection.Persistence.Contexts;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Policies.Handlers;
 using PersonalCollectionWebApp.Policies.Requirements;
+using PersonalCollectionWebApp.Services;
 using static PersonalCollection.Domain.Constants;
 
 namespace PersonalCollectionWebApp.Extensions
@@ -17,6 +18,7 @@ namespace PersonalCollectionWebApp.Extensions
         {
             services.AddIdentityServices();
             services.AddAuthorizationWithPolicies();
+            services.AddScoped<AuthService>();
             services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllers(); //controller for change culture

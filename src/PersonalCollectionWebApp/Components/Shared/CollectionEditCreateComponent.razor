@@ -1,6 +1,5 @@
 ﻿@using PSC.Blazor.Components.MarkdownEditor
 @using PSC.Blazor.Components.MarkdownEditor.EventsArgs
-@inject ImageStorageService ImageStorageService
 
 <MudGrid>
     <MudItem xs="12" sm="7">
@@ -12,32 +11,7 @@
                     {
                         <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
                     }
-                </MudSelect>
-
-                @if (!string.IsNullOrEmpty(Collection.Image))
-                {
-                    <ImageComponent FileName=@Collection.Image />
-                    <MudButton StartIcon="@Icons.Material.Filled.Delete" OnClick=OnDeleteImage>Delete</MudButton>
-                }
-                else
-                {
-                    <MudFileUpload T="IBrowserFile" Accept=".png, .jpg" FilesChanged="UploadImage">
-                        <ButtonTemplate>
-                            <MudButton HtmlTag="label" Variant="Variant.Filled" Color="Color.Primary" for="@context.Id">Upload Image</MudButton>
-                        </ButtonTemplate>
-                        <SelectedTemplate>
-                            @if (context != null)
-                            {
-                                <MudText>@context.Name</MudText>
-                            }
-                            else
-                            {
-                                <MudText>No File</MudText>
-                            }
-                        </SelectedTemplate>
-                    </MudFileUpload>
-                }
-               
+                </MudSelect>            
                 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <MarkdownEditor @bind-Value="Collection.Description" MaxHeight="150px" />
                 <MudExpansionPanels MultiExpansion="true">
@@ -68,18 +42,5 @@
     async Task Submit()
     {
         await OnSubmit.InvokeAsync();
-    }
-
-    private async Task UploadImage(IBrowserFile file)
-    {
-        var fileName = $"{Guid.NewGuid()}_{file.Name}";
-        await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
-        Collection.Image = fileName;
-    }
-
-    private async Task OnDeleteImage()
-    {
-        await ImageStorageService.DeleteAsync(Collection.Image);
-        Collection.Image = null;
     }
 }

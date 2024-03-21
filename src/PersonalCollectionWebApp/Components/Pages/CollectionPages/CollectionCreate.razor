@@ -3,7 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject CollectionService CollectionService
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IStringLocalizer<CollectionCreate> locale
 
 <PageTitle>@locale["Collection create"]</PageTitle>
@@ -20,9 +20,6 @@
 </CollectionEditCreateComponent>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     public Collection collection = new();
     private IEnumerable<Theme> themes = [];
 
@@ -52,29 +49,14 @@
 
     public async Task AddCollection()
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsUserAuthenticated())
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
+            collection.UserId = await AuthService.GetCurrentUserId();
+            if(await AuthService.IsAllowManageCollection(collection))
             {
-                var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (!string.IsNullOrEmpty(userId))
-                {
-                    collection.UserId = userId;
-                    var isAuthorized = await AuthorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
-                    if (isAuthorized.Succeeded)
-                    {
-                        collection.CustomFieldsSettings = customFieldsSettings;
-                        await CollectionService.AddCollection(collection);
-                        NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
-                    }
-                    else
-                    {
-                        NavigationManager.NavigateTo("/");
-                    }
-                }
+                collection.CustomFieldsSettings = customFieldsSettings;
+                await CollectionService.AddCollection(collection);
+                NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
             }
         }
     }
