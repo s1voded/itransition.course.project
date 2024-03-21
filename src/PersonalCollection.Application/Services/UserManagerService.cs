@@ -34,8 +34,7 @@ namespace PersonalCollection.Application.Services
             var user = await GetUserByIdWithClaims(userId);
             if (user != null && !UserHasClaim(user, ClaimTypes.Role, role))
             {
-                var claimRole = new Claim(ClaimTypes.Role, role);
-                await _userManager.AddClaimAsync(user, claimRole);
+                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role));
             }
         }
 
@@ -44,8 +43,7 @@ namespace PersonalCollection.Application.Services
             var user = await GetUserByIdWithClaims(userId);
             if (user != null && UserHasClaim(user, ClaimTypes.Role, role))
             {
-                var claimRole = new Claim(ClaimTypes.Role, role);
-                await _userManager.RemoveClaimAsync(user, claimRole);
+                await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role));
             }
         }
 

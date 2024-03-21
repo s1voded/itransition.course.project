@@ -28,6 +28,17 @@ namespace PersonalCollectionWebApp.Services
             return false;
         }
 
+        public async Task<bool> IsUserAdmin()
+        {
+            var user = await GetCurrentUser();
+            if (user is not null)
+            {
+                var isAuthorized = await _authorizationService.AuthorizeAsync(user, PolicyAdminOnly);
+                return isAuthorized.Succeeded;
+            }
+            return false;
+        }
+
         public async Task<bool> IsUserAuthenticated()
         {
             var user = await GetCurrentUser();
@@ -38,7 +49,6 @@ namespace PersonalCollectionWebApp.Services
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -49,7 +59,6 @@ namespace PersonalCollectionWebApp.Services
             {
                 return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             }
-
             return null;
         }
 
@@ -62,7 +71,6 @@ namespace PersonalCollectionWebApp.Services
 
                 return user;
             }
-
             return null;
         }
     }

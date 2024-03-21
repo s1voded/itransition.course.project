@@ -2,7 +2,7 @@
 @attribute [Authorize(Policy = PolicyAdminOnly)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject UserManagerService UserManagerService
-@inject IAuthorizationService AuthorizationService
+@inject AuthService AuthService
 @inject IDialogService DialogService
 @inject IStringLocalizer<ManageUsers> locale
   
@@ -50,9 +50,6 @@
 </MudTable>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
     private HashSet<ApplicationUserDto> selectedUsers = [];
     private IEnumerable<ApplicationUserDto> users = [];
     private string? searchString;
@@ -75,6 +72,8 @@
         users = await UserManagerService.GetAllUsers();
     }
 
+    private async Task DeleteUser() => await ChangeUser(ChangeType.Delete);
+
     private void OnDeleteUser()
     {
         if (selectedUsers.Count > 0)
@@ -90,47 +89,36 @@
         }
     }
 
-    private async Task DeleteUser() => await ChangeUser(ChangeType.Delete);
-
     private async Task ChangeUser(ChangeType changeType)
     {
-        if (authenticationState is not null)
+        if (await AuthService.IsUserAdmin())
         {
-            var authState = await authenticationState;
-            var user = authState?.User;
-
-            if (user is not null)
+            foreach (var selectedUser in selectedUsers)
             {
-                if ((await AuthorizationService.AuthorizeAsync(user, PolicyAdminOnly)).Succeeded)
+                switch (changeType)
                 {
-                    foreach (var selectedUser in selectedUsers)
-                    {
-                        switch (changeType)
-                        {
-                            case ChangeType.SetAdmin:
-                                await UserManagerService.AddUserRole(selectedUser.Id, AdminRole);
-                                break;
+                    case ChangeType.SetAdmin:
+                        await UserManagerService.AddUserRole(selectedUser.Id, AdminRole);
+                        break;
 
-                            case ChangeType.RemoveAdmin:
-                                await UserManagerService.RemoveUserRole(selectedUser.Id, AdminRole);
-                                break;
+                    case ChangeType.RemoveAdmin:
+                        await UserManagerService.RemoveUserRole(selectedUser.Id, AdminRole);
+                        break;
 
-                            case ChangeType.Block:
-                                await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, true);
-                                break;
+                    case ChangeType.Block:
+                        await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, true);
+                        break;
 
-                            case ChangeType.Unblock:
-                                await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, false);
-                                break;
-                            case ChangeType.Delete:
-                                await UserManagerService.DeleteUser(selectedUser.Id);
-                                break;
-                        }
-                    }
+                    case ChangeType.Unblock:
+                        await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, false);
+                        break;
+                    case ChangeType.Delete:
+                        await UserManagerService.DeleteUser(selectedUser.Id);
+                        break;
                 }
             }
+            await GetUsers();
         }
-        await GetUsers();
     }
 
     private Func<ApplicationUserDto, bool> UserFilter => x =>
