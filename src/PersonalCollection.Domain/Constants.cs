@@ -45,5 +45,7 @@
 
         public const string RU = "ru-RU";
         public const string EN = "en-US";
+
+        public const string JSGetTimeOffsetFuncName = "getTimezoneOffset";
     }
 }

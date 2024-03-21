@@ -7,6 +7,7 @@
 @inject AuthService AuthService
 @inject IDialogService DialogService
 @inject IStringLocalizer<ItemDetails> locale
+@inject IJSRuntime JS
 @implements IAsyncDisposable
 
 <PageTitle>@item?.Name</PageTitle>
@@ -25,7 +26,7 @@
 
     <MudPaper Class="pa-4" Elevation="1">
         <MudText>@locale["Name"]: <b>@item.Name</b></MudText>
-        <MudText>@locale["Added"]: <b>@item.CreatedDate</b></MudText>
+        <MudText>@locale["Added"]: <b>@GetLocalTime(item.CreatedDate)</b></MudText>
         <MudText>
             @locale["Collection"]:
             <MudLink Href=@($"/{NavCollections}/{item.Collection.Id}") Class="pa-1">@item.Collection.Name</MudLink>
@@ -133,6 +134,7 @@
     private IEnumerable<Comment> itemComments = [];
     private IEnumerable<Like> itemLikes = [];
     private string? commentContent, userId;
+    private int timeZoneOffset;
 
     protected override async Task OnInitializedAsync()
     {
@@ -144,6 +146,8 @@
 
         await GetComments();
         await GetLikes();
+
+        timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
 
     private async Task GetComments()
@@ -218,6 +222,8 @@
     }
 
     private string? GetReactionUserName(ApplicationUser? user) => user != null ? user.UserName : locale["deleted user"];
+
+    private string GetLocalTime(DateTime dateTime) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
     private void NavigateToEditItem()
     {

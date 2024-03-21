@@ -5,6 +5,7 @@
 @inject ItemService ItemService
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<Main> locale
+@inject IJSRuntime JS
 
 <PageTitle>@locale["Main"]</PageTitle>
 
@@ -28,7 +29,7 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
         <MudTd DataLabel="Author">@context.Collection.User.UserName</MudTd>
-        <MudTd DataLabel="Added" >@context.CreatedDate.ToLocalTime()</MudTd>
+        <MudTd DataLabel="Added">@GetLocalTime(context.CreatedDate)</MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -84,13 +85,18 @@
     private IEnumerable<Collection> largestCollections = [];
     private IEnumerable<TagDto> tagsWithUsedCount = [];
     private int countLargestCollections = 5, countLastAddedItems = 5;
+    private int timeZoneOffset;
 
     protected override async Task OnInitializedAsync()
     {
         largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
         lastAddedItems = await ItemService.GetLastAddedItems(countLastAddedItems);
         tagsWithUsedCount = await ItemService.GetTagsWithUsedCount();
+
+        timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
+
+    private string GetLocalTime(DateTime dateTime) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)
     {
@@ -118,9 +124,9 @@
         return $"font-size: {fontSize}px;";
     }
 
-    private int Scale(int value, int min, int max, int minScale, int maxScale)
+    private double Scale(int value, int min, int max, int minScale, int maxScale)
     {
-        if (min != max) return minScale + (value - min) / (max - min) * (maxScale - minScale);
+        if (min != max) return minScale + (double)(value - min) / (max - min) * (maxScale - minScale);
         else return (maxScale + minScale) / 2;
     }
 }

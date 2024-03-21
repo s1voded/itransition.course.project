@@ -7,6 +7,7 @@
 @inject IDialogService DialogService
 @inject ImageStorageService ImageStorageService
 @inject IStringLocalizer<CollectionDetails> locale
+@inject IJSRuntime JS
 
 <PageTitle>@collection?.Name</PageTitle>
 
@@ -90,7 +91,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Added">@context.CreatedDate.ToLocalTime()</MudTd>
+            <MudTd DataLabel="Added">@GetLocalTime(context.CreatedDate)</MudTd>
             <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
             @for (int i = 0; i < CustomFieldsCount; i++)
             {
@@ -121,6 +122,7 @@
 
     private Collection? collection;
     private bool canManageCollection;
+    private int timeZoneOffset;
 
     protected override async Task OnInitializedAsync()
     {
@@ -128,6 +130,8 @@
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection);
+
+        timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
 
     private void OnDeleteCollection()
@@ -174,6 +178,8 @@
             await CollectionService.UpdateCollection(collection);
         }
     }
+
+    private string GetLocalTime(DateTime dateTime) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
     private void NavigateToAddItem()
     {
