@@ -1,4 +1,5 @@
-﻿@attribute [Route(AppRouteUserManager)]
+﻿@using System.Security.Claims
+@attribute [Route(AppRouteUserManager)]
 @attribute [Authorize(Policy = PolicyAdminOnly)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject UserManagerService UserManagerService
@@ -93,29 +94,27 @@
     {
         if (await AuthService.IsUserAdmin())
         {
-            foreach (var selectedUser in selectedUsers)
+            var userIds = selectedUsers.Select(u => u.Id).ToArray();
+            switch (changeType)
             {
-                switch (changeType)
-                {
-                    case ChangeType.SetAdmin:
-                        await UserManagerService.AddUserRole(selectedUser.Id, AdminRole);
-                        break;
+                case ChangeType.SetAdmin:
+                    await UserManagerService.AddUsersClaim(userIds, ClaimTypes.Role, AdminRole);
+                    break;
 
-                    case ChangeType.RemoveAdmin:
-                        await UserManagerService.RemoveUserRole(selectedUser.Id, AdminRole);
-                        break;
+                case ChangeType.RemoveAdmin:
+                    await UserManagerService.RemoveUsersClaim(userIds, ClaimTypes.Role, AdminRole);
+                    break;
 
-                    case ChangeType.Block:
-                        await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, true);
-                        break;
+                case ChangeType.Block:
+                    await UserManagerService.UpdateUsersBlockStatus(userIds, true);
+                    break;
 
-                    case ChangeType.Unblock:
-                        await UserManagerService.UpdateBlockStatusUser(selectedUser.Id, false);
-                        break;
-                    case ChangeType.Delete:
-                        await UserManagerService.DeleteUser(selectedUser.Id);
-                        break;
-                }
+                case ChangeType.Unblock:
+                    await UserManagerService.UpdateUsersBlockStatus(userIds, false);
+                    break;
+                case ChangeType.Delete:
+                    await UserManagerService.DeleteUsers(userIds);
+                    break;
             }
             await GetUsers();
         }

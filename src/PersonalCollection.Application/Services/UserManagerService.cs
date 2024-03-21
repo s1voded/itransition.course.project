@@ -5,87 +5,48 @@ using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Application.Models;
 using PersonalCollection.Domain.Entities;
-using System.Data;
-using System.Security.Claims;
 
 namespace PersonalCollection.Application.Services
 {
     public class UserManagerService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper)
+        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper, IUserRepository userRepository)
         {
-            _userManager = userManager;
             _mapper = mapper;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
-            return await _userManager.Users
+            return await _userRepository.GetAll()
                 .Include(u => u.Claims)
                 .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
                 .ToListAsync();
         }
 
-        public async Task AddUserRole(string userId, string role)
+        public async Task UpdateUsersBlockStatus(string[] userIds, bool status)
         {
-            var user = await GetUserByIdWithClaims(userId);
-            if (user != null && !UserHasClaim(user, ClaimTypes.Role, role))
-            {
-                await _userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, role));
-            }
+            await _userRepository.ExecuteUpdateUsersBlockStatus(userIds, status);
         }
 
-        public async Task RemoveUserRole(string userId, string role)
+        public async Task AddUsersClaim(string[] userIds, string claimType, string claimValue)
         {
-            var user = await GetUserByIdWithClaims(userId);
-            if (user != null && UserHasClaim(user, ClaimTypes.Role, role))
-            {
-                await _userManager.RemoveClaimAsync(user, new Claim(ClaimTypes.Role, role));
-            }
+            await _userRepository.AddUsersClaim(userIds, claimType, claimValue);
+            await _userRepository.SaveChangesAsync();
         }
 
-        public async Task UpdateBlockStatusUser(string userId, bool status)
+        public async Task RemoveUsersClaim(string[] userIds, string claimType, string claimValue)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user != null && user.IsBlocked != status)
-            {
-                user.IsBlocked = status;
-                await _userManager.UpdateAsync(user);
-            }
+            await _userRepository.RemoveUsersClaim(userIds, claimType, claimValue);
+            await _userRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteUser(string userId)
+        public async Task DeleteUsers(string[] userIds)
         {
-            var user = await _userManager.Users
-                .Include(u => u.Comments)
-                .Include(u => u.Likes)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-
-            if (user != null)
-            {
-                //https://learn.microsoft.com/ru-ru/ef/core/saving/cascade-delete#cascading-nulls
-                user.Comments.Clear();
-                user.Likes.Clear();              
-
-                await _userManager.DeleteAsync(user);
-            }
-        }
-
-        private async Task<ApplicationUser?> GetUserByIdWithClaims(string userId)
-        {
-            return await _userManager.Users
-                .Include(u => u.Claims)
-                .FirstOrDefaultAsync(u => u.Id == userId);
-        }
-
-        private bool UserHasClaim(ApplicationUser user, string claimType, string claimValue)
-        {
-            return user.Claims
-                .Where(c => c.ClaimType == claimType)
-                .Any(c => c.ClaimValue == claimValue);
+            await _userRepository.ExecuteDeleteUsers(userIds);
         }
     }
 }

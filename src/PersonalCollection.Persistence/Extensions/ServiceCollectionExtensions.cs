@@ -32,6 +32,7 @@ namespace PersonalCollection.Persistence.Extensions
             services.AddScoped<ITagRepository, TagRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
             services.AddScoped<ILikeRepository, LikeRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }
