@@ -150,6 +150,9 @@
   <data name="Unblock" xml:space="preserve">
     <value>Разблокировать</value>
   </data>
+  <data name="user" xml:space="preserve">
+    <value>пользователя</value>
+  </data>
   <data name="Username" xml:space="preserve">
     <value>Имя пользователя</value>
   </data>

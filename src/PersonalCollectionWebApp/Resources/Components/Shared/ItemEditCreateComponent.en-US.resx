@@ -117,46 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Block" xml:space="preserve">
-    <value>Block</value>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="Blocked" xml:space="preserve">
-    <value>Blocked</value>
+  <data name="as a new tag" xml:space="preserve">
+    <value>as a new tag</value>
   </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
   </data>
-  <data name="Email" xml:space="preserve">
-    <value>Email</value>
+  <data name="Name is required" xml:space="preserve">
+    <value>Name is required!</value>
   </data>
-  <data name="Manage users" xml:space="preserve">
-    <value>Manage users</value>
+  <data name="Please enter a minimum of 2 characters to perform a search" xml:space="preserve">
+    <value>Please enter a minimum of 2 characters to perform a search.</value>
   </data>
-  <data name="Remove admin" xml:space="preserve">
-    <value>Remove admin</value>
-  </data>
-  <data name="Role" xml:space="preserve">
-    <value>Role</value>
-  </data>
-  <data name="Search users" xml:space="preserve">
-    <value>Search users</value>
-  </data>
-  <data name="Set admin" xml:space="preserve">
-    <value>Set admin</value>
-  </data>
-  <data name="Status" xml:space="preserve">
-    <value>Status</value>
-  </data>
-  <data name="Unblock" xml:space="preserve">
-    <value>Unblock</value>
-  </data>
-  <data name="user" xml:space="preserve">
-    <value>user</value>
-  </data>
-  <data name="Username" xml:space="preserve">
-    <value>Username</value>
-  </data>
-  <data name="Users" xml:space="preserve">
-    <value>Users</value>
+  <data name="Select tags" xml:space="preserve">
+    <value>Select tags</value>
   </data>
 </root>

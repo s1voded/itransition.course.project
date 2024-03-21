@@ -1,7 +1,7 @@
 ﻿<MudExpansionPanel HideIcon="true">
     <TitleContent>
         <div class="d-flex">
-            <MudText Class="mt-1">@($"{CustomFieldsName} fields")</MudText>
+            <MudText Class="mt-1">@CustomFieldsCaption</MudText>
             <MudBadge Content=@CustomFields.Count(c => c.Enable) Overlap="true" Class="d-flex ml-auto" Visible=@CustomFields.Any(c => c.Enable)>
                 <MudIcon Icon="@Icons.Material.Filled.ExpandMore" Color="Color.Default" />
             </MudBadge>
@@ -13,7 +13,7 @@
             var index = i;
             <MudPaper Class="d-flex align-end flex-grow-1 gap-4" Elevation="0">
                 <MudCheckBox @bind-Value="CustomFields[index].Enable"></MudCheckBox>
-                <MudTextField @bind-Value="CustomFields[index].Name" Label=@($"Field #{index+1} name") Required="CustomFields[index].Enable" Disabled="!CustomFields[index].Enable"></MudTextField>
+                <MudTextField @bind-Value="CustomFields[index].Name" Label=@CustomFieldLabel Required="CustomFields[index].Enable" Disabled="!CustomFields[index].Enable"></MudTextField>
             </MudPaper>
         }
     </ChildContent>
@@ -21,5 +21,6 @@
 
 @code {
     [Parameter] public List<CustomField> CustomFields { get; set; }
-    [Parameter] public string CustomFieldsName { get; set; }
+    [Parameter] public string CustomFieldsCaption { get; set; }
+    [Parameter] public string CustomFieldLabel { get; set; }
 }

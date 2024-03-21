@@ -78,14 +78,14 @@
     {
         if (selectedUsers.Count > 0)
         {
-            var deleteContentText = selectedUsers.Count == 1 ? $"user {selectedUsers.First().UserName}" : $"{selectedUsers.Count} users";
+            var deleteContentText = selectedUsers.Count == 1 ? $"{locale["user"]} {selectedUsers.First().UserName}" : $"{selectedUsers.Count} users";
 
             var parameters = new DialogParameters<DeleteDialog>();
             parameters.Add(x => x.ContentText, deleteContentText);
             parameters.Add(x => x.OnDelete, new EventCallbackFactory().Create(this, DeleteUser));
 
             var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
-            DialogService.Show<DeleteDialog>($"Delete {deleteContentText}", parameters, options);
+            DialogService.Show<DeleteDialog>($"{locale["Delete"]} {deleteContentText}", parameters, options);
         }
     }
 

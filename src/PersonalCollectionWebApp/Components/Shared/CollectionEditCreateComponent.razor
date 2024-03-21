@@ -1,12 +1,13 @@
 ﻿@using PSC.Blazor.Components.MarkdownEditor
 @using PSC.Blazor.Components.MarkdownEditor.EventsArgs
+@inject IStringLocalizer<CollectionEditCreateComponent> locale
 
 <MudGrid>
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
             <MudForm @bind-IsValid="@formIsValid">
-                <MudTextField @bind-Value="Collection.Name" Label="Name" Required="true" RequiredError="Name is required!" />
-                <MudSelect @bind-Value="Collection.ThemeId" Label="Theme" AnchorOrigin="Origin.BottomCenter" >
+                <MudTextField @bind-Value="Collection.Name" Label=@locale["Name"] Required="true" RequiredError=@locale["Name is required"] />
+                <MudSelect @bind-Value="Collection.ThemeId" Label=@locale["Theme"] AnchorOrigin="Origin.BottomCenter">
                     @foreach (var theme in Themes)
                     {
                         <MudSelectItem T="int?" Value="@theme.Id">@theme.Name</MudSelectItem>
@@ -15,11 +16,11 @@
                 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <MarkdownEditor @bind-Value="Collection.Description" MaxHeight="150px" />
                 <MudExpansionPanels MultiExpansion="true">
-                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomStrings CustomFieldsName="String"/>
-                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomTexts CustomFieldsName="Text" />
-                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomInts CustomFieldsName="Int" />
-                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomBools CustomFieldsName="Bool" />
-                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomDates CustomFieldsName="Date" />
+                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomStrings CustomFieldsCaption=@locale["String fields"] CustomFieldLabel=@locale["Name field"]/>
+                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomTexts CustomFieldsCaption=@locale["Text fields"] CustomFieldLabel=@locale["Name field"] />
+                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomInts CustomFieldsCaption=@locale["Int fields"] CustomFieldLabel=@locale["Name field"] />
+                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomBools CustomFieldsCaption=@locale["Bool fields"] CustomFieldLabel=@locale["Name field"] />
+                    <CustomFieldsSettingComponent CustomFields=@CustomFieldsSettings.CustomDates CustomFieldsCaption=@locale["Date fields"] CustomFieldLabel=@locale["Name field"] />
                 </MudExpansionPanels>
                 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <div class="d-flex align-center justify-space-between">
