@@ -76,7 +76,7 @@
     <MudText Typo="Typo.h6" Class="pa-2">@locale["Tags"]</MudText>
     @foreach (var tag in tagsWithUsedCount)
     {
-        <MudLink Href="@PageHelperService.GetTagSearchHref(tag.Name)" Style=@PageHelperService.GetFontSizeForTag(tag, minCountTags, maxCountTags) Class="pa-2">@tag.Name</MudLink>
+        <MudLink Href="@PageHelperService.GetTagSearchHref(tag.Name)" Style=@($"font-size: {PageHelperService.GetFontSizeForTag(tag, minCountTags, maxCountTags)}px;") Class="pa-2">@tag.Name</MudLink>
     }
 </MudPaper>
 

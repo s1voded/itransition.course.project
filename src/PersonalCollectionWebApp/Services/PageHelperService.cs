@@ -15,13 +15,10 @@ namespace PersonalCollectionWebApp.Services
             return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
         }
 
-        public string GetFontSizeForTag(TagDto tag, int minCount, int maxCount)
+        public double GetFontSizeForTag(TagDto tag, int minCount, int maxCount)
         {
-            var minFontSize = 12;
-            var maxFontSize = 30;
-
-            var fontSize = Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);
-            return $"font-size: {fontSize}px;";
+            int minFontSize = 12, maxFontSize = 30;
+            return Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);
         }
 
         private double Scale(int value, int min, int max, int minScale, int maxScale)
