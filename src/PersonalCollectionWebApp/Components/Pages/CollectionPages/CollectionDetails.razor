@@ -3,6 +3,7 @@
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
+@inject PageHelperService PageHelperService
 @inject AuthService AuthService
 @inject IDialogService DialogService
 @inject ImageStorageService ImageStorageService
@@ -91,7 +92,7 @@
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Added">@GetLocalTime(context.CreatedDate)</MudTd>
+            <MudTd DataLabel="Added">@PageHelperService.GetLocalTime(context.CreatedDate, timeZoneOffset)</MudTd>
             <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
             @for (int i = 0; i < CustomFieldsCount; i++)
             {
@@ -106,7 +107,7 @@
                 var index = i;
                 @if (collection?.CustomFieldsSettings != null && collection.CustomFieldsSettings.CustomDates[index].Enable)
                 {
-                    <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDates[index].Name">@context.CustomDates[index]</MudTd>
+                    <MudTd DataLabel="@collection.CustomFieldsSettings.CustomDates[index].Name">@(context.CustomDates[index].HasValue ? context.CustomDates[index].Value.ToShortDateString() : "")</MudTd>
                 }
             }
         </RowTemplate>
@@ -162,8 +163,9 @@
     {
         if (await AuthService.IsAllowManageCollection(collection))
         {
+            var _2mb = 2097152;
             var fileName = $"{Guid.NewGuid()}_{file.Name}";
-            await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(2097152));
+            await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(_2mb));
             collection.Image = fileName;
             await CollectionService.UpdateCollection(collection);
         }
@@ -178,8 +180,6 @@
             await CollectionService.UpdateCollection(collection);
         }
     }
-
-    private string GetLocalTime(DateTime dateTime) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
     private void NavigateToAddItem()
     {

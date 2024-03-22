@@ -21,6 +21,7 @@ namespace PersonalCollectionWebApp.Extensions
             services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllers(); //controller for change culture
+            services.AddScoped<PageHelperService>();
         }
 
         private static void AddIdentityServices(this IServiceCollection services)

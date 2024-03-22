@@ -1,6 +1,4 @@
-﻿@typeparam T
-
-@for (int i = 0; i < CustomFieldsCount; i++)
+﻿@for (int i = 0; i < CustomFieldsCount; i++)
 {
     var index = i;
     @if (CustomFields[index].Enable)
@@ -10,6 +8,6 @@
 }
 
 @code {
-    [Parameter] public T[] ItemCustomField { get; set; }
+    [Parameter] public string[] ItemCustomField { get; set; }
     [Parameter] public List<CustomField> CustomFields { get; set; }
 }

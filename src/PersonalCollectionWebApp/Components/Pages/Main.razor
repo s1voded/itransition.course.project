@@ -4,6 +4,7 @@
 @inject CollectionService CollectionService
 @inject ItemService ItemService
 @inject NavigationManager NavigationManager
+@inject PageHelperService PageHelperService
 @inject IStringLocalizer<Main> locale
 @inject IJSRuntime JS
 
@@ -29,7 +30,7 @@
         <MudTd DataLabel="Name">@context.Name</MudTd>
         <MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
         <MudTd DataLabel="Author">@context.Collection.User.UserName</MudTd>
-        <MudTd DataLabel="Added">@GetLocalTime(context.CreatedDate)</MudTd>
+        <MudTd DataLabel="Added">@PageHelperService.GetLocalTime(context.CreatedDate, timeZoneOffset)</MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -75,7 +76,7 @@
     <MudText Typo="Typo.h6" Class="pa-2">@locale["Tags"]</MudText>
     @foreach (var tag in tagsWithUsedCount)
     {
-        <MudLink Href="@GetTagSearchHref(tag.Name)" Style=@GetFontSizeForTag(tag) Class="pa-2">@tag.Name</MudLink>
+        <MudLink Href="@PageHelperService.GetTagSearchHref(tag.Name)" Style=@PageHelperService.GetFontSizeForTag(tag, minCountTags, maxCountTags) Class="pa-2">@tag.Name</MudLink>
     }
 </MudPaper>
 
@@ -85,18 +86,19 @@
     private IEnumerable<Collection> largestCollections = [];
     private IEnumerable<TagDto> tagsWithUsedCount = [];
     private int countLargestCollections = 5, countLastAddedItems = 5;
-    private int timeZoneOffset;
+    private int timeZoneOffset, minCountTags, maxCountTags;
 
     protected override async Task OnInitializedAsync()
     {
         largestCollections = await CollectionService.GetLargestCollections(countLargestCollections);
         lastAddedItems = await ItemService.GetLastAddedItems(countLastAddedItems);
+
         tagsWithUsedCount = await ItemService.GetTagsWithUsedCount();
+        minCountTags = tagsWithUsedCount.Min(t => t.Count);
+        maxCountTags = tagsWithUsedCount.Max(t => t.Count);
 
         timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
-
-    private string GetLocalTime(DateTime dateTime) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)
     {
@@ -106,27 +108,5 @@
     private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
     {
         NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
-    }
-
-    private string GetTagSearchHref(string tagName)
-    {
-        return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
-    }
-
-    private string GetFontSizeForTag(TagDto tag)
-    {
-        var minFontSize = 12;
-        var maxFontSize = 30;
-        var minCount = tagsWithUsedCount.Min(t => t.Count);
-        var maxCount = tagsWithUsedCount.Max(t => t.Count);
-
-        var fontSize = Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);
-        return $"font-size: {fontSize}px;";
-    }
-
-    private double Scale(int value, int min, int max, int minScale, int maxScale)
-    {
-        if (min != max) return minScale + (double)(value - min) / (max - min) * (maxScale - minScale);
-        else return (maxScale + minScale) / 2;
     }
 }
