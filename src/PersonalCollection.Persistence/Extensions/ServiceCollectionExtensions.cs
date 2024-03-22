@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PersonalCollection.Application.Interfaces.Repositories;
-using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
 using PersonalCollection.Persistence.Repositories;
 
@@ -14,6 +12,7 @@ namespace PersonalCollection.Persistence.Extensions
         public static void AddPersistenceLayer(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext(configuration);
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddRepositories();
         }
 

@@ -14,9 +14,11 @@ namespace PersonalCollectionWebApp.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddPresentationLayer(this IServiceCollection services)
+        public static void AddPresentationLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentityServices();
+            // Add services to the container.
+            services.AddRazorComponents().AddInteractiveServerComponents();
+            services.AddIdentityServices(configuration);
             services.AddAuthorizationWithPolicies();
             services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -24,7 +26,7 @@ namespace PersonalCollectionWebApp.Extensions
             services.AddScoped<PageHelperService>();
         }
 
-        private static void AddIdentityServices(this IServiceCollection services)
+        private static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<AuthService>();
             services.AddCascadingAuthenticationState();
@@ -37,6 +39,11 @@ namespace PersonalCollectionWebApp.Extensions
                 options.DefaultScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+                })
                 .AddIdentityCookies();
 
             services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)

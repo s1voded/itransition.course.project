@@ -5,16 +5,14 @@ using PersonalCollectionWebApp.Extensions;
 using PersonalCollectionWebApp.Hubs;
 using PersonalCollectionWebApp.Components;
 using static PersonalCollection.Domain.Constants;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable(EnvVariableSecrets));
+builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
-//builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddPresentationLayer();
+builder.Services.AddPresentationLayer(builder.Configuration);
 builder.Services.AddApplicationLayer(builder.Configuration);
 builder.Services.AddPersistenceLayer(builder.Configuration);
 
