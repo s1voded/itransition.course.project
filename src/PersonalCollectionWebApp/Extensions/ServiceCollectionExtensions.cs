@@ -7,7 +7,6 @@ using PersonalCollection.Persistence.Contexts;
 using PersonalCollectionWebApp.Components.Account;
 using PersonalCollectionWebApp.Policies.Handlers;
 using PersonalCollectionWebApp.Policies.Requirements;
-using PersonalCollectionWebApp.Services;
 using static PersonalCollection.Domain.Constants;
 
 namespace PersonalCollectionWebApp.Extensions
@@ -16,19 +15,16 @@ namespace PersonalCollectionWebApp.Extensions
     {
         public static void AddPresentationLayer(this IServiceCollection services, IConfiguration configuration)
         {
-            // Add services to the container.
             services.AddRazorComponents().AddInteractiveServerComponents();
             services.AddIdentityServices(configuration);
             services.AddAuthorizationWithPolicies();
             services.AddMudServices(x => x.PopoverOptions.ThrowOnDuplicateProvider = false);
             services.AddLocalization(options => options.ResourcesPath = "Resources");
             services.AddControllers(); //controller for change culture
-            services.AddScoped<PageHelperService>();
         }
 
         private static void AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<AuthService>();
             services.AddCascadingAuthenticationState();
             services.AddScoped<IdentityUserAccessor>();
             services.AddScoped<IdentityRedirectManager>();

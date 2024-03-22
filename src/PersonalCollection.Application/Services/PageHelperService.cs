@@ -2,7 +2,7 @@
 using PersonalCollection.Domain.Entities;
 using static PersonalCollection.Domain.Constants;
 
-namespace PersonalCollectionWebApp.Services
+namespace PersonalCollection.Application.Services
 {
     public class PageHelperService
     {

@@ -4,7 +4,7 @@ using PersonalCollection.Domain.Entities;
 using System.Security.Claims;
 using static PersonalCollection.Domain.Constants;
 
-namespace PersonalCollectionWebApp.Services
+namespace PersonalCollection.Application.Services
 {
     public class AuthService
     {

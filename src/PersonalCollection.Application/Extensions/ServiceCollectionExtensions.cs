@@ -31,6 +31,8 @@ namespace PersonalCollection.Application.Extensions
             services.AddScoped<UserManagerService>();
             services.AddScoped<ReactionsService>();
             services.AddScoped<ImageStorageService>();
+            services.AddScoped<PageHelperService>();
+            services.AddScoped<AuthService>();
         }
     }
 }
