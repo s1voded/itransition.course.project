@@ -34,77 +34,36 @@
         </MudText>
         <MudText>
             @locale["Tags"]:
-            @foreach(var tag in item.Tags)
+            @foreach (var tag in item.Tags)
             {
                 <MudLink Href=@PageHelperService.GetTagSearchHref(tag.Name) Class="pa-1">@tag.Name</MudLink>
             }
         </MudText>
         @if (item.Collection.CustomFieldsSettings != null)
         {
-            <CustomFieldsValueComponent CustomFields=@item.Collection.CustomFieldsSettings.CustomStrings ItemCustomField=@item.CustomStrings />
-            <CustomFieldsValueComponent CustomFields=@item.Collection.CustomFieldsSettings.CustomTexts ItemCustomField=@item.CustomTexts />
-            <CustomFieldsValueComponent CustomFields=@item.Collection.CustomFieldsSettings.CustomInts ItemCustomField=@item.CustomInts.Select(i => i.ToString()).ToArray()/>
-            <CustomFieldsValueComponent CustomFields=@item.Collection.CustomFieldsSettings.CustomBools ItemCustomField=@item.CustomBools.Select(b => b.ToString()).ToArray() />
-            <CustomFieldsValueComponent CustomFields=@item.Collection.CustomFieldsSettings.CustomDates ItemCustomField=@item.CustomDates.Select(d => d.HasValue ? d.Value.ToShortDateString() : "").ToArray() />
+            var customFields = item.Collection.CustomFieldsSettings;
+            <CustomFieldsValueComponent CustomFields=@customFields.CustomStrings ItemCustomField=@item.CustomStrings />
+            <CustomFieldsValueComponent CustomFields=@customFields.CustomTexts ItemCustomField=@item.CustomTexts />
+            <CustomFieldsValueComponent CustomFields=@customFields.CustomInts ItemCustomField=@item.CustomInts.Select(i => i.ToString()).ToArray() />
+            <CustomFieldsValueComponent CustomFields=@customFields.CustomBools ItemCustomField=@item.CustomBools.Select(b => b.ToString()).ToArray() />
+            <CustomFieldsValueComponent CustomFields=@customFields.CustomDates ItemCustomField=@item.CustomDates.Select(d => d.HasValue ? d.Value.ToShortDateString() : "").ToArray() />
         }
+        <LikesComponent ItemLiked=@itemLiked ItemLikes=@itemLikes LikeDisable=@(!userIsAuth) OnLikeItem=@OnLikeItem />
     </MudPaper>
-
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
-
-    <AuthorizeView>
-        <Authorized>
-            <MudTooltip>
-                <ChildContent>
-                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true Visible=@(itemLikes.Count() > 0)>
-                        <MudIconButton Color="Color.Inherit" OnClick="OnLikeItem">
-                            @if (itemLiked)
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.Favorite" />
-                            }
-                            else
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
-                            }
-                        </MudIconButton>
-                    </MudBadge>
-                </ChildContent>
-                <TooltipContent>
-                    @foreach (var like in itemLikes)
-                    {
-                        <MudText Typo="Typo.body2">@GetReactionUserName(like.User)</MudText>
-                    }
-                </TooltipContent>
-            </MudTooltip>
-            <MudGrid>
-                <MudItem xs="12" sm="7">
-                    <MudPaper Class="pa-4">
-                        <MudForm @bind-IsValid="@formIsValid">
-                            <MudTextField @bind-Value="commentContent" Label=@locale["Comment"] Required="true" RequiredError=@locale["Comment content is required"] />
-                            <MudDivider DividerType="DividerType.Middle" Class="my-2" />
-                            <div class="d-flex align-center justify-space-between">
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid)" Class="ml-auto" OnClick="OnSubmitComment">@locale["Send"]</MudButton>
-                            </div>
-                        </MudForm>
-                    </MudPaper>
-                </MudItem>
-            </MudGrid>
-        </Authorized>
-        <NotAuthorized>
-            <MudTooltip>
-                <ChildContent>
-                    <MudBadge Content="@itemLikes.Count()" Class="mx-6 my-4" Origin=Origin.CenterRight Overlap=true Visible=@(itemLikes.Count() > 0)>
-                        <MudIconButton Color="Color.Inherit" Icon="@Icons.Material.Filled.FavoriteBorder" Disabled />
-                    </MudBadge>
-                </ChildContent>
-                <TooltipContent>
-                    @foreach (var like in itemLikes)
-                    {
-                        <MudText Typo="Typo.body2">@GetReactionUserName(like.User)</MudText>
-                    }
-                </TooltipContent>
-            </MudTooltip>
-        </NotAuthorized>
-    </AuthorizeView>
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudPaper Class="pa-4">
+                <MudForm @bind-IsValid="@formIsValid">
+                    <MudTextField @bind-Value="commentContent" Label=@locale["Comment"] Required="true" RequiredError=@locale["Comment content is required"] Disabled=@(!userIsAuth) />
+                    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+                    <div class="d-flex align-center justify-space-between">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!formIsValid || !userIsAuth)" Class="ml-auto" OnClick="OnSubmitComment">@locale["Send"]</MudButton>
+                    </div>
+                </MudForm>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
@@ -114,7 +73,7 @@
             <MudPaper Class="pa-4">
                 <MudStack Row="true">
                     <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudText Typo="Typo.subtitle2">@GetReactionUserName(comment.User)</MudText>
+                        <MudText Typo="Typo.subtitle2">@PageHelperService.GetReactionUserName(comment.User, locale["deleted user"])</MudText>
                         <MudText Typo="Typo.caption">@comment.AddedDateTime</MudText>
                         <MudDivider />
                         <MudText Typo="Typo.body1">@comment.Content</MudText>
@@ -131,7 +90,7 @@
 
     private HubConnection? hubConnection;
     private Item? item;
-    private bool canManageCollection, formIsValid, itemLiked;
+    private bool canManageCollection, formIsValid, itemLiked, userIsAuth;
     private IEnumerable<Comment> itemComments = [];
     private IEnumerable<Like> itemLikes = [];
     private string? commentContent, userId;
@@ -144,6 +103,7 @@
         item = await ItemService.GetItemWithCollection(ItemId);
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
+        userIsAuth = await AuthService.IsUserAuthenticated();
 
         await GetComments();
         await GetLikes();
@@ -221,8 +181,6 @@
             }                
         }
     }
-
-    private string? GetReactionUserName(ApplicationUser? user) => user != null ? user.UserName : locale["deleted user"];
 
     private void NavigateToEditItem()
     {

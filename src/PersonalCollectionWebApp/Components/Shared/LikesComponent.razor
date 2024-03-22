@@ -1,0 +1,38 @@
+﻿@using PersonalCollectionWebApp.Components.Pages.ItemPages
+@inject PageHelperService PageHelperService
+@inject IStringLocalizer<ItemDetails> locale
+
+<MudTooltip Class="pa-1">
+    <ChildContent>
+        <MudBadge Content=@ItemLikes.Count() Class="pa-1" Origin=Origin.CenterRight Overlap=true Visible=@(ItemLikes.Count() > 0)>
+            <MudIconButton Color="Color.Inherit" OnClick=@LikeItem Disabled=@LikeDisable>
+                @if (ItemLiked)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.Favorite" />
+                }
+                else
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.FavoriteBorder" />
+                }
+            </MudIconButton>
+        </MudBadge>
+    </ChildContent>
+    <TooltipContent>
+        @foreach (var like in ItemLikes)
+        {
+            <MudText Typo="Typo.body2">@PageHelperService.GetReactionUserName(like.User, locale["deleted user"])</MudText>
+        }
+    </TooltipContent>
+</MudTooltip>
+
+@code {
+    [Parameter] public IEnumerable<Like> ItemLikes { get; set; }
+    [Parameter] public bool ItemLiked { get; set; }
+    [Parameter] public EventCallback OnLikeItem { get; set; }
+    [Parameter] public bool LikeDisable { get; set; }
+
+    async Task LikeItem()
+    {
+        await OnLikeItem.InvokeAsync();
+    }
+}
