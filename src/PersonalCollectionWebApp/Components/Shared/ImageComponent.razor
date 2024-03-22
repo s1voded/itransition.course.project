@@ -1,9 +1,11 @@
 ﻿@inject ImageStorageService ImageStorageService
 
-<MudImage ObjectFit=ObjectFit.ScaleDown Src=@imageSource Height="200" Width="400" Elevation="25" Class="rounded-lg ma-1" />
+<MudImage ObjectFit=ObjectFit.ScaleDown Src=@imageSource Height=@ImgHieght Width=@ImgWidth Elevation="1" Class="rounded-lg" />
 
 @code {
     [Parameter] public string? FileName { get; set; }
+    [Parameter] public int ImgHieght { get; set; } = 200;
+    [Parameter] public int ImgWidth { get; set; } = 400;
 
     private string? imageSource;
 

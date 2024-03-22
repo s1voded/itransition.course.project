@@ -31,9 +31,7 @@
         <MudTd>
             @if (!string.IsNullOrEmpty(context.Image))
             {
-                <MudAvatar Rounded="true" Color="Color.Transparent" Size="Size.Large">
-                    <ImageComponent FileName="@context.Image" />
-                </MudAvatar>
+                <ImageComponent FileName="@context.Image" ImgHieght="50" ImgWidth="100" />
             }
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>

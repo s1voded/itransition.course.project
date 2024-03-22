@@ -36,7 +36,7 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable T="Collection" Items="@largestCollections" Hover="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+<MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@locale["Largest collections"]</MudText>
     </ToolBarContent>
@@ -58,9 +58,7 @@
         <MudTd>
             @if (!string.IsNullOrEmpty(context.Image))
             {
-                <MudAvatar Rounded="true" Color="Color.Transparent" Size="Size.Large">
-                    <ImageComponent FileName="@context.Image" />
-                </MudAvatar>
+                <ImageComponent FileName="@context.Image" ImgHieght="50" ImgWidth="100"/>
             }
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
