@@ -5,7 +5,7 @@ using PersonalCollectionWebApp.Policies.Requirements;
 
 namespace PersonalCollectionWebApp.Policies.Handlers
 {
-    public class IsCollectionOwnerHandler: AuthorizationHandler<AllowedManageCollectionRequirement, Collection>
+    public class IsCollectionOwnerHandler: AuthorizationHandler<AllowedManageCollectionRequirement, string>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -13,7 +13,7 @@ namespace PersonalCollectionWebApp.Policies.Handlers
         {
             _userManager = userManager;
         }
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, Collection? resource)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, AllowedManageCollectionRequirement requirement, string authorId)
         {
             var user = await _userManager.GetUserAsync(context.User);
             if (user == null)
@@ -21,7 +21,7 @@ namespace PersonalCollectionWebApp.Policies.Handlers
                 return;
             }
 
-            if (resource?.UserId == user.Id)
+            if (authorId == user.Id)
             {
                 context.Succeed(requirement);
             }

@@ -3,7 +3,7 @@ using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Application.Models.Dto
 {
-    public class CollectionDto
+    public class CollectionWithItemsDto
     {
         public int Id { get; set; }
         public string UserId { get; set; }
@@ -12,16 +12,16 @@ namespace PersonalCollection.Application.Models.Dto
         public string? Image { get; set; }
         public string? Theme { get; set; }
         public string Author { get; set; }
-        public int ItemsCount { get; set; }
+        public CustomFieldsSettings? CustomFieldsSettings { get; set; }
+        public IEnumerable<ItemInCollectionDto> Items { get; set; } = [];
 
         private class Mapping : Profile
         {
             public Mapping()
             {
-                CreateMap<Collection, CollectionDto>()
+                CreateMap<Collection, CollectionWithItemsDto>()
                 .ForMember(dest => dest.Theme, act => act.MapFrom(src => src.Theme.Name))
-                .ForMember(dest => dest.Author, act => act.MapFrom(src => src.User.UserName))
-                .ForMember(dest => dest.ItemsCount, act => act.MapFrom(src => src.Items.Count));
+                .ForMember(dest => dest.Author, act => act.MapFrom(src => src.User.UserName));
             }
         }
     }

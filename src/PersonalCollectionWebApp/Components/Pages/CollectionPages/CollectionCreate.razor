@@ -52,7 +52,7 @@
         if (await AuthService.IsUserAuthenticated())
         {
             collection.UserId = await AuthService.GetCurrentUserId();
-            if(await AuthService.IsAllowManageCollection(collection))
+            if(await AuthService.IsAllowManageCollection(collection.UserId))
             {
                 collection.CustomFieldsSettings = customFieldsSettings;
                 await CollectionService.AddCollection(collection);

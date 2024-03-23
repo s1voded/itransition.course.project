@@ -28,8 +28,8 @@
     <MudStack Justify=Justify.FlexStart AlignItems=AlignItems.Center Row=true>
         <MudPaper Class="pa-4" Elevation="1">
             <MudText>@locale["Name"]: <b>@collection?.Name</b></MudText>
-            <MudText>@locale["Theme"]: <b>@collection?.Theme?.Name</b></MudText>
-            <MudText>@locale["Author"]: <b>@collection?.User.UserName</b></MudText>
+            <MudText>@locale["Theme"]: <b>@collection?.Theme</b></MudText>
+            <MudText>@locale["Author"]: <b>@collection?.Author</b></MudText>
             <MudText>@locale["Description"]:</MudText>
             @((MarkupString)@Markdig.Markdown.ToHtml(collection?.Description ?? string.Empty))
         </MudPaper>
@@ -65,7 +65,7 @@
 
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-    <MudTable T="Item" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
+    <MudTable T="ItemInCollectionDto" Items="@collection?.Items" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
         <ToolBarContent>
             <MudText Typo="Typo.h5">@locale["Items"]</MudText>
         </ToolBarContent>
@@ -93,7 +93,7 @@
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Added">@PageHelperService.GetLocalTime(context.CreatedDate, timeZoneOffset)</MudTd>
-            <MudTd DataLabel="Tags">@string.Join(", ", context.Tags.Select(t => t.Name))</MudTd>
+            <MudTd DataLabel="Tags">@string.Join(", ", context.Tags)</MudTd>
             @for (int i = 0; i < CustomFieldsCount; i++)
             {
                 var index = i;
@@ -121,7 +121,7 @@
     [Parameter]
     public int CollectionId { get; set; }
 
-    private Collection? collection;
+    private CollectionWithItemsDto? collection;
     private bool canManageCollection;
     private int timeZoneOffset;
 
@@ -130,7 +130,7 @@
         collection = await CollectionService.GetCollectionWithItems(CollectionId);
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.Author);
 
         timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
@@ -148,9 +148,9 @@
 
     private async Task DeleteCollection()
     {
-        if (await AuthService.IsAllowManageCollection(collection))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
-            await CollectionService.DeleteCollection(collection);
+            CollectionService.DeleteCollection(collection.Id);
             if (!string.IsNullOrEmpty(collection.Image))
             {
                 await ImageStorageService.DeleteAsync(collection.Image);
@@ -161,23 +161,23 @@
 
     private async Task OnUploadImage(IBrowserFile file)
     {
-        if (await AuthService.IsAllowManageCollection(collection))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
             var _2mb = 2097152;
             var fileName = $"{Guid.NewGuid()}_{file.Name}";
             await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(_2mb));
             collection.Image = fileName;
-            await CollectionService.UpdateCollection(collection);
+            await CollectionService.UpdateCollectionImage(collection.Id, fileName);
         }
     }
 
     private async Task OnDeleteImage()
     {
-        if (await AuthService.IsAllowManageCollection(collection))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
             await ImageStorageService.DeleteAsync(collection.Image);
             collection.Image = null;
-            await CollectionService.UpdateCollection(collection);
+            await CollectionService.UpdateCollectionImage(collection.Id, null);
         }
     }
 
@@ -191,7 +191,7 @@
         NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}/{NavEdit}");
     }
 
-    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
+    private void NavigateToItemDetails(TableRowClickEventArgs<ItemInCollectionDto> args)
     {
         NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }

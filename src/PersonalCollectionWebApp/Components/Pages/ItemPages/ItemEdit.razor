@@ -36,12 +36,12 @@
         tags = await ItemService.GetAllItemTags();
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
+        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);
     }
 
     private async Task OnUpdateItem()
     {
-        if (await AuthService.IsAllowManageCollection(item.Collection))
+        if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
         {
             await ItemService.UpdateItem(item);
             NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");

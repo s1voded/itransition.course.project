@@ -36,12 +36,12 @@
         tags = await ItemService.GetAllItemTags();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
     }
 
     public async Task OnAddItem()
     {
-        if (await AuthService.IsAllowManageCollection(collection))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
             item.CollectionId = CollectionId;
             item.CreatedDate = DateTime.UtcNow;

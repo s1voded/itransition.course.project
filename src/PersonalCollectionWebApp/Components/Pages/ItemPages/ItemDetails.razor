@@ -102,7 +102,7 @@
 
         item = await ItemService.GetItemWithCollection(ItemId);
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection);
+        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);
         userIsAuth = await AuthService.IsUserAuthenticated();
 
         await GetComments();
@@ -140,7 +140,7 @@
 
     private async Task DeleteItem()
     {
-        if (await AuthService.IsAllowManageCollection(item.Collection))
+        if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
         {
             await ItemService.DeleteItem(item);
             NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");

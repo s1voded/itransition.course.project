@@ -52,12 +52,12 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ItemDto>> GetLastAddedItems(int count)
+        public async Task<IEnumerable<ItemLastAddedDto>> GetLastAddedItems(int count)
         {
             return await _itemRepository.GetAll()
                 .OrderByDescending(i => i.CreatedDate)
                 .Take(count)
-                .ProjectTo<ItemDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<ItemLastAddedDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();
         }

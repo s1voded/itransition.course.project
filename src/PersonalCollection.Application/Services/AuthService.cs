@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
-using PersonalCollection.Domain.Entities;
 using System.Security.Claims;
 using static PersonalCollection.Domain.Constants;
 
@@ -17,12 +16,12 @@ namespace PersonalCollection.Application.Services
             _authorizationService = authorizationService;
         }
 
-        public async Task<bool> IsAllowManageCollection(Collection collection)
+        public async Task<bool> IsAllowManageCollection(string authorId)
         {
             var user = await GetCurrentUser();
             if (user is not null)
             {
-                var isAuthorized = await _authorizationService.AuthorizeAsync(user, collection, PolicyCanManageCollection);
+                var isAuthorized = await _authorizationService.AuthorizeAsync(user, authorId, PolicyCanManageCollection);
                 return isAuthorized.Succeeded;
             }
             return false;

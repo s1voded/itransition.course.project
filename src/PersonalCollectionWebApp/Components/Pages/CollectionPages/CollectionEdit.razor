@@ -36,12 +36,12 @@
         themes = await CollectionService.GetThemes();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
     }
 
     private async Task OnUpdateCollection()
     {
-        if (await AuthService.IsAllowManageCollection(collection))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
             await CollectionService.UpdateCollection(collection);
             NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");

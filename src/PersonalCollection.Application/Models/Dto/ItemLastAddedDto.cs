@@ -3,7 +3,7 @@ using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Application.Models.Dto
 {
-    public class ItemDto
+    public class ItemLastAddedDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -15,7 +15,7 @@ namespace PersonalCollection.Application.Models.Dto
         {
             public Mapping()
             {
-                CreateMap<Item, ItemDto>()
+                CreateMap<Item, ItemLastAddedDto>()
                 .ForMember(dest => dest.CollectionName, act => act.MapFrom(src => src.Collection.Name))
                 .ForMember(dest => dest.Author, act => act.MapFrom(src => src.Collection.User.UserName));
             }

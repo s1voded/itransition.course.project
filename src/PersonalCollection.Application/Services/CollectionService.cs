@@ -21,7 +21,6 @@ namespace PersonalCollection.Application.Services
         }
 
         public async Task<Collection?> GetCollectionById(int collectionId) => await _collectionRepository.GetById(collectionId);
-        public async Task<Collection?> GetCollectionWithItems(int collectionId) => await _collectionRepository.GetCollectionWithItems(collectionId);
         public async Task<IEnumerable<Theme>> GetThemes() => await _themeRepository.GetAll().AsNoTracking().ToListAsync();
 
         public async Task<IEnumerable<CollectionDto>> GetLargestCollections(int count)
@@ -43,6 +42,14 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
+        public async Task<CollectionWithItemsDto?> GetCollectionWithItems(int collectionId)
+        {
+            return await _collectionRepository.GetAll()
+               .ProjectTo<CollectionWithItemsDto>(_mapper.ConfigurationProvider)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(c => c.Id == collectionId);
+        }
+
         public async Task AddCollection(Collection collection)
         {
             await _collectionRepository.Create(collection);
@@ -55,10 +62,18 @@ namespace PersonalCollection.Application.Services
             await _collectionRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteCollection(Collection collection)
+        public async Task UpdateCollectionImage(int collectionId, string? image)
         {
-            _collectionRepository.Delete(collection);
-            await _collectionRepository.SaveChangesAsync();
+            await _collectionRepository.GetAll()
+                .Where(c => c.Id == collectionId)
+                .ExecuteUpdateAsync(setters => setters.SetProperty(c => c.Image, image));
+        }
+
+        public void DeleteCollection(int collectionId)
+        {
+            _collectionRepository.GetAll()
+                .Where(c => c.Id == collectionId)
+                .ExecuteDelete();
         }
     }
 }

@@ -10,7 +10,7 @@
 
 <PageTitle>@locale["Main"]</PageTitle>
 
-<MudTable T="ItemDto" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
+<MudTable T="ItemLastAddedDto" Items=@lastAddedItems Hover="true" Dense="true" OnRowClick=@NavigateToItemDetails RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@locale["Last added items"]</MudText>
     </ToolBarContent>
@@ -36,7 +36,7 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable T="CollectionDto" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+<MudTable T="CollectionDto" Items=@largestCollections Hover="true" Dense="true" OnRowClick=@NavigateToCollectionDetails RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@locale["Largest collections"]</MudText>
     </ToolBarContent>
@@ -80,7 +80,7 @@
 
 
 @code {
-    private IEnumerable<ItemDto> lastAddedItems = [];
+    private IEnumerable<ItemLastAddedDto> lastAddedItems = [];
     private IEnumerable<CollectionDto> largestCollections = [];
     private IEnumerable<TagDto> tagsWithUsedCount = [];
     private int countLargestCollections = 5, countLastAddedItems = 5;
@@ -103,7 +103,7 @@
         NavigationManager.NavigateTo($"/{NavCollections}/{collection.Item.Id}");
     }
 
-    private void NavigateToItemDetails(TableRowClickEventArgs<ItemDto> args)
+    private void NavigateToItemDetails(TableRowClickEventArgs<ItemLastAddedDto> args)
     {
         NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }
