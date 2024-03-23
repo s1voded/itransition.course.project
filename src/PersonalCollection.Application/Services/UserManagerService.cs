@@ -1,19 +1,17 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
-using PersonalCollection.Application.Models;
-using PersonalCollection.Domain.Entities;
+using PersonalCollection.Application.Models.Dto;
 
 namespace PersonalCollection.Application.Services
 {
     public class UserManagerService
     {
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
 
-        public UserManagerService(UserManager<ApplicationUser> userManager, IMapper mapper, IUserRepository userRepository)
+        public UserManagerService(IMapper mapper, IUserRepository userRepository)
         {
             _mapper = mapper;
             _userRepository = userRepository;
@@ -24,6 +22,7 @@ namespace PersonalCollection.Application.Services
             return await _userRepository.GetAll()
                 .Include(u => u.Claims)
                 .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync();
         }
 

@@ -1,26 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
-using PersonalCollection.Application.Models;
+using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Application.Services
 {
     public class CollectionService
     {
+        private readonly IMapper _mapper;
         private readonly ICollectionRepository _collectionRepository;
         private readonly IThemeRepository _themeRepository;
 
-        public CollectionService(ICollectionRepository collectionRepository, IThemeRepository themeRepository)
+        public CollectionService(IMapper mapper, ICollectionRepository collectionRepository, IThemeRepository themeRepository)
         {
+            _mapper = mapper;
             _collectionRepository = collectionRepository;
             _themeRepository = themeRepository;
         }
 
         public async Task<Collection?> GetCollectionById(int collectionId) => await _collectionRepository.GetById(collectionId);
-        public async Task<IEnumerable<Collection>> GetUserCollections(string userId) => await _collectionRepository.GetUserCollections(userId);
         public async Task<Collection?> GetCollectionWithItems(int collectionId) => await _collectionRepository.GetCollectionWithItems(collectionId);
-        public async Task<IEnumerable<Collection>> GetLargestCollections(int count) => await _collectionRepository.GetLargestCollections(count);
         public async Task<IEnumerable<Theme>> GetThemes() => await _themeRepository.GetAll().AsNoTracking().ToListAsync();
+
+        public async Task<IEnumerable<CollectionDto>> GetLargestCollections(int count)
+        {
+            return await _collectionRepository.GetAll()
+                .OrderByDescending(c => c.Items.Count)
+                .Take(count)
+                .ProjectTo<CollectionDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<CollectionDto>> GetUserCollections(string userId)
+        {
+            return await _collectionRepository.GetAll()
+                .Where(c => c.UserId == userId)
+                .ProjectTo<CollectionDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
 
         public async Task AddCollection(Collection collection)
         {

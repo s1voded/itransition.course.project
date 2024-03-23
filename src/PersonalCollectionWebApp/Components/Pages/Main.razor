@@ -10,7 +10,7 @@
 
 <PageTitle>@locale["Main"]</PageTitle>
 
-<MudTable T="Item" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
+<MudTable T="ItemDto" Items="@lastAddedItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@locale["Last added items"]</MudText>
     </ToolBarContent>
@@ -28,15 +28,15 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Collection">@context.Collection.Name</MudTd>
-        <MudTd DataLabel="Author">@context.Collection.User.UserName</MudTd>
+        <MudTd DataLabel="Collection">@context.CollectionName</MudTd>
+        <MudTd DataLabel="Author">@context.Author</MudTd>
         <MudTd DataLabel="Added">@PageHelperService.GetLocalTime(context.CreatedDate, timeZoneOffset)</MudTd>
     </RowTemplate>
 </MudTable>
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable T="Collection" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+<MudTable T="CollectionDto" Items="@largestCollections" Hover="true" Dense="true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h6">@locale["Largest collections"]</MudText>
     </ToolBarContent>
@@ -62,9 +62,9 @@
             }
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
-        <MudTd DataLabel="Theme">@context.Theme?.Name</MudTd>
-        <MudTd DataLabel="Author">@context.User.UserName</MudTd>
-        <MudTd DataLabel="Items count">@context.Items.Count</MudTd>
+        <MudTd DataLabel="Theme">@context.Theme</MudTd>
+        <MudTd DataLabel="Author">@context.Author</MudTd>
+        <MudTd DataLabel="Items count">@context.ItemsCount</MudTd>
     </RowTemplate>
 </MudTable>
 
@@ -80,8 +80,8 @@
 
 
 @code {
-    private IEnumerable<Item> lastAddedItems = [];
-    private IEnumerable<Collection> largestCollections = [];
+    private IEnumerable<ItemDto> lastAddedItems = [];
+    private IEnumerable<CollectionDto> largestCollections = [];
     private IEnumerable<TagDto> tagsWithUsedCount = [];
     private int countLargestCollections = 5, countLastAddedItems = 5;
     private int timeZoneOffset, minCountTags, maxCountTags;
@@ -98,12 +98,12 @@
         timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
 
-    private void NavigateToCollectionDetails(TableRowClickEventArgs<Collection> collection)
+    private void NavigateToCollectionDetails(TableRowClickEventArgs<CollectionDto> collection)
     {
         NavigationManager.NavigateTo($"/{NavCollections}/{collection.Item.Id}");
     }
 
-    private void NavigateToItemDetails(TableRowClickEventArgs<Item> args)
+    private void NavigateToItemDetails(TableRowClickEventArgs<ItemDto> args)
     {
         NavigationManager.NavigateTo($"/{NavItems}/{args.Item.Id}");
     }

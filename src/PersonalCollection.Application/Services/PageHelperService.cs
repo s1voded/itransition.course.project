@@ -1,4 +1,4 @@
-﻿using PersonalCollection.Application.Models;
+﻿using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
 using static PersonalCollection.Domain.Constants;
 

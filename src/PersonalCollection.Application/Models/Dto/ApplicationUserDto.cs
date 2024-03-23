@@ -2,7 +2,7 @@
 using PersonalCollection.Domain.Entities;
 using System.Security.Claims;
 
-namespace PersonalCollection.Application.Models
+namespace PersonalCollection.Application.Models.Dto
 {
     public class ApplicationUserDto
     {
