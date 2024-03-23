@@ -150,7 +150,7 @@
     {
         if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
-            CollectionService.DeleteCollection(collection.Id);
+            await CollectionService.DeleteCollection(collection.Id);
             if (!string.IsNullOrEmpty(collection.Image))
             {
                 await ImageStorageService.DeleteAsync(collection.Image);
@@ -167,7 +167,7 @@
             var fileName = $"{Guid.NewGuid()}_{file.Name}";
             await ImageStorageService.UploadAsync(fileName, file.OpenReadStream(_2mb));
             collection.Image = fileName;
-            await CollectionService.UpdateCollectionImage(collection.Id, fileName);
+            await CollectionService.UpdateCollectionImage(collection.Id, collection.Image);
         }
     }
 
@@ -177,7 +177,7 @@
         {
             await ImageStorageService.DeleteAsync(collection.Image);
             collection.Image = null;
-            await CollectionService.UpdateCollectionImage(collection.Id, null);
+            await CollectionService.UpdateCollectionImage(collection.Id, collection.Image);
         }
     }
 

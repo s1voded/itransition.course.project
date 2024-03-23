@@ -52,9 +52,9 @@ namespace PersonalCollection.Persistence.Repositories
         public async Task<int> ExecuteDeleteUsers(string[] userIds)
         {
             await ClearUsersReactions(userIds);
-            return GetAll()
+            return await GetAll()
                 .Where(u => userIds.Contains(u.Id))
-                .ExecuteDelete();
+                .ExecuteDeleteAsync();
         }
 
         private async Task ClearUsersReactions(string[] userIds)

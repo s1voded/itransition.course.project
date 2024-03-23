@@ -69,11 +69,11 @@ namespace PersonalCollection.Application.Services
                 .ExecuteUpdateAsync(setters => setters.SetProperty(c => c.Image, image));
         }
 
-        public void DeleteCollection(int collectionId)
+        public async Task DeleteCollection(int collectionId)
         {
-            _collectionRepository.GetAll()
+            await _collectionRepository.GetAll()
                 .Where(c => c.Id == collectionId)
-                .ExecuteDelete();
+                .ExecuteDeleteAsync();
         }
     }
 }
