@@ -88,16 +88,9 @@
     [Parameter] public string SubmitButtonText { get; set; }
 
     private bool formIsValid;
-    //private IList<TagDto>? _selectedTags;
-
-    protected override void OnInitialized()
-    {
-        //Tags = Item.Tags?.ToList();
-    }
 
     async Task Submit()
     {
-        //Item.Tags = _selectedTags;
         await OnSubmit.InvokeAsync();
     }
 

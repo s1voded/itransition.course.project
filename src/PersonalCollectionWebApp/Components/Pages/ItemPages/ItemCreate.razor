@@ -27,13 +27,12 @@
 
     public ItemEditCreateDto item = new();
     private CollectionEditCreateDto? collection;
-    private IList<TagDto> tags;
+    private IList<TagDto> tags = [];
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
         collection = await CollectionService.GetCollectionById(CollectionId);
-        //tags = await ItemService.GetAllItemTags();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
@@ -45,7 +44,7 @@
         {
             item.CollectionId = CollectionId;
             item.CreatedDate = DateTime.UtcNow;
-            await ItemService.AddItem(item);
+            await ItemService.AddItem(item, tags);
             NavigationManager.NavigateTo($"/{NavCollections}/{CollectionId}");
 
         }

@@ -146,11 +146,11 @@
 
     private async Task DeleteItem()
     {
-        // if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
-        // {
-        //     await ItemService.DeleteItem(item);
-        //     NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
-        // }
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
+        {
+            await ItemService.DeleteItem(item.Id);
+            NavigationManager.NavigateTo($"/{NavCollections}/{item?.CollectionId}");
+        }
     }
 
     private async Task OnSubmitComment()

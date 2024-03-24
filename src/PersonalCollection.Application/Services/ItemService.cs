@@ -21,8 +21,6 @@ namespace PersonalCollection.Application.Services
             _tagRepository = tagRepository;        
         }
 
-        //public async Task<Item?> GetItemWithCollection(int itemId) => await _itemRepository.GetItemWithCollection(itemId);
-        //public async Task<IEnumerable<Tag>> GetAllItemTags() => await _tagRepository.GetAll().ToListAsync();
         public async Task<ItemEditCreateDto?> GetItemWithCollection(int itemId)
         {
             return await _itemRepository.GetAll()
@@ -38,7 +36,7 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<int> AddItem(ItemEditCreateDto itemDto)
+        public async Task<int> AddItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
         {
             var item = _mapper.Map<Item>(itemDto);
 
@@ -48,20 +46,20 @@ namespace PersonalCollection.Application.Services
             return item.Id;
         }
 
-        public async Task UpdateItem(ItemEditCreateDto itemDto)
+        public async Task UpdateItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
         {
             var item = await _itemRepository.GetById(itemDto.Id);
-            item.Tags.Clear();
             _mapper.Map(itemDto, item);
 
             _itemRepository.Update(item);
             await _itemRepository.SaveChangesAsync();
         }
 
-        public async Task DeleteItem(Item item)
+        public async Task DeleteItem(int itemId)
         {
-            _itemRepository.Delete(item);
-            await _itemRepository.SaveChangesAsync();
+            await _itemRepository.GetAll()
+                .Where(i => i.Id == itemId)
+                .ExecuteDeleteAsync();
         }
 
         public async Task<IEnumerable<TagWithUsedCountDto>> GetTagsWithUsedCount()
@@ -73,7 +71,7 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<TagDto>> GetItemTags(int itemId)
+        public async Task<IList<TagDto>> GetItemTags(int itemId)
         {
             return await _tagRepository.GetAll()
                 .Where(t => t.Items.Any(i => i.Id == itemId))
