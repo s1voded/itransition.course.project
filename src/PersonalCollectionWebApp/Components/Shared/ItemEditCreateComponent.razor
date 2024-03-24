@@ -1,6 +1,7 @@
 ﻿@using PSC.Blazor.Components.AutoComplete
 @using PersonalCollection.Domain
 @inject IStringLocalizer<ItemEditCreateComponent> locale
+@inject ItemService ItemService
 
 <MudGrid>
     <MudItem xs="12" sm="7">
@@ -9,7 +10,7 @@
                 <MudTextField @bind-Value="Item.Name" Label=@locale["Name"] Required="true" RequiredError=@locale["Name is required"] />
                 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
                 <Autocomplete SearchMethod="GetTags"
-                              @bind-Values="_selectedTags"
+                              @bind-Values="Tags"
                               EnableDropDown="true"
                               MinimumLength="2"
                               AddItemOnEmptyResultMethod="AddTag"
@@ -80,34 +81,33 @@
 </MudGrid>
 
 @code {
-    [Parameter] public Item Item { get; set; }
-    [Parameter] public IEnumerable<Tag> Tags { get; set; }
+    [Parameter] public ItemEditCreateDto Item { get; set; }
+    [Parameter] public IList<TagDto> Tags { get; set; }
     [Parameter] public CustomFieldsSettings CustomFieldsSettings { get; set; }
     [Parameter] public EventCallback OnSubmit { get; set; }
     [Parameter] public string SubmitButtonText { get; set; }
 
     private bool formIsValid;
-    private IList<Tag>? _selectedTags;
+    //private IList<TagDto>? _selectedTags;
 
     protected override void OnInitialized()
     {
-        _selectedTags = Item.Tags?.ToList();
+        //Tags = Item.Tags?.ToList();
     }
 
     async Task Submit()
     {
-        Item.Tags = _selectedTags;
+        //Item.Tags = _selectedTags;
         await OnSubmit.InvokeAsync();
     }
 
-    public async Task<IEnumerable<Tag>> GetTags(string searchText)
+    public async Task<IEnumerable<TagDto>> GetTags(string searchText)
     {
-        return await Task.FromResult(Tags.Where(x => x.Name.ToLower().Contains(searchText.ToLower())).ToList());
+        return await ItemService.SearchTag(searchText.ToLower());
     } 
 
-    public Task<Tag> AddTag(string searchText)
+    public async Task<TagDto> AddTag(string searchText)
     {
-        var newTag = new Tag() { Name = searchText };
-        return Task.FromResult(newTag);
+        return await ItemService.AddNewTag(new TagDto() { Name = searchText });
     }
 }

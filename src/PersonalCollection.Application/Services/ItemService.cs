@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PersonalCollection.Application.Services
 {
@@ -15,24 +16,44 @@ namespace PersonalCollection.Application.Services
 
         public ItemService(IMapper mapper, IItemRepository itemRepository, ITagRepository tagRepository)
         {
-            _itemRepository = itemRepository;
-            _tagRepository = tagRepository;
             _mapper = mapper;
+            _itemRepository = itemRepository;
+            _tagRepository = tagRepository;        
         }
 
-        public async Task<Item?> GetItemWithCollection(int itemId) => await _itemRepository.GetItemWithCollection(itemId);
-        public async Task<IEnumerable<Item>> SearchItems(string searchString) => await _itemRepository.SearchItems(searchString);
-        public async Task<IEnumerable<Item>> SearchItemsByTag(string tagName) => await _itemRepository.SearchItemsByTag(tagName);
-        public async Task<IEnumerable<Tag>> GetAllItemTags() => await _tagRepository.GetAll().ToListAsync();
-
-        public async Task AddItem(Item item)
+        //public async Task<Item?> GetItemWithCollection(int itemId) => await _itemRepository.GetItemWithCollection(itemId);
+        //public async Task<IEnumerable<Tag>> GetAllItemTags() => await _tagRepository.GetAll().ToListAsync();
+        public async Task<ItemEditCreateDto?> GetItemWithCollection(int itemId)
         {
+            return await _itemRepository.GetAll()
+                .ProjectTo<ItemEditCreateDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == itemId);
+        }
+        public async Task<IEnumerable<TagDto>> GetAllItemTags()
+        {
+            return await _tagRepository.GetAll()
+                .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<int> AddItem(ItemEditCreateDto itemDto)
+        {
+            var item = _mapper.Map<Item>(itemDto);
+
             await _itemRepository.Create(item);
             await _itemRepository.SaveChangesAsync();
+
+            return item.Id;
         }
 
-        public async Task UpdateItem(Item item)
+        public async Task UpdateItem(ItemEditCreateDto itemDto)
         {
+            var item = await _itemRepository.GetById(itemDto.Id);
+            item.Tags.Clear();
+            _mapper.Map(itemDto, item);
+
             _itemRepository.Update(item);
             await _itemRepository.SaveChangesAsync();
         }
@@ -43,21 +64,66 @@ namespace PersonalCollection.Application.Services
             await _itemRepository.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TagDto>> GetTagsWithUsedCount()
+        public async Task<IEnumerable<TagWithUsedCountDto>> GetTagsWithUsedCount()
         {
             return await _tagRepository.GetAll()
                 .Where(t => t.Items.Count() > 0)
+                .ProjectTo<TagWithUsedCountDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TagDto>> GetItemTags(int itemId)
+        {
+            return await _tagRepository.GetAll()
+                .Where(t => t.Items.Any(i => i.Id == itemId))
                 .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ItemLastAddedDto>> GetLastAddedItems(int count)
+
+        public async Task<IEnumerable<ItemDto>> SearchItemsByTag(string tagName)
+        {
+            return await _itemRepository.GetAll()
+                .Where(i => i.Tags.Any(t => t.Name == tagName))
+                .ProjectTo<ItemDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ItemDto>> SearchItems(string searchString)
+        {
+            return await _itemRepository.SearchItems(searchString)
+                .ProjectTo<ItemDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TagDto>> SearchTag(string searchString)
+        {
+            return await _tagRepository.GetAll()
+                .Where(t => t.Name.Contains(searchString.ToLower()))
+                .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+        public async Task<TagDto> AddNewTag(TagDto tagDto)
+        {
+            var tag = _mapper.Map<Tag>(tagDto);
+
+            await _tagRepository.Create(tag);
+            await _tagRepository.SaveChangesAsync();
+
+            return _mapper.Map<TagDto>(tag);
+        }
+
+        public async Task<IEnumerable<ItemDto>> GetLastAddedItems(int count)
         {
             return await _itemRepository.GetAll()
                 .OrderByDescending(i => i.CreatedDate)
                 .Take(count)
-                .ProjectTo<ItemLastAddedDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<ItemDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();
         }

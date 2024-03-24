@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PersonalCollection.Application.Services
 {
@@ -20,8 +21,23 @@ namespace PersonalCollection.Application.Services
             _themeRepository = themeRepository;
         }
 
-        public async Task<Collection?> GetCollectionById(int collectionId) => await _collectionRepository.GetById(collectionId);
         public async Task<IEnumerable<Theme>> GetThemes() => await _themeRepository.GetAll().AsNoTracking().ToListAsync();
+
+        public async Task<CollectionEditCreateDto?> GetCollectionById(int collectionId)
+        {
+            return await _collectionRepository.GetAll()
+               .ProjectTo<CollectionEditCreateDto>(_mapper.ConfigurationProvider)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(c => c.Id == collectionId);
+        }
+
+        public async Task<CollectionCustomFieldSettingsDto?> GetCollectionCustomFieldSettings(int collectionId)
+        {
+            return await _collectionRepository.GetAll()
+               .ProjectTo<CollectionCustomFieldSettingsDto>(_mapper.ConfigurationProvider)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(c => c.Id == collectionId);
+        }
 
         public async Task<IEnumerable<CollectionDto>> GetLargestCollections(int count)
         {
@@ -50,14 +66,21 @@ namespace PersonalCollection.Application.Services
                .FirstOrDefaultAsync(c => c.Id == collectionId);
         }
 
-        public async Task AddCollection(Collection collection)
+        public async Task<int> AddCollection(CollectionEditCreateDto collectionDto)
         {
+            var collection = _mapper.Map<Collection>(collectionDto);
+
             await _collectionRepository.Create(collection);
             await _collectionRepository.SaveChangesAsync();
+
+            return collection.Id;
         }
 
-        public async Task UpdateCollection(Collection collection)
+        public async Task UpdateCollection(CollectionEditCreateDto collectionDto)
         {
+            var collection = await _collectionRepository.GetById(collectionDto.Id);
+            _mapper.Map(collectionDto, collection);
+
             _collectionRepository.Update(collection);
             await _collectionRepository.SaveChangesAsync();
         }

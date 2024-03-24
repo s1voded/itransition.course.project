@@ -32,7 +32,7 @@
 </MudGrid>
 
 @code {
-    [Parameter] public Collection Collection { get; set; }
+    [Parameter] public CollectionEditCreateDto Collection { get; set; }
     [Parameter] public IEnumerable<Theme> Themes { get; set; }
     [Parameter] public CustomFieldsSettings CustomFieldsSettings { get; set; }
     [Parameter] public EventCallback OnSubmit { get; set; }

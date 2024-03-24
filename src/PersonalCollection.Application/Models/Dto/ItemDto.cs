@@ -1,12 +1,12 @@
 ﻿namespace PersonalCollection.Application.Models.Dto
 {
-    public class ItemInCollectionDto
+    public class ItemDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string?[] CustomStrings { get; set; } = [];
-        public DateTime?[] CustomDates { get; set; } = [];
+        public string CollectionName { get; set; }
+        public string Author { get; set; }
         public IEnumerable<string> Tags { get; set; } = [];
     }
 }

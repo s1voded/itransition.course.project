@@ -15,7 +15,7 @@ namespace PersonalCollection.Application.Services
             return $"/{NavSearch}?{ParameterSearchTag}={tagName}";
         }
 
-        public double GetFontSizeForTag(TagDto tag, int minCount, int maxCount)
+        public double GetFontSizeForTag(TagWithUsedCountDto tag, int minCount, int maxCount)
         {
             int minFontSize = 12, maxFontSize = 30;
             return Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);

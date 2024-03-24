@@ -2,6 +2,7 @@
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject ItemService ItemService
+@inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
 @inject IStringLocalizer<ItemEdit> locale
@@ -15,7 +16,7 @@
         <ItemEditCreateComponent 
             Item=@item
             Tags=@tags
-            CustomFieldsSettings=@item.Collection.CustomFieldsSettings
+            CustomFieldsSettings=@collection.CustomFieldsSettings
             OnSubmit=@OnUpdateItem
             SubmitButtonText=@locale["Update"]>
         </ItemEditCreateComponent>
@@ -26,22 +27,24 @@
     [Parameter]
     public int ItemId { get; set; }
 
-    private Item? item;
-    private IEnumerable<Tag> tags;
+    private ItemEditCreateDto? item;
+    private CollectionCustomFieldSettingsDto? collection;
+    private IList<TagDto> tags;
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
         item = await ItemService.GetItemWithCollection(ItemId);
-        tags = await ItemService.GetAllItemTags();
+        collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
+        //tags = await ItemService.GetAllItemTags();
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
     }
 
     private async Task OnUpdateItem()
     {
-        if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
             await ItemService.UpdateItem(item);
             NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");

@@ -2,6 +2,7 @@
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject ItemService ItemService
+@inject CollectionService CollectionService
 @inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
 @inject AuthService AuthService
@@ -30,18 +31,18 @@
         <MudText>@locale["Added"]: <b>@PageHelperService.GetLocalTime(item.CreatedDate, timeZoneOffset)</b></MudText>
         <MudText>
             @locale["Collection"]:
-            <MudLink Href=@($"/{NavCollections}/{item.Collection.Id}") Class="pa-1">@item.Collection.Name</MudLink>
+            <MudLink Href=@($"/{NavCollections}/{item.CollectionId}") Class="pa-1">@collection.Name</MudLink>
         </MudText>
         <MudText>
             @locale["Tags"]:
-            @foreach (var tag in item.Tags)
+            @foreach (var tag in itemTags)
             {
                 <MudLink Href=@PageHelperService.GetTagSearchHref(tag.Name) Class="pa-1">@tag.Name</MudLink>
             }
         </MudText>
-        @if (item.Collection.CustomFieldsSettings != null)
+        @if (collection.CustomFieldsSettings != null)
         {
-            var customFields = item.Collection.CustomFieldsSettings;
+            var customFields = collection.CustomFieldsSettings;
             <CustomFieldsValueComponent CustomFields=@customFields.CustomStrings ItemCustomField=@item.CustomStrings />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomTexts ItemCustomField=@item.CustomTexts />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomInts ItemCustomField=@item.CustomInts.Select(i => i.ToString()).ToArray() />
@@ -89,10 +90,12 @@
     public int ItemId { get; set; }
 
     private HubConnection? hubConnection;
-    private Item? item;
+    private ItemEditCreateDto? item;
+    private CollectionCustomFieldSettingsDto? collection;
     private bool canManageCollection, formIsValid, itemLiked, userIsAuth;
     private IEnumerable<Comment> itemComments = [];
     private IEnumerable<Like> itemLikes = [];
+    private IEnumerable<TagDto> itemTags = [];
     private string? commentContent, userId;
     private int timeZoneOffset;
 
@@ -101,8 +104,11 @@
         await InitHubConnection();
 
         item = await ItemService.GetItemWithCollection(ItemId);
+        itemTags = await ItemService.GetItemTags(ItemId);
+        collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
+
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
         userIsAuth = await AuthService.IsUserAuthenticated();
 
         await GetComments();
@@ -140,11 +146,11 @@
 
     private async Task DeleteItem()
     {
-        if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
-        {
-            await ItemService.DeleteItem(item);
-            NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
-        }
+        // if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
+        // {
+        //     await ItemService.DeleteItem(item);
+        //     NavigationManager.NavigateTo($"/{NavCollections}/{item?.Collection.Id}");
+        // }
     }
 
     private async Task OnSubmitComment()

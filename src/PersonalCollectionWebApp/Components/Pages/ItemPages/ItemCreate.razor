@@ -25,15 +25,15 @@
     [Parameter]
     public int CollectionId { get; set; }
 
-    public Item item = new();
-    private Collection? collection;
-    private IEnumerable<Tag> tags;
+    public ItemEditCreateDto item = new();
+    private CollectionEditCreateDto? collection;
+    private IList<TagDto> tags;
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
         collection = await CollectionService.GetCollectionById(CollectionId);
-        tags = await ItemService.GetAllItemTags();
+        //tags = await ItemService.GetAllItemTags();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);

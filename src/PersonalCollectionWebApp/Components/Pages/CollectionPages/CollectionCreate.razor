@@ -20,7 +20,7 @@
 </CollectionEditCreateComponent>
 
 @code {
-    private Collection collection = new();
+    private CollectionEditCreateDto collection = new();
     private IEnumerable<Theme> themes = [];
 
     private CustomFieldsSettings customFieldsSettings = new()
@@ -55,8 +55,8 @@
             if(await AuthService.IsAllowManageCollection(collection.UserId))
             {
                 collection.CustomFieldsSettings = customFieldsSettings;
-                await CollectionService.AddCollection(collection);
-                NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
+                var collectionId = await CollectionService.AddCollection(collection);
+                NavigationManager.NavigateTo($"/{NavCollections}/{collectionId}");
             }
         }
     }
