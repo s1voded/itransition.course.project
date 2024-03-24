@@ -36,6 +36,14 @@ namespace PersonalCollection.Application.Mapping
             CreateMap<TagDto, Tag>();
             CreateMap<Tag, TagWithUsedCountDto>()
                 .ForMember(dest => dest.Count, act => act.MapFrom(src => src.Items.Count));
+
+            CreateMap<Comment, CommentDto>()
+                .ForMember(dest => dest.Author, act => act.MapFrom(src => src.User.UserName));
+            CreateMap<CommentDto, Comment>();
+
+            CreateMap<Like, LikeDto>()
+                .ForMember(dest => dest.Author, act => act.MapFrom(src => src.User.UserName));
+            CreateMap<LikeDto, Like>();
         }
     }
 }

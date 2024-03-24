@@ -8,8 +8,6 @@ namespace PersonalCollection.Application.Services
     {
         public string GetLocalTime(DateTime dateTime, int timeZoneOffset) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 
-        public string? GetReactionUserName(ApplicationUser? user, string deletedUserName) => user != null ? user.UserName : deletedUserName;
-
         public string GetTagSearchHref(string tagName)
         {
             return $"/{NavSearch}?{ParameterSearchTag}={tagName}";

@@ -74,7 +74,7 @@
             <MudPaper Class="pa-4">
                 <MudStack Row="true">
                     <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudText Typo="Typo.subtitle2">@PageHelperService.GetReactionUserName(comment.User, locale["deleted user"])</MudText>
+                        <MudText Typo="Typo.subtitle2">@(comment.Author != null ? comment.Author : locale["deleted user"])</MudText>
                         <MudText Typo="Typo.caption">@comment.AddedDateTime</MudText>
                         <MudDivider />
                         <MudText Typo="Typo.body1">@comment.Content</MudText>
@@ -93,8 +93,8 @@
     private ItemEditCreateDto? item;
     private CollectionCustomFieldSettingsDto? collection;
     private bool canManageCollection, formIsValid, itemLiked, userIsAuth;
-    private IEnumerable<Comment> itemComments = [];
-    private IEnumerable<Like> itemLikes = [];
+    private IEnumerable<CommentDto> itemComments = [];
+    private IEnumerable<LikeDto> itemLikes = [];
     private IEnumerable<TagDto> itemTags = [];
     private string? commentContent, userId;
     private int timeZoneOffset;
@@ -129,7 +129,7 @@
         var userId = await AuthService.GetCurrentUserId();
         if (!string.IsNullOrEmpty(userId))
         {
-            itemLiked = itemLikes.Any(l => l.User?.Id == userId);
+            itemLiked = itemLikes.Any(l => l.UserId == userId);
         }
     }
 
@@ -160,7 +160,7 @@
             var userId = await AuthService.GetCurrentUserId();
             if (!string.IsNullOrEmpty(userId))
             {
-                var comment = new Comment() { ItemId = ItemId, Content = commentContent, AddedDateTime = DateTime.UtcNow, UserId = userId };
+                var comment = new CommentDto() { ItemId = ItemId, Content = commentContent, AddedDateTime = DateTime.UtcNow, UserId = userId };
                 commentContent = "";
                 await ReactionsService.AddComment(comment);
                 await SendUpdateComments();
@@ -176,13 +176,7 @@
             var userId = await AuthService.GetCurrentUserId();
             if (!string.IsNullOrEmpty(userId))
             {
-                var myLike = await ReactionsService.GetLikeForItemByUser(ItemId, userId);
-                if (myLike != null) await ReactionsService.DeleteLike(myLike);
-                else
-                {
-                    var newLike = new Like() { ItemId = ItemId, UserId = userId };
-                    await ReactionsService.AddLike(newLike);
-                }
+                await ReactionsService.UpdateUserLike(ItemId, userId);
                 await GetLikes();
             }                
         }

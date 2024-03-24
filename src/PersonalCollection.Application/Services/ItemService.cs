@@ -94,6 +94,7 @@ namespace PersonalCollection.Application.Services
         {
             return await _itemRepository.SearchItems(searchString)
                 .ProjectTo<ItemDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
                 .ToListAsync();
         }
 

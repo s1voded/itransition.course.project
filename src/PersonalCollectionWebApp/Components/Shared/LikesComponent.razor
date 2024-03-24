@@ -20,13 +20,13 @@
     <TooltipContent>
         @foreach (var like in ItemLikes)
         {
-            <MudText Typo="Typo.body2">@PageHelperService.GetReactionUserName(like.User, locale["deleted user"])</MudText>
+            <MudText Typo="Typo.body2">@(like.Author != null ? like.Author : locale["deleted user"])</MudText>
         }
     </TooltipContent>
 </MudTooltip>
 
 @code {
-    [Parameter] public IEnumerable<Like> ItemLikes { get; set; }
+    [Parameter] public IEnumerable<LikeDto> ItemLikes { get; set; }
     [Parameter] public bool ItemLiked { get; set; }
     [Parameter] public EventCallback OnLikeItem { get; set; }
     [Parameter] public bool LikeDisable { get; set; }
