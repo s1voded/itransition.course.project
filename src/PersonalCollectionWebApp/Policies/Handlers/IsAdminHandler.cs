@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace PersonalCollectionWebApp.Policies.Handlers
 {
-    public class IsAdminHandler : IAuthorizationHandler
+    public class IsAdminHandler : AuthorizationHandler<IsAdminRequirement>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -17,25 +17,17 @@ namespace PersonalCollectionWebApp.Policies.Handlers
             _userManager = userManager;
         }
 
-        public async Task HandleAsync(AuthorizationHandlerContext context)
+        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsAdminRequirement requirement)
         {
-            var pendingRequirements = context.PendingRequirements.ToList();
-
-            foreach (var requirement in pendingRequirements)
+            var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
             {
-                if (requirement is IsAdminRequirement || requirement is AllowedManageCollectionRequirement)
-                {
-                    var userId = context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                    var user = await _userManager.Users.Include(u => u.Claims).FirstOrDefaultAsync(u => u.Id == userId);
-                    if (user == null)
-                    {
-                        return;
-                    }
-                    if (user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).Any(c => c.ClaimValue == Constants.AdminRole))
-                    {
-                        context.Succeed(requirement);
-                    }
-                }
+                return;
+            }
+            if (user.Claims.Where(c => c.ClaimType == ClaimTypes.Role).Any(c => c.ClaimValue == Constants.AdminRole))
+            {
+                context.Succeed(requirement);
             }
         }
     }
