@@ -37,6 +37,8 @@
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+
+        if (!canManageCollection) NavigateToAccessDenied();
     }
 
     private async Task OnUpdateCollection()
@@ -46,6 +48,7 @@
             await CollectionService.UpdateCollection(collection);
             NavigationManager.NavigateTo($"/{NavCollections}/{collection.Id}");
         }
+        else NavigateToAccessDenied();
     }
 
     private void NavigateToAccessDenied()

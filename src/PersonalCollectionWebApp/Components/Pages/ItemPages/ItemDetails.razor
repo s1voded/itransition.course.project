@@ -104,11 +104,15 @@
         await InitHubConnection();
 
         item = await ItemService.GetItemWithCollection(ItemId);
-        itemTags = await ItemService.GetItemTags(ItemId);
-        collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+        else
+        {
+            collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
+            itemTags = await ItemService.GetItemTags(ItemId);
+            canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+        }
+
         userIsAuth = await AuthService.IsUserAuthenticated();
 
         await GetComments();

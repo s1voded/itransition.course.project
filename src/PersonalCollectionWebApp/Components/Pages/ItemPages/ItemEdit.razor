@@ -35,11 +35,16 @@
     protected override async Task OnInitializedAsync()
     {
         item = await ItemService.GetItemWithCollection(ItemId);
-        collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
-        tags = await ItemService.GetItemTags(ItemId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+        else
+        {
+            collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
+            tags = await ItemService.GetItemTags(ItemId);
+            canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+        }
+
+        if (!canManageCollection) NavigateToAccessDenied();
     }
 
     private async Task OnUpdateItem()
@@ -49,6 +54,7 @@
             await ItemService.UpdateItem(item, tags);
             NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");
         }
+        else NavigateToAccessDenied();
     }
 
     private void NavigateToAccessDenied()
