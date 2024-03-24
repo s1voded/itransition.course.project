@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Persistence.Contexts;
 using PersonalCollection.Persistence.Repositories;
@@ -23,7 +22,6 @@ namespace PersonalCollection.Persistence.Extensions
             services.AddDbContext<ApplicationDbContext>(options => {
                 options.UseSqlServer(connectionString,
                 builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
-                //options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             });
         }
 

@@ -1,12 +1,12 @@
 ﻿@attribute [Route(AppRouteCollectionDetails)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
-@inject PageHelperService PageHelperService
-@inject AuthService AuthService
+@inject IAuthService AuthService
+@inject ICollectionService CollectionService
+@inject IPageHelperService PageHelperService
 @inject IDialogService DialogService
-@inject ImageStorageService ImageStorageService
+@inject IImageStorageService ImageStorageService
 @inject IStringLocalizer<CollectionDetails> locale
 @inject IJSRuntime JS
 
@@ -130,7 +130,7 @@
         collection = await CollectionService.GetCollectionWithItems(CollectionId);
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else canManageCollection = await AuthService.IsAllowManageCollection(collection.Author);
+        else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
 
         timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }

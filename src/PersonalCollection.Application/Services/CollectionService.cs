@@ -2,13 +2,13 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Application.Interfaces.Services;
 using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace PersonalCollection.Application.Services
 {
-    public class CollectionService
+    public class CollectionService: ICollectionService
     {
         private readonly IMapper _mapper;
         private readonly ICollectionRepository _collectionRepository;
@@ -21,12 +21,26 @@ namespace PersonalCollection.Application.Services
             _themeRepository = themeRepository;
         }
 
-        public async Task<IEnumerable<Theme>> GetThemes() => await _themeRepository.GetAll().AsNoTracking().ToListAsync();
+        public async Task<int> AddCollection(CollectionEditCreateDto collectionDto)
+        {
+            var collection = _mapper.Map<Collection>(collectionDto);
+            await _collectionRepository.Create(collection);
+            await _collectionRepository.SaveChangesAsync();
+            return collection.Id;
+        }
 
         public async Task<CollectionEditCreateDto?> GetCollectionById(int collectionId)
         {
             return await _collectionRepository.GetAll()
                .ProjectTo<CollectionEditCreateDto>(_mapper.ConfigurationProvider)
+               .AsNoTracking()
+               .FirstOrDefaultAsync(c => c.Id == collectionId);
+        }
+
+        public async Task<CollectionWithItemsDto?> GetCollectionWithItems(int collectionId)
+        {
+            return await _collectionRepository.GetAll()
+               .ProjectTo<CollectionWithItemsDto>(_mapper.ConfigurationProvider)
                .AsNoTracking()
                .FirstOrDefaultAsync(c => c.Id == collectionId);
         }
@@ -58,24 +72,6 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<CollectionWithItemsDto?> GetCollectionWithItems(int collectionId)
-        {
-            return await _collectionRepository.GetAll()
-               .ProjectTo<CollectionWithItemsDto>(_mapper.ConfigurationProvider)
-               .AsNoTracking()
-               .FirstOrDefaultAsync(c => c.Id == collectionId);
-        }
-
-        public async Task<int> AddCollection(CollectionEditCreateDto collectionDto)
-        {
-            var collection = _mapper.Map<Collection>(collectionDto);
-
-            await _collectionRepository.Create(collection);
-            await _collectionRepository.SaveChangesAsync();
-
-            return collection.Id;
-        }
-
         public async Task UpdateCollection(CollectionEditCreateDto collectionDto)
         {
             var collection = await _collectionRepository.GetById(collectionDto.Id);
@@ -98,5 +94,7 @@ namespace PersonalCollection.Application.Services
                 .Where(c => c.Id == collectionId)
                 .ExecuteDeleteAsync();
         }
+
+        public async Task<IEnumerable<Theme>> GetThemes() => await _themeRepository.GetAll().AsNoTracking().ToListAsync();
     }
 }

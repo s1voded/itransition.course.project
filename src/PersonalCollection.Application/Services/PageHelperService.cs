@@ -1,10 +1,10 @@
-﻿using PersonalCollection.Application.Models.Dto;
-using PersonalCollection.Domain.Entities;
+﻿using PersonalCollection.Application.Interfaces.Services;
+using PersonalCollection.Application.Models.Dto;
 using static PersonalCollection.Domain.Constants;
 
 namespace PersonalCollection.Application.Services
 {
-    public class PageHelperService
+    public class PageHelperService: IPageHelperService
     {
         public string GetLocalTime(DateTime dateTime, int timeZoneOffset) => dateTime.Subtract(TimeSpan.FromMinutes(timeZoneOffset)).ToString();
 

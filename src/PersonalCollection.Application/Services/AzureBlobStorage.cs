@@ -1,15 +1,16 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.Extensions.Options;
+using PersonalCollection.Application.Interfaces.Services;
 using PersonalCollection.Application.Models.Config;
 
 namespace PersonalCollection.Application.Services
 {
-    public class ImageStorageService
+    public class AzureBlobStorage: IImageStorageService
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly IOptions<AzureBlobConfig> _azureBlobConfig;
 
-        public ImageStorageService(BlobServiceClient blobServiceClient, IOptions<AzureBlobConfig> azureBlobConfig)
+        public AzureBlobStorage(BlobServiceClient blobServiceClient, IOptions<AzureBlobConfig> azureBlobConfig)
         {
             _blobServiceClient = blobServiceClient;
             _azureBlobConfig = azureBlobConfig;

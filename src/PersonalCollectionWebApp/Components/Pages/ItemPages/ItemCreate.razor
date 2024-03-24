@@ -2,9 +2,9 @@
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
-@inject CollectionService CollectionService
-@inject ItemService ItemService
-@inject AuthService AuthService
+@inject IAuthService AuthService
+@inject ICollectionService CollectionService
+@inject IItemService ItemService
 @inject IStringLocalizer<ItemCreate> locale
 
 <PageTitle>@locale["Item create"]</PageTitle>

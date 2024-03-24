@@ -1,12 +1,12 @@
 ﻿@attribute [Route(AppRouteItemDetails)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject ItemService ItemService
-@inject CollectionService CollectionService
-@inject ReactionsService ReactionsService
 @inject NavigationManager NavigationManager
-@inject AuthService AuthService
-@inject PageHelperService PageHelperService
+@inject IAuthService AuthService
+@inject ICollectionService CollectionService
+@inject IItemService ItemService
+@inject IReactionsService ReactionsService
+@inject IPageHelperService PageHelperService
 @inject IDialogService DialogService
 @inject IStringLocalizer<ItemDetails> locale
 @inject IJSRuntime JS

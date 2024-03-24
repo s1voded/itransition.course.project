@@ -1,10 +1,10 @@
 ﻿@attribute [Route(AppRouteItemEdit)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject ItemService ItemService
-@inject CollectionService CollectionService
 @inject NavigationManager NavigationManager
-@inject AuthService AuthService
+@inject IAuthService AuthService
+@inject ICollectionService CollectionService
+@inject IItemService ItemService
 @inject IStringLocalizer<ItemEdit> locale
 
 <PageTitle>@locale["Edit"] @item?.Name</PageTitle>

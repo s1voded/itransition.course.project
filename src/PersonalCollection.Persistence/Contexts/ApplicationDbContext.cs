@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Persistence.Contexts

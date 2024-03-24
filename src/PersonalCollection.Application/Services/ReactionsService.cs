@@ -2,12 +2,13 @@
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using PersonalCollection.Application.Interfaces.Repositories;
+using PersonalCollection.Application.Interfaces.Services;
 using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
 
 namespace PersonalCollection.Application.Services
 {
-    public class ReactionsService
+    public class ReactionsService: IReactionsService
     {
         private readonly IMapper _mapper;
         private readonly ICommentRepository _commentRepository;
@@ -20,20 +21,19 @@ namespace PersonalCollection.Application.Services
             _likeRepository = likeRepository;
         }
 
+        public async Task AddComment(CommentDto commentDto)
+        {
+            var comment = _mapper.Map<Comment>(commentDto);
+
+            await _commentRepository.Create(comment);
+            await _commentRepository.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<CommentDto>> GetItemComments(int itemId)
         {
             return await _commentRepository.GetAll()
                 .Where(c => c.ItemId == itemId)
                 .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<LikeDto>> GetItemLikes(int itemId)
-        {
-            return await _likeRepository.GetAll()
-                .Where(l => l.ItemId == itemId)
-                .ProjectTo<LikeDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -49,6 +49,15 @@ namespace PersonalCollection.Application.Services
             else await AddLike(itemId, userId);
         }
 
+        public async Task<IEnumerable<LikeDto>> GetItemLikes(int itemId)
+        {
+            return await _likeRepository.GetAll()
+                .Where(l => l.ItemId == itemId)
+                .ProjectTo<LikeDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
         private async Task DeleteLike(int likeId)
         {
             await _likeRepository.GetAll()
@@ -61,14 +70,6 @@ namespace PersonalCollection.Application.Services
             var newLike = new Like() { ItemId = itemId, UserId = userId };
             await _likeRepository.Create(newLike);
             await _likeRepository.SaveChangesAsync();
-        }
-
-        public async Task AddComment(CommentDto commentDto)
-        {
-            var comment = _mapper.Map<Comment>(commentDto);
-
-            await _commentRepository.Create(comment);
-            await _commentRepository.SaveChangesAsync();
         }
     }
 }

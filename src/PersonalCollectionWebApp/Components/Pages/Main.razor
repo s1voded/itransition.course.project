@@ -1,10 +1,10 @@
 ﻿@page "/"
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject CollectionService CollectionService
-@inject ItemService ItemService
 @inject NavigationManager NavigationManager
-@inject PageHelperService PageHelperService
+@inject ICollectionService CollectionService
+@inject IItemService ItemService
+@inject IPageHelperService PageHelperService
 @inject IStringLocalizer<Main> locale
 @inject IJSRuntime JS
 

@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
+using PersonalCollection.Application.Interfaces.Services;
 using System.Security.Claims;
 using static PersonalCollection.Domain.Constants;
 
 namespace PersonalCollection.Application.Services
 {
-    public class AuthService
+    public class AuthService: IAuthService
     {
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         private readonly IAuthorizationService _authorizationService;

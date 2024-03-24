@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PersonalCollection.Application.Interfaces.Repositories;
+﻿using PersonalCollection.Application.Interfaces.Repositories;
 using PersonalCollection.Domain.Entities;
 using PersonalCollection.Persistence.Contexts;
 

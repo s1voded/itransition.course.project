@@ -2,8 +2,8 @@
 @attribute [Route(AppRouteUserManager)]
 @attribute [Authorize(Policy = PolicyAdminOnly)]
 @rendermode @(new InteractiveServerRenderMode(false))
-@inject UserManagerService UserManagerService
-@inject AuthService AuthService
+@inject IAuthService AuthService
+@inject IUserManagerService UserManagerService
 @inject IDialogService DialogService
 @inject IStringLocalizer<ManageUsers> locale
   

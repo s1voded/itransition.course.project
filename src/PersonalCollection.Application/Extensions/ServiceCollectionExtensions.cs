@@ -3,6 +3,7 @@ using Azure.Storage.Blobs;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using PersonalCollection.Application.Interfaces.Services;
 using PersonalCollection.Application.Models.Config;
 using PersonalCollection.Application.Services;
 using System.Reflection;
@@ -26,13 +27,13 @@ namespace PersonalCollection.Application.Extensions
 
         private static void AddMyServices(this IServiceCollection services)
         {
-            services.AddScoped<CollectionService>();
-            services.AddScoped<ItemService>();
-            services.AddScoped<UserManagerService>();
-            services.AddScoped<ReactionsService>();
-            services.AddScoped<ImageStorageService>();
-            services.AddScoped<PageHelperService>();
-            services.AddScoped<AuthService>();
+            services.AddScoped<ICollectionService, CollectionService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IReactionsService, ReactionsService>();
+            services.AddScoped<IImageStorageService, AzureBlobStorage>();
+            services.AddScoped<IUserManagerService, UserManagerService>();
+            services.AddScoped<IPageHelperService, PageHelperService>();
+            services.AddScoped<IAuthService, AuthService>();
         }
     }
 }
