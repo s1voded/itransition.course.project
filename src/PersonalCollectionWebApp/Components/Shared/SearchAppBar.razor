@@ -4,10 +4,12 @@
 @inject IItemService ItemService
 @inject IStringLocalizer<MainLayout> locale
 
-<div class="input-group" Style="width: 500px;">
-    <input @bind="searchString" type="text" class="form-control" placeholder=@locale["Search items"] aria-label="Search items" aria-describedby="button-addon2">
-    <button @onclick="NavigateToSearchItems" class="btn btn-outline-secondary" type="button" id="button-addon2">@locale["Search"]</button>
-</div>
+<form>
+    <div class="input-group" Style="width: 500px;">
+        <input @bind="searchString" type="text" class="form-control" placeholder=@locale["Search items"] aria-label="Search items" aria-describedby="button-addon2">
+        <button @onclick="NavigateToSearchItems" class="btn btn-outline-secondary" type="submit" id="button-addon2">@locale["Search"]</button>
+    </div>
+</form>
 
 @* <MudAutocomplete @ref=autoComplete
                  T="ItemDto"
