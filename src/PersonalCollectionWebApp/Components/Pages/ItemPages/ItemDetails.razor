@@ -31,25 +31,25 @@
         <MudText>@locale["Added"]: <b>@PageHelperService.GetLocalTime(item.CreatedDate, timeZoneOffset)</b></MudText>
         <MudText>
             @locale["Collection"]:
-            <MudLink Href=@($"/{NavCollections}/{item.CollectionId}") Class="pa-1">@collection.Name</MudLink>
+            <MudLink Href=@($"/{NavCollections}/{item.CollectionId}") Class="pa-1">@item.Collection.Name</MudLink>
         </MudText>
         <MudText>
             @locale["Tags"]:
-            @foreach (var tag in itemTags)
+            @foreach (var tag in item.Tags)
             {
                 <MudLink Href=@PageHelperService.GetTagSearchHref(tag.Name) Class="pa-1">@tag.Name</MudLink>
             }
         </MudText>
-        @if (collection.CustomFieldsSettings != null)
+        @if (item.Collection.CustomFieldsSettings != null)
         {
-            var customFields = collection.CustomFieldsSettings;
+            var customFields = item.Collection.CustomFieldsSettings;
             <CustomFieldsValueComponent CustomFields=@customFields.CustomStrings ItemCustomField=@item.CustomStrings />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomTexts ItemCustomField=@item.CustomTexts />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomInts ItemCustomField=@item.CustomInts.Select(i => i.ToString()).ToArray() />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomBools ItemCustomField=@item.CustomBools.Select(b => b.ToString()).ToArray() />
             <CustomFieldsValueComponent CustomFields=@customFields.CustomDates ItemCustomField=@item.CustomDates.Select(d => d.HasValue ? d.Value.ToShortDateString() : "").ToArray() />
         }
-        <LikesComponent ItemLiked=@itemLiked ItemLikes=@itemLikes LikeDisable=@(!userIsAuth) OnLikeItem=@OnLikeItem />
+        <LikesComponent ItemLiked=@itemLiked ItemLikes=@item.Likes LikeDisable=@(!userIsAuth) OnLikeItem=@OnLikeItem />
     </MudPaper>
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
     <MudGrid>
@@ -69,7 +69,7 @@
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
     <MudStack>
-        @foreach (var comment in itemComments)
+        @foreach (var comment in item.Comments)
         {
             <MudPaper Class="pa-4">
                 <MudStack Row="true">
@@ -90,12 +90,8 @@
     public int ItemId { get; set; }
 
     private HubConnection? hubConnection;
-    private ItemEditCreateDto? item;
-    private CollectionCustomFieldSettingsDto? collection;
+    private ItemDetailDto? item;
     private bool canManageCollection, formIsValid, itemLiked, userIsAuth;
-    private IEnumerable<CommentDto> itemComments = [];
-    private IEnumerable<LikeDto> itemLikes = [];
-    private IEnumerable<TagDto> itemTags = [];
     private string? commentContent, userId;
     private int timeZoneOffset;
 
@@ -103,38 +99,37 @@
     {
         await InitHubConnection();
 
-        item = await ItemService.GetItemWithCollection(ItemId);
+        item = await ItemService.GetItemDetailById(ItemId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
-        else
-        {
-            collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
-            itemTags = await ItemService.GetItemTags(ItemId);
-            canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
-        }
+        else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);
 
         userIsAuth = await AuthService.IsUserAuthenticated();
-
-        await GetComments();
-        await GetLikes();
+        itemLiked = await InitUserLike(item.Likes);
 
         timeZoneOffset = await JS.InvokeAsync<int>(JSGetTimeOffsetFuncName);
     }
 
     private async Task GetComments()
     {
-        itemComments = await ReactionsService.GetItemComments(ItemId);
+        item.Comments = await ReactionsService.GetItemComments(ItemId);
     }
 
     private async Task GetLikes()
     {
-        itemLikes = await ReactionsService.GetItemLikes(ItemId);
+        item.Likes = await ReactionsService.GetItemLikes(ItemId);
+        itemLiked = await InitUserLike(item.Likes);
+    }
 
+    private async Task<bool> InitUserLike(IEnumerable<LikeDto> likes)
+    {
+        var userLiked = false; 
         var userId = await AuthService.GetCurrentUserId();
         if (!string.IsNullOrEmpty(userId))
         {
-            itemLiked = itemLikes.Any(l => l.UserId == userId);
+            userLiked = likes.Any(l => l.UserId == userId);
         }
+        return userLiked;
     }
 
     private void OnDeleteItem()
@@ -150,7 +145,7 @@
 
     private async Task DeleteItem()
     {
-        if (await AuthService.IsAllowManageCollection(collection.UserId))
+        if (await AuthService.IsAllowManageCollection(item.Collection.UserId))
         {
             await ItemService.DeleteItem(item.Id);
             NavigationManager.NavigateTo($"/{NavCollections}/{item?.CollectionId}");

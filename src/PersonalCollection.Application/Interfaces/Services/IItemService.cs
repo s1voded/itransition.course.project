@@ -5,7 +5,8 @@ namespace PersonalCollection.Application.Interfaces.Services
     public interface IItemService
     {
         public Task<int> AddItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto);
-        public Task<ItemEditCreateDto?> GetItemWithCollection(int itemId);
+        public Task<ItemEditCreateDto?> GetItemById(int itemId);
+        public Task<ItemDetailDto?> GetItemDetailById(int itemId);
         public Task<IEnumerable<ItemDto>> GetLastAddedItems(int count);
         public Task<IEnumerable<ItemDto>> SearchItemsByTag(string tagName);
         public Task<IEnumerable<ItemDto>> SearchItems(string searchString);

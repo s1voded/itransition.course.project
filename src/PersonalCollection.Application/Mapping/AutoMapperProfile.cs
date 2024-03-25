@@ -24,6 +24,7 @@ namespace PersonalCollection.Application.Mapping
                 .ForMember(dest => dest.ItemsCount, act => act.MapFrom(src => src.Items.Count));
 
             CreateMap<ItemEditCreateDto, Item>();
+            CreateMap<Item, ItemDetailDto>();
             CreateMap<Item, ItemEditCreateDto>();
             CreateMap<Item, ItemDto>()
                 .ForMember(dest => dest.CollectionName, act => act.MapFrom(src => src.Collection.Name))

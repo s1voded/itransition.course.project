@@ -13,6 +13,7 @@ namespace PersonalCollection.Domain.Entities
         public Collection Collection { get; set; } = null!; // Required reference navigation to principal
         public ICollection<Tag>? Tags { get; set; } = [];
         public ICollection<Comment>? Comments { get; set; } = [];
+        public ICollection<Like>? Likes { get; set; } = [];
 
         public string?[] CustomStrings { get; set; } = new string?[CustomFieldsCount];
         public string?[] CustomTexts { get; set; } = new string?[CustomFieldsCount];

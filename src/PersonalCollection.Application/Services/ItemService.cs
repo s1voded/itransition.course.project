@@ -30,10 +30,18 @@ namespace PersonalCollection.Application.Services
             return item.Id;
         }
 
-        public async Task<ItemEditCreateDto?> GetItemWithCollection(int itemId)
+        public async Task<ItemEditCreateDto?> GetItemById(int itemId)
         {
             return await _itemRepository.GetAll()
                 .ProjectTo<ItemEditCreateDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(i => i.Id == itemId);
+        }
+
+        public async Task<ItemDetailDto?> GetItemDetailById(int itemId)
+        {
+            return await _itemRepository.GetAll()
+                .ProjectTo<ItemDetailDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.Id == itemId);
         }

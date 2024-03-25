@@ -34,7 +34,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        item = await ItemService.GetItemWithCollection(ItemId);
+        item = await ItemService.GetItemById(ItemId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else
