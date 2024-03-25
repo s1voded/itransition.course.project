@@ -24,7 +24,7 @@
     </ColGroup>
     <HeaderContent>
         <MudTh></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<CollectionDto, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<CollectionDto, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<CollectionDto, object>(x=>x.Theme)">@locale["Theme"]</MudTableSortLabel></MudTh>
         <MudTh>@locale["Description"]</MudTh>
         <MudTh>@locale["Items count"]</MudTh>

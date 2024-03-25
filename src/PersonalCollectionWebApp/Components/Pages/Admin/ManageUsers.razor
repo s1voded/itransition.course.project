@@ -34,7 +34,7 @@
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Id</MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">@locale["Username"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ApplicationUserDto, object>(x=>x.UserName)">@locale["Username"]</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Email)">@locale["Email"]</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.Roles.Count)">@locale["Role"]</MudTableSortLabel></MudTh>
         <MudTh><MudTableSortLabel SortBy="new Func<ApplicationUserDto, object>(x=>x.IsBlocked)">@locale["Status"]</MudTableSortLabel></MudTh>
@@ -124,19 +124,19 @@
 
     private Func<ApplicationUserDto, bool> UserFilter => x =>
     {
-    if (string.IsNullOrWhiteSpace(searchString))
-        return true;
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
 
-    if ($"{x.Id}".Contains(searchString))
-        return true;
+        if ($"{x.Id}".Contains(searchString))
+            return true;
 
-    if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-        return true;
+        if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
 
-    if (x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
-        return true;
+        if (x.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
 
-    return false;
+        return false;
     };
 
     private void NavigateToAccessDenied()

@@ -4,59 +4,59 @@
 @inject IItemService ItemService
 @inject IStringLocalizer<MainLayout> locale
 
-@* <div class="input-group" Style="width: 500px;">
+<div class="input-group" Style="width: 500px;">
     <input @bind="searchString" type="text" class="form-control" placeholder=@locale["Search items"] aria-label="Search items" aria-describedby="button-addon2">
     <button @onclick="NavigateToSearchItems" class="btn btn-outline-secondary" type="button" id="button-addon2">@locale["Search"]</button>
-</div> *@
+</div>
 
-<MudAutocomplete @ref="_autoComplete"
-    T="ItemDto"
-    Label=@locale["Search items"]
-    ToStringFunc="@(i => i?.Name)"
-    ValueChanged=NavigateToItemDetails
-    SearchFunc="@Search1" 
-    Margin=Margin.Dense 
-    Dense=true 
-    Variant="Variant.Outlined" 
-    AdornmentIcon="@Icons.Material.Filled.Search" CoerceText=true CoerceValue=true>
+@* <MudAutocomplete @ref=autoComplete
+                 T="ItemDto"
+                 Label=@locale["Search items"]
+                 ToStringFunc="@(i => i?.Name)"
+                 ValueChanged=NavigateToItemDetails
+                 SearchFunc="@SearchItems"
+                 Margin=Margin.Dense
+                 Dense=true
+                 Variant="Variant.Outlined"
+                 AdornmentIcon="@Icons.Material.Filled.Search">
     <ItemTemplate>
         <FoundItemComponent Item="@context"/>
     </ItemTemplate>
     <ItemSelectedTemplate>
         <FoundItemComponent Item="@context" />
     </ItemSelectedTemplate>
-</MudAutocomplete>
+</MudAutocomplete> *@
 
 @code {
-    //private string searchString;
+    private string searchString;
 
-    // private void NavigateToSearchItems()
+    private void NavigateToSearchItems()
+    {
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            NavigationManager.NavigateTo($"/{NavSearch}?{ParameterSearchString}={searchString}", true);
+            searchString = "";
+        }
+    }
+
+    // private MudAutocomplete<ItemDto> autoComplete;
+
+    // private async Task NavigateToItemDetails(ItemDto item)
     // {
-    //     if (!string.IsNullOrEmpty(searchString))
+    //     if (item != null)
     //     {
-    //         NavigationManager.NavigateTo($"/{NavSearch}?{ParameterSearchString}={searchString}", true);
-    //         searchString = "";
+    //         NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");
+    //         await autoComplete.Clear();
     //     }
     // }
 
-    private MudAutocomplete<ItemDto> _autoComplete { get; set; }
+    // private async Task<IEnumerable<ItemDto>> SearchItems(string value)
+    // {
+    //     if (!string.IsNullOrEmpty(value))
+    //     {
+    //         return await ItemService.SearchItems(value);
+    //     }
 
-    private async Task NavigateToItemDetails(ItemDto item)
-    {
-        if (item != null)
-        {
-            await _autoComplete.Clear();
-            NavigationManager.NavigateTo($"/{NavItems}/{item.Id}");
-        }
-    }
-
-    private async Task<IEnumerable<ItemDto>> Search1(string value)
-    {
-        if (!string.IsNullOrEmpty(value))
-        {
-            return await ItemService.SearchItems(value);
-        }
-
-        return [];
-    }
+    //     return [];
+    // }
 }

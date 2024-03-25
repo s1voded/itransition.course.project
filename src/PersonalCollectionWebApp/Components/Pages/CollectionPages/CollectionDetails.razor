@@ -71,7 +71,7 @@
         </ToolBarContent>
         <HeaderContent>
             <MudTh><MudTableSortLabel SortBy="new Func<ItemInCollectionDto, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<ItemInCollectionDto, object>(x=>x.CreatedDate)">@locale["Added"]</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<ItemInCollectionDto, object>(x=>x.CreatedDate)">@locale["Added"]</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<ItemInCollectionDto, object>(x=>x.Tags.Count())">@locale["Tags"]</MudTableSortLabel></MudTh>
             @for (int i = 0; i < CustomFieldsCount; i++)
             {

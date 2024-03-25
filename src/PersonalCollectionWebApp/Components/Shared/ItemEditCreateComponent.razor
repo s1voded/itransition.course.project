@@ -16,16 +16,16 @@
                               AddItemOnEmptyResultMethod="AddTag"
                               placeholder=@locale["Select tags"]>
                     <SelectedTemplate Context="tag">
-                        @tag.Name
+                        <MudText>@tag.Name</MudText>
                     </SelectedTemplate>
                     <HelpTemplate>
-                        @locale["Please enter a minimum of 2 characters to perform a search"]
+                        <MudText>@locale["Please enter a minimum of 2 characters to perform a search"]</MudText>                  
                     </HelpTemplate>
                     <NotFoundTemplate Context="searchText">
-                        @locale["Add"] "@searchText" @locale["as a new tag"]
+                        <MudText>@locale["Add"] "@searchText" @locale["as a new tag"]</MudText>
                     </NotFoundTemplate>
                     <ResultTemplate Context="tag">
-                        @tag.Name
+                        <MudText>@tag.Name</MudText>             
                     </ResultTemplate>
                 </Autocomplete>
                 @if (CustomFieldsSettings != null)
@@ -99,8 +99,8 @@
         return await ItemService.SearchTag(searchText.ToLower());
     } 
 
-    public async Task<TagDto> AddTag(string searchText)
+    public async Task<TagDto> AddTag(string tagName)
     {
-        return await ItemService.AddNewTag(new TagDto() { Name = searchText });
+        return await ItemService.AddNewTag(new TagDto() { Name = tagName });
     }
 }

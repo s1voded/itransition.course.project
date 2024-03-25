@@ -75,7 +75,7 @@
                 <MudStack Row="true">
                     <MudStack Justify="Justify.Center" Spacing="0">
                         <MudText Typo="Typo.subtitle2">@(comment.Author != null ? comment.Author : locale["deleted user"])</MudText>
-                        <MudText Typo="Typo.caption">@comment.AddedDateTime</MudText>
+                        <MudText Typo="Typo.caption">@PageHelperService.GetLocalTime(comment.AddedDateTime, timeZoneOffset)</MudText>
                         <MudDivider />
                         <MudText Typo="Typo.body1">@comment.Content</MudText>
                     </MudStack>
