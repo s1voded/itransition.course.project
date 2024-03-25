@@ -29,28 +29,13 @@ namespace PersonalCollection.Application.Services
             return collection.Id;
         }
 
-        public async Task<CollectionEditCreateDto?> GetCollectionById(int collectionId)
+        public async Task<T?> GetCollectionById<T>(int collectionId)
         {
-            return await _collectionRepository.GetAll()
-               .ProjectTo<CollectionEditCreateDto>(_mapper.ConfigurationProvider)
-               .AsNoTracking()
-               .FirstOrDefaultAsync(c => c.Id == collectionId);
-        }
+            var query = _collectionRepository.GetAll()
+                .Where(i => i.Id == collectionId)
+                .AsNoTracking();
 
-        public async Task<CollectionWithItemsDto?> GetCollectionWithItems(int collectionId)
-        {
-            return await _collectionRepository.GetAll()
-               .ProjectTo<CollectionWithItemsDto>(_mapper.ConfigurationProvider)
-               .AsNoTracking()
-               .FirstOrDefaultAsync(c => c.Id == collectionId);
-        }
-
-        public async Task<CollectionCustomFieldSettingsDto?> GetCollectionCustomFieldSettings(int collectionId)
-        {
-            return await _collectionRepository.GetAll()
-               .ProjectTo<CollectionCustomFieldSettingsDto>(_mapper.ConfigurationProvider)
-               .AsNoTracking()
-               .FirstOrDefaultAsync(c => c.Id == collectionId);
+            return await _mapper.ProjectTo<T>(query).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<CollectionDto>> GetLargestCollections(int count)

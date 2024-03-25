@@ -29,18 +29,18 @@
 
     private ItemEditCreateDto? item;
     private CollectionCustomFieldSettingsDto? collection;
-    private IList<TagDto> tags = [];
+    private List<TagDto> tags = [];
     private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
-        item = await ItemService.GetItemById(ItemId);
+        item = await ItemService.GetItemById<ItemEditCreateDto>(ItemId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else
         {
-            collection = await CollectionService.GetCollectionCustomFieldSettings(item.CollectionId);
-            tags = await ItemService.GetItemTags(ItemId);
+            collection = await CollectionService.GetCollectionById<CollectionCustomFieldSettingsDto>(item.CollectionId);
+            tags = (await ItemService.GetItemTags(ItemId)).ToList();
             canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
         }
 

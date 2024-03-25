@@ -127,7 +127,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        collection = await CollectionService.GetCollectionWithItems(CollectionId);
+        collection = await CollectionService.GetCollectionById<CollectionWithItemsDto>(CollectionId);
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);

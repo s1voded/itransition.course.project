@@ -99,7 +99,7 @@
     {
         await InitHubConnection();
 
-        item = await ItemService.GetItemDetailById(ItemId);
+        item = await ItemService.GetItemById<ItemDetailDto>(ItemId);
 
         if (item is null) NavigationManager.NavigateTo(AppRouteNotFound);
         else canManageCollection = await AuthService.IsAllowManageCollection(item.Collection.UserId);

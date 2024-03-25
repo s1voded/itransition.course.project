@@ -32,7 +32,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        collection = await CollectionService.GetCollectionById(CollectionId);
+        collection = await CollectionService.GetCollectionById<CollectionEditCreateDto>(CollectionId);
         themes = await CollectionService.GetThemes();
 
         if (collection is null) NavigationManager.NavigateTo(AppRouteNotFound);

@@ -21,7 +21,7 @@ namespace PersonalCollection.Application.Services
             _tagRepository = tagRepository;        
         }
 
-        public async Task<int> AddItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
+        public async Task<int> AddItem(ItemEditCreateDto itemDto, IEnumerable<TagDto> tagsDto)
         {
             var item = _mapper.Map<Item>(itemDto);
             item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
@@ -30,20 +30,13 @@ namespace PersonalCollection.Application.Services
             return item.Id;
         }
 
-        public async Task<ItemEditCreateDto?> GetItemById(int itemId)
+        public async Task<T?> GetItemById<T>(int itemId)
         {
-            return await _itemRepository.GetAll()
-                .ProjectTo<ItemEditCreateDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(i => i.Id == itemId);
-        }
+            var query = _itemRepository.GetAll()
+                .Where(i => i.Id == itemId)
+                .AsNoTracking();
 
-        public async Task<ItemDetailDto?> GetItemDetailById(int itemId)
-        {
-            return await _itemRepository.GetAll()
-                .ProjectTo<ItemDetailDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .FirstOrDefaultAsync(i => i.Id == itemId);
+            return await _mapper.ProjectTo<T>(query).SingleOrDefaultAsync();
         }
 
         public async Task<IEnumerable<ItemDto>> GetLastAddedItems(int count)
@@ -73,7 +66,7 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task UpdateItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
+        public async Task UpdateItem(ItemEditCreateDto itemDto, IEnumerable<TagDto> tagsDto)
         {
             var item = await _itemRepository.GetItemWithTags(itemDto.Id);
             item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
@@ -107,7 +100,7 @@ namespace PersonalCollection.Application.Services
                 .ToListAsync();
         }
 
-        public async Task<IList<TagDto>> GetItemTags(int itemId)
+        public async Task<IEnumerable<TagDto>> GetItemTags(int itemId)
         {
             return await _tagRepository.GetAll()
                 .Where(t => t.Items.Any(i => i.Id == itemId))
