@@ -1,0 +1,9 @@
+﻿<MudStack Spacing="0">
+    <MudText Typo="Typo.subtitle1">@Item.Name</MudText>
+    <MudText Typo="Typo.caption">@Item.CollectionName</MudText>
+    <MudText Typo="Typo.caption">@Item.Author</MudText>
+</MudStack>
+
+@code{
+    [Parameter] public ItemDto Item {get; set;}
+}

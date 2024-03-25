@@ -21,7 +21,7 @@ namespace PersonalCollection.Persistence.Repositories
 
         public IQueryable<Item> SearchItems(string search)
         {
-            var searchCondition = $"\"{search}\"";
+            var searchCondition = $"\"{search}*\"";
 
             return GetAll()
                 .Where(i =>
