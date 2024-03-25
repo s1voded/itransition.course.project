@@ -24,6 +24,7 @@ namespace PersonalCollection.Application.Services
         public async Task<int> AddItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
         {
             var item = _mapper.Map<Item>(itemDto);
+            item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
             await _itemRepository.Create(item);
             await _itemRepository.SaveChangesAsync();
             return item.Id;
@@ -66,9 +67,9 @@ namespace PersonalCollection.Application.Services
 
         public async Task UpdateItem(ItemEditCreateDto itemDto, IList<TagDto> tagsDto)
         {
-            var item = await _itemRepository.GetById(itemDto.Id);
+            var item = await _itemRepository.GetItemWithTags(itemDto.Id);
+            item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
             _mapper.Map(itemDto, item);
-
             _itemRepository.Update(item);
             await _itemRepository.SaveChangesAsync();
         }

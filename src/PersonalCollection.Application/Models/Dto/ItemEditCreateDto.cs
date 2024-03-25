@@ -8,7 +8,6 @@ namespace PersonalCollection.Application.Models.Dto
         public int CollectionId { get; set; }
         public string Name { get; set; }
         public DateTime CreatedDate { get; set; }
-        //public ICollection<TagDto> Tags { get; set; }
         public string?[] CustomStrings { get; set; } = new string?[CustomFieldsCount];
         public string?[] CustomTexts { get; set; } = new string?[CustomFieldsCount];
         public int?[] CustomInts { get; set; } = new int?[CustomFieldsCount];
