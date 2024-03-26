@@ -4,6 +4,7 @@ namespace PersonalCollection.Application.Interfaces.Services
 {
     public interface IUserManagerService
     {
+        public Task<ApplicationUserDto?> GetUserById(string userId);
         public Task<IEnumerable<ApplicationUserDto>> GetAllUsers();
         public Task DeleteUsers(string[] userIds);
 

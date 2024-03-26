@@ -1,0 +1,60 @@
+﻿@inject NavigationManager NavigationManager
+@inject IStringLocalizer<NavMenu> locale
+@rendermode InteractiveServer
+@implements IDisposable
+
+<MudNavMenu>
+    <a href="">
+        <MudText Typo="Typo.h6" class="d-flex justify-center pa-2">@locale["Personal Collections"]</MudText>
+    </a>
+    <MudDivider Class="mb-2" />
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@locale["Main"]</MudNavLink>
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="/collections" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Collections">@locale["Collections"]</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles=@Constants.AdminRole>
+        <MudNavLink Href="/usermanager" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PeopleAlt">@locale["Users"]</MudNavLink>
+    </AuthorizeView>
+    <AuthorizeView>
+        <Authorized>
+            <MudNavLink Href="/Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudNavLink>
+                <form action="Account/Logout" method="post" class="d-flex justify-center">
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <MudButton Size="Size.Small" Variant="Variant.Text" StartIcon="@Icons.Material.Filled.Logout" ButtonType="ButtonType.Submit">@locale["Logout"]</MudButton>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <MudNavLink Href="/Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">@locale["Register"]</MudNavLink>
+            <MudNavLink Href="/Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Login">@locale["Login"]</MudNavLink>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudNavMenu>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private void NavigateToUserCollections()
+    {
+        NavigationManager.NavigateTo($"/{NavCollections}", true);
+    }
+}

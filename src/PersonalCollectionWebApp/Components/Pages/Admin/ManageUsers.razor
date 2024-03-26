@@ -26,7 +26,7 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<MudTable Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable T=ApplicationUserDto Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" SelectOnRowClick=false OnRowClick="@NavigateToUserCollections" RowClass="cursor-pointer">
     <ToolBarContent>
         <MudText Typo="Typo.h4">@locale["Users"]</MudText>
         <MudSpacer />
@@ -144,5 +144,10 @@
         var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
         var uriEscaped = Uri.EscapeDataString(uri);
         NavigationManager.NavigateTo($"{AppRouteAccessDenied}?ReturnUrl={uriEscaped}", forceLoad: true);
+    }
+
+    private void NavigateToUserCollections(TableRowClickEventArgs<ApplicationUserDto> args)
+    {
+        NavigationManager.NavigateTo($"/{NavCollections}?UserId={args.Item.Id}", true);
     }
 }

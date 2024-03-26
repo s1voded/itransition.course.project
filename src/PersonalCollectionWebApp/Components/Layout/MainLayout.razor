@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
+@* <div class="page">
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -22,9 +22,25 @@
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
-</div>
+</div> *@
 
 <MudThemeProvider/>
 <MudPopoverProvider @rendermode=InteractiveServer />
 <MudDialogProvider @rendermode=InteractiveServer />
 <MudSnackbarProvider @rendermode=InteractiveServer />
+
+<MudLayout>
+    <MudDrawer Open="true" Variant="DrawerVariant.Persistent">
+        <MyNavMenu />
+    </MudDrawer>
+    <MudAppBar Dense=true Color="Color.Transparent" Fixed=false Elevation="1">
+        <CultureSelector />
+        <MudSpacer />
+        <SearchAppBar />
+    </MudAppBar>
+    <MudMainContent Class="pt-6">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

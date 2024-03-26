@@ -1,18 +1,22 @@
-﻿@attribute [Route(AppRouteCollections)]
+﻿@using Microsoft.AspNetCore.Identity
+@attribute [Route(AppRouteCollections)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
+@inject IUserManagerService UserManagerService
 @inject IAuthService AuthService
 @inject ICollectionService CollectionService
 @inject IStringLocalizer<Collections> locale
 
 <PageTitle>@locale["Collections"]</PageTitle>
 
-<MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-    <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">@locale["Add collection"]</MudButton>
-</MudButtonGroup>
-
-<MudDivider DividerType="DividerType.Middle" Class="my-2" />
+@if (canManageCollection)
+{
+    <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">@locale["Add collection"]</MudButton>
+    </MudButtonGroup>
+    <MudDivider DividerType="DividerType.Middle" Class="my-2" />
+}
 
 <MudTable T="CollectionDto" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
     <ColGroup>
@@ -44,18 +48,39 @@
 </MudTable>
 
 @code {
+    [SupplyParameterFromQuery]
+    public string? UserId { get; set; }
+
     private IEnumerable<CollectionDto> collections = [];
+    private bool canManageCollection;
 
     protected override async Task OnInitializedAsync()
     {
-        if(await AuthService.IsUserAuthenticated())
+        var userId = await InitUserId();      
+
+        if (!string.IsNullOrEmpty(userId))
         {
-            var userId = await AuthService.GetCurrentUserId();
-            if (!string.IsNullOrEmpty(userId))
+            collections = await CollectionService.GetUserCollections(userId);
+            canManageCollection = await AuthService.IsAllowManageCollection(userId);
+        }
+        else NavigationManager.NavigateTo(AppRouteNotFound);
+    }
+
+    private async Task<string?> InitUserId()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            var user = await UserManagerService.GetUserById(UserId);
+            return user?.Id;
+        }
+        else
+        {
+            if (await AuthService.IsUserAuthenticated())
             {
-                collections = await CollectionService.GetUserCollections(userId);
+                return await AuthService.GetCurrentUserId();
             }
-        }        
+            else return null;
+        }
     }
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<CollectionDto> args)
@@ -65,6 +90,9 @@
 
     private void NavigateToAddCollection()
     {
-        NavigationManager.NavigateTo($"/{NavCollections}/{NavCreate}");
+        var collectionCreateUri = $"/{NavCollections}/{NavCreate}";
+        if (!string.IsNullOrEmpty(UserId)) collectionCreateUri += $"?UserId={UserId}";
+
+        NavigationManager.NavigateTo(collectionCreateUri);
     }
 }

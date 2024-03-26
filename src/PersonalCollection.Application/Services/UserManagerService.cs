@@ -18,10 +18,17 @@ namespace PersonalCollection.Application.Services
             _userRepository = userRepository;
         }
 
+        public async Task<ApplicationUserDto?> GetUserById(string userId)
+        {
+            return await _userRepository.GetAll()
+                .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(u => u.Id == userId);
+        }
+
         public async Task<IEnumerable<ApplicationUserDto>> GetAllUsers()
         {
             return await _userRepository.GetAll()
-                .Include(u => u.Claims)
                 .ProjectTo<ApplicationUserDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();

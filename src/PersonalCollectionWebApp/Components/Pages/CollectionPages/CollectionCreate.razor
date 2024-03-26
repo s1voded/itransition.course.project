@@ -2,6 +2,7 @@
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
+@inject IUserManagerService UserManagerService
 @inject IAuthService AuthService
 @inject ICollectionService CollectionService
 @inject IStringLocalizer<CollectionCreate> locale
@@ -11,15 +12,21 @@
 
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
-<CollectionEditCreateComponent 
-    Collection=@collection
-    Themes=@themes
-    CustomFieldsSettings=@customFieldsSettings
-    OnSubmit=@OnAddCollection
-    SubmitButtonText=@locale["Create"]>
-</CollectionEditCreateComponent>
+@if (canManageCollection)
+{
+    <CollectionEditCreateComponent Collection=@collection
+                                   Themes=@themes
+                                   CustomFieldsSettings=@customFieldsSettings
+                                   OnSubmit=@OnAddCollection
+                                   SubmitButtonText=@locale["Create"]>
+    </CollectionEditCreateComponent>
+}
 
 @code {
+    [SupplyParameterFromQuery]
+    public string? UserId { get; set; }
+    private bool canManageCollection;
+
     private CollectionEditCreateDto collection = new();
     private IEnumerable<Theme> themes = [];
 
@@ -44,20 +51,50 @@
 
     protected override async Task OnInitializedAsync()
     {
-        themes = await CollectionService.GetThemes();
+        var userId = await InitUserId();
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            collection.UserId = userId;
+            canManageCollection = await AuthService.IsAllowManageCollection(collection.UserId);
+            if (!canManageCollection) NavigateToAccessDenied();
+
+            themes = await CollectionService.GetThemes();
+        }
+        else NavigationManager.NavigateTo(AppRouteNotFound);
+    }
+
+    private async Task<string?> InitUserId()
+    {
+        if (!string.IsNullOrEmpty(UserId))
+        {
+            var user = await UserManagerService.GetUserById(UserId);
+            return user?.Id;
+        }
+        else
+        {
+            if (await AuthService.IsUserAuthenticated())
+            {
+                return await AuthService.GetCurrentUserId();
+            }
+            else return null;
+        }
     }
 
     private async Task OnAddCollection()
     {
-        if (await AuthService.IsUserAuthenticated())
+        if (await AuthService.IsAllowManageCollection(collection.UserId))
         {
-            collection.UserId = await AuthService.GetCurrentUserId();
-            if(await AuthService.IsAllowManageCollection(collection.UserId))
-            {
-                collection.CustomFieldsSettings = customFieldsSettings;
-                var collectionId = await CollectionService.AddCollection(collection);
-                NavigationManager.NavigateTo($"/{NavCollections}/{collectionId}");
-            }
+            collection.CustomFieldsSettings = customFieldsSettings;
+            var collectionId = await CollectionService.AddCollection(collection);
+            NavigationManager.NavigateTo($"/{NavCollections}/{collectionId}");
         }
+    }
+
+    private void NavigateToAccessDenied()
+    {
+        var uri = new Uri(NavigationManager.Uri).GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+        var uriEscaped = Uri.EscapeDataString(uri);
+        NavigationManager.NavigateTo($"{AppRouteAccessDenied}?ReturnUrl={uriEscaped}", forceLoad: true);
     }
 }
