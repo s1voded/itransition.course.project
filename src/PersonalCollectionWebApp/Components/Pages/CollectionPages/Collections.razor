@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@attribute [Route(AppRouteCollections)]
+﻿@attribute [Route(AppRouteCollections)]
 @attribute [Authorize(Policy = PolicyUserNotBlocked)]
 @rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager

@@ -5,7 +5,7 @@
 <MudGrid>
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
-            <MudForm @bind-IsValid="@formIsValid">
+            <MudForm @ref=mudForm @bind-IsValid="@formIsValid">
                 <MudTextField @bind-Value="Collection.Name" Label=@locale["Name"] Required="true" RequiredError=@locale["Name is required"] />
                 <MudSelect @bind-Value="Collection.ThemeId" Label=@locale["Theme"] AnchorOrigin="Origin.BottomCenter">
                     @foreach (var theme in Themes)
@@ -37,8 +37,19 @@
     [Parameter] public CustomFieldsSettings CustomFieldsSettings { get; set; }
     [Parameter] public EventCallback OnSubmit { get; set; }
     [Parameter] public string SubmitButtonText { get; set; }
+    [Parameter] public bool FormValid { get; set; }
 
     private bool formIsValid;
+    private MudForm mudForm;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && FormValid)
+        {
+            await Task.Delay(100);//https://github.com/MudBlazor/MudBlazor/issues/5196#issuecomment-1339264606
+            await mudForm.Validate();
+        }
+    }
 
     async Task Submit()
     {

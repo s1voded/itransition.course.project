@@ -6,7 +6,6 @@ namespace PersonalCollection.Domain.Entities
     public class ApplicationUser : IdentityUser
     {
         public bool IsBlocked { get; set; }
-        public ICollection<Collection> Collections { get; } = [];
 
         //https://learn.microsoft.com/ru-ru/aspnet/core/security/authentication/customize-identity-model?view=aspnetcore-8.0#add-navigation-properties
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }

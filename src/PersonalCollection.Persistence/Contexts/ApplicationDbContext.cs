@@ -18,13 +18,6 @@ namespace PersonalCollection.Persistence.Contexts
                     .HasForeignKey(uc => uc.UserId)
                     .IsRequired();
 
-                b.HasMany(u => u.Comments)
-                    .WithOne(c => c.User)
-                    .HasForeignKey(c => c.UserId);
-
-                b.HasMany(u => u.Likes)
-                    .WithOne(l => l.User)
-                    .HasForeignKey(l => l.UserId);
             });
 
             modelBuilder.Entity<Collection>().OwnsOne(collection => collection.CustomFieldsSettings, builder => 
