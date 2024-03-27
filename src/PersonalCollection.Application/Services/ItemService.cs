@@ -69,10 +69,13 @@ namespace PersonalCollection.Application.Services
         public async Task UpdateItem(ItemEditCreateDto itemDto, IEnumerable<TagDto> tagsDto)
         {
             var item = await _itemRepository.GetItemWithTags(itemDto.Id);
-            item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
-            _mapper.Map(itemDto, item);
-            _itemRepository.Update(item);
-            await _itemRepository.SaveChangesAsync();
+            if (item != null)
+            {
+                item.Tags = await _tagRepository.GetTagsByIds(tagsDto.Select(td => td.Id).ToArray());
+                _mapper.Map(itemDto, item);
+                _itemRepository.Update(item);
+                await _itemRepository.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteItem(int itemId)
@@ -112,7 +115,7 @@ namespace PersonalCollection.Application.Services
         public async Task<IEnumerable<TagWithUsedCountDto>> GetTagsWithUsedCount()
         {
             return await _tagRepository.GetAll()
-                .Where(t => t.Items.Count() > 0)
+                .Where(t => t.Items.Count != 0)
                 .ProjectTo<TagWithUsedCountDto>(_mapper.ConfigurationProvider)
                 .AsNoTracking()
                 .ToListAsync();

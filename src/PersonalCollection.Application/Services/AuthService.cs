@@ -20,58 +20,35 @@ namespace PersonalCollection.Application.Services
         public async Task<bool> IsAllowManageCollection(string authorId)
         {
             var user = await GetCurrentUser();
-            if (user is not null)
-            {
-                var isAuthorized = await _authorizationService.AuthorizeAsync(user, authorId, PolicyCanManageCollection);
-                return isAuthorized.Succeeded;
-            }
-            return false;
+            if (user is null) return false;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(user, authorId, PolicyCanManageCollection);
+            return isAuthorized.Succeeded;
         }
 
         public async Task<bool> IsUserAdmin()
         {
             var user = await GetCurrentUser();
-            if (user is not null)
-            {
-                var isAuthorized = await _authorizationService.AuthorizeAsync(user, PolicyAdminOnly);
-                return isAuthorized.Succeeded;
-            }
-            return false;
+            if (user is null) return false;
+            var isAuthorized = await _authorizationService.AuthorizeAsync(user, PolicyAdminOnly);
+            return isAuthorized.Succeeded;
         }
 
         public async Task<bool> IsUserAuthenticated()
         {
             var user = await GetCurrentUser();
-            if (user is not null)
-            {
-                if (user.Identity is not null && user.Identity.IsAuthenticated)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return user?.Identity is { IsAuthenticated: true };
         }
 
         public async Task<string?> GetCurrentUserId()
         {
             var user = await GetCurrentUser();
-            if (user is not null)
-            {
-                return user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            }
-            return null;
+            return user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         }
 
         private async Task<ClaimsPrincipal?> GetCurrentUser()
         {
-            if (_authenticationStateProvider is not null)
-            {
-                var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
-                var user = authState?.User;
-
-                return user;
-            }
-            return null;
+            var authState = await _authenticationStateProvider.GetAuthenticationStateAsync();
+            return authState?.User;
         }
     }
 }

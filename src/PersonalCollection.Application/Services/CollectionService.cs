@@ -60,10 +60,12 @@ namespace PersonalCollection.Application.Services
         public async Task UpdateCollection(CollectionEditCreateDto collectionDto)
         {
             var collection = await _collectionRepository.GetById(collectionDto.Id);
-            _mapper.Map(collectionDto, collection);
-
-            _collectionRepository.Update(collection);
-            await _collectionRepository.SaveChangesAsync();
+            if (collection != null)
+            {
+                _mapper.Map(collectionDto, collection);
+                _collectionRepository.Update(collection);
+                await _collectionRepository.SaveChangesAsync();
+            }
         }
 
         public async Task UpdateCollectionImage(int collectionId, string? image)

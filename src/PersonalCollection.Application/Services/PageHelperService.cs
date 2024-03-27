@@ -15,7 +15,7 @@ namespace PersonalCollection.Application.Services
 
         public double GetFontSizeForTag(TagWithUsedCountDto tag, int minCount, int maxCount)
         {
-            int minFontSize = 12, maxFontSize = 30;
+            const int minFontSize = 12, maxFontSize = 30;
             return Scale(tag.Count, minCount, maxCount, minFontSize, maxFontSize);
         }
 

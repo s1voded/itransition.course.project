@@ -24,18 +24,11 @@ namespace PersonalCollection.Application.Services
 
         public async Task<string?> DownloadAsync(string fileName)
         {
-            string? imageSource = null;
             var blobClient = GetBlobClient(fileName);
-
-            if(await blobClient.ExistsAsync())
-            {
-                var downloadResult = await blobClient.DownloadContentAsync();
-                var blobContents = downloadResult.Value.Content.ToArray();
-                var imagesrc = Convert.ToBase64String(blobContents);
-                imageSource = string.Format("data:image;base64,{0}", imagesrc);
-            }
-
-            return imageSource;
+            if (!await blobClient.ExistsAsync()) return null;
+            var downloadResult = await blobClient.DownloadContentAsync();
+            var blobContents = downloadResult.Value.Content.ToArray();
+            return $"data:image;base64,{Convert.ToBase64String(blobContents)}";
         }
 
         public async Task DeleteAsync(string fileName)
