@@ -12,7 +12,7 @@
 
 <MudTable T="ItemDto" Items=@lastAddedItems Hover="true" Dense="true" OnRowClick=@NavigateToItemDetails RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@locale["Last added items"]</MudText>
+        <MudText Typo="Typo.h5">@locale["Last added items"]</MudText>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 20%;" />
@@ -41,7 +41,7 @@
 
 <MudTable T="CollectionDto" Items=@largestCollections Hover="true" Dense="true" OnRowClick=@NavigateToCollectionDetails RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@locale["Largest collections"]</MudText>
+        <MudText Typo="Typo.h5">@locale["Largest collections"]</MudText>
     </ToolBarContent>
     <ColGroup>
         <col style="width: 4%;" />
@@ -74,7 +74,7 @@
 <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 
 <MudPaper Class="pa-4" Elevation="1">
-    <MudText Typo="Typo.h6" Class="pa-2">@locale["Tags"]</MudText>
+    <MudText Typo="Typo.h5" Class="pa-2">@locale["Tags"]</MudText>
     @foreach (var tag in tagsWithUsedCount)
     {
         <MudLink Href="@PageHelperService.GetTagSearchHref(tag.Name)" Style=@($"font-size: {PageHelperService.GetFontSizeForTag(tag, minCountTags, maxCountTags)}px;") Class="pa-2">@tag.Name</MudLink>

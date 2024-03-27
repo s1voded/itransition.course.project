@@ -71,14 +71,11 @@
             var user = await UserManagerService.GetUserById(UserId);
             return user?.Id;
         }
-        else
+        if (await AuthService.IsUserAuthenticated())
         {
-            if (await AuthService.IsUserAuthenticated())
-            {
-                return await AuthService.GetCurrentUserId();
-            }
-            else return null;
+            return await AuthService.GetCurrentUserId();
         }
+        return null;
     }
 
     private async Task OnAddCollection()

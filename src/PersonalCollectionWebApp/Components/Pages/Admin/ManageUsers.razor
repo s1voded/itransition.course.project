@@ -28,7 +28,7 @@
 
 <MudTable T=ApplicationUserDto Items="@users" Hover="true" Dense="true" MultiSelection="true" @bind-SelectedItems="selectedUsers" Filter="UserFilter" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" SelectOnRowClick=false OnRowClick="@NavigateToUserCollections" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h4">@locale["Users"]</MudText>
+        <MudText Typo="Typo.h5">@locale["Users"]</MudText>
         <MudSpacer />
         <MudTextField Immediate="true" @bind-Value="searchString" Placeholder=@locale["Search users"] Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>

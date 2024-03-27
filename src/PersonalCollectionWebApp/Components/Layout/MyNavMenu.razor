@@ -1,5 +1,5 @@
 ﻿@inject NavigationManager NavigationManager
-@inject IStringLocalizer<NavMenu> locale
+@inject IStringLocalizer<MyNavMenu> locale
 @rendermode InteractiveServer
 @implements IDisposable
 
@@ -14,7 +14,7 @@
             <MudNavLink Href="/collections" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Collections">@locale["Collections"]</MudNavLink>
         </Authorized>
     </AuthorizeView>
-    <AuthorizeView Roles=@Constants.AdminRole>
+    <AuthorizeView Roles=@AdminRole>
         <MudNavLink Href="/usermanager" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PeopleAlt">@locale["Users"]</MudNavLink>
     </AuthorizeView>
     <AuthorizeView>

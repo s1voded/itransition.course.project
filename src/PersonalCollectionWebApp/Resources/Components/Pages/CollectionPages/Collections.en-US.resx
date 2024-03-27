@@ -129,6 +129,9 @@
   <data name="Items count" xml:space="preserve">
     <value>Items count</value>
   </data>
+  <data name="My collections" xml:space="preserve">
+    <value>My collections</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>

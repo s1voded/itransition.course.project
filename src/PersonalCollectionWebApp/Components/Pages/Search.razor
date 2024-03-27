@@ -11,7 +11,7 @@
 
 <MudTable T="ItemDto" Items="@foundItems" Hover="true" Dense="true" OnRowClick="@NavigateToItemDetails" RowClass="cursor-pointer">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">@locale["Found items"]</MudText>
+        <MudText Typo="Typo.h5">@locale["Found items"]</MudText>
     </ToolBarContent>
     <HeaderContent>
         <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ItemDto, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>

@@ -7,7 +7,7 @@
 @inject ICollectionService CollectionService
 @inject IStringLocalizer<Collections> locale
 
-<PageTitle>@locale["Collections"]</PageTitle>
+<PageTitle>@GetCollectionsTitle()</PageTitle>
 
 @if (canManageCollection)
 {
@@ -18,17 +18,20 @@
 }
 
 <MudTable T="CollectionDto" Items="@collections" Hover=" true" OnRowClick="@NavigateToCollectionDetails" RowClass="cursor-pointer">
+    <ToolBarContent>
+        <MudText Typo="Typo.h5">@GetCollectionsTitle()</MudText>
+    </ToolBarContent>
     <ColGroup>
-        <col style="width: 4%;" />
-        <col style="width: 24%;" />
-        <col style="width: 24%;" />
-        <col style="width: 24%;" />
-        <col style="width: 24%;" />
+        <col style="width: 4%;"/>
+        <col style="width: 24%;"/>
+        <col style="width: 24%;"/>
+        <col style="width: 24%;"/>
+        <col style="width: 24%;"/>
     </ColGroup>
     <HeaderContent>
         <MudTh></MudTh>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<CollectionDto, object>(x=>x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<CollectionDto, object>(x=>x.Theme)">@locale["Theme"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<CollectionDto, object>(x => x.Name)">@locale["Name"]</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<CollectionDto, object>(x => x.Theme)">@locale["Theme"]</MudTableSortLabel></MudTh>
         <MudTh>@locale["Description"]</MudTh>
         <MudTh>@locale["Items count"]</MudTh>
     </HeaderContent>
@@ -36,7 +39,7 @@
         <MudTd>
             @if (!string.IsNullOrEmpty(context.Image))
             {
-                <ImageComponent FileName="@context.Image" ImgHieght="50" ImgWidth="100" />
+                <ImageComponent FileName="@context.Image" ImgHieght="50" ImgWidth="100"/>
             }
         </MudTd>
         <MudTd DataLabel="Name">@context.Name</MudTd>
@@ -50,12 +53,14 @@
     [SupplyParameterFromQuery]
     public string? UserId { get; set; }
 
+
+    private ApplicationUserDto? user;
     private IEnumerable<CollectionDto> collections = [];
     private bool canManageCollection;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        var userId = await InitUserId();      
+        var userId = await InitUserId();
 
         if (!string.IsNullOrEmpty(userId))
         {
@@ -69,18 +74,17 @@
     {
         if (!string.IsNullOrEmpty(UserId))
         {
-            var user = await UserManagerService.GetUserById(UserId);
+            user = await UserManagerService.GetUserById(UserId);
             return user?.Id;
         }
-        else
+        if (await AuthService.IsUserAuthenticated())
         {
-            if (await AuthService.IsUserAuthenticated())
-            {
-                return await AuthService.GetCurrentUserId();
-            }
-            else return null;
+            return await AuthService.GetCurrentUserId();
         }
+        return null;
     }
+
+    private string GetCollectionsTitle() => string.IsNullOrEmpty(UserId) ? locale["My collections"] : $"{locale["Collections"]} ({user?.UserName})";
 
     private void NavigateToCollectionDetails(TableRowClickEventArgs<CollectionDto> args)
     {
