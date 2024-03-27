@@ -36,6 +36,7 @@
 
         public const string ParameterSearchTag = "SearchTag";
         public const string ParameterSearchString = "SearchString";
+        public const string ParameterUserId = "UserId";
 
         public const string HubName = "/commentshub";
         public const string HubSendCommentsUpdate = "SendCommentsUpdate";

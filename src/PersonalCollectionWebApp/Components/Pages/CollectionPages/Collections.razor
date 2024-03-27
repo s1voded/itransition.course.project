@@ -22,11 +22,7 @@
         <MudText Typo="Typo.h5">@GetCollectionsTitle()</MudText>
     </ToolBarContent>
     <ColGroup>
-        <col style="width: 4%;"/>
-        <col style="width: 24%;"/>
-        <col style="width: 24%;"/>
-        <col style="width: 24%;"/>
-        <col style="width: 24%;"/>
+        <ColGroupComponent/>
     </ColGroup>
     <HeaderContent>
         <MudTh></MudTh>
@@ -94,7 +90,7 @@
     private void NavigateToAddCollection()
     {
         var collectionCreateUri = $"/{NavCollections}/{NavCreate}";
-        if (!string.IsNullOrEmpty(UserId)) collectionCreateUri += $"?UserId={UserId}";
+        if (!string.IsNullOrEmpty(UserId)) collectionCreateUri += $"?{ParameterUserId}={UserId}";
 
         NavigationManager.NavigateTo(collectionCreateUri);
     }

@@ -148,6 +148,6 @@
 
     private void NavigateToUserCollections(TableRowClickEventArgs<ApplicationUserDto> args)
     {
-        NavigationManager.NavigateTo($"/{NavCollections}?UserId={args.Item.Id}", true);
+        NavigationManager.NavigateTo($"/{NavCollections}?{ParameterUserId}={args.Item.Id}", true);
     }
 }
