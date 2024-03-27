@@ -39,6 +39,14 @@ namespace PersonalCollection.Application.Services
             return await _mapper.ProjectTo<T>(query).SingleOrDefaultAsync();
         }
 
+        public IQueryable<ItemExportDto> GetExportItemsQuery(string userId)
+        {
+            return _itemRepository.GetAll()
+                .Where(i => i.Collection.UserId == userId)
+                .ProjectTo<ItemExportDto>(_mapper.ConfigurationProvider)
+                .AsNoTracking();
+        }
+
         public async Task<IEnumerable<ItemDto>> GetLastAddedItems(int count)
         {
             return await _itemRepository.GetAll()
@@ -93,14 +101,6 @@ namespace PersonalCollection.Application.Services
             await _tagRepository.SaveChangesAsync();
 
             return _mapper.Map<TagDto>(tag);
-        }
-
-        public async Task<IEnumerable<TagDto>> GetAllItemTags()
-        {
-            return await _tagRepository.GetAll()
-                .ProjectTo<TagDto>(_mapper.ConfigurationProvider)
-                .AsNoTracking()
-                .ToListAsync();
         }
 
         public async Task<IEnumerable<TagDto>> GetItemTags(int itemId)

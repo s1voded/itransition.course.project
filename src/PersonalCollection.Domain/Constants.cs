@@ -47,7 +47,9 @@
         public const string RU = "ru-RU";
         public const string EN = "en-US";
 
+        public const string CsvItemSeparator = ";";
         public const string JSGetTimeOffsetFuncName = "getTimezoneOffset";
+        public const string JSDownloadFileFuncName = "downloadFileFromStream";
         public const string EnvVariableSecrets = "PersonalCollectionSecrets";
     }
 }

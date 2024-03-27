@@ -5,15 +5,24 @@
 @inject IUserManagerService UserManagerService
 @inject IAuthService AuthService
 @inject ICollectionService CollectionService
+@inject IItemService ItemService
+@inject IPageHelperService PageHelperService
 @inject IStringLocalizer<Collections> locale
+@inject IJSRuntime JS
 
 <PageTitle>@GetCollectionsTitle()</PageTitle>
 
 @if (canManageCollection)
 {
-    <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
-        <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">@locale["Add collection"]</MudButton>
-    </MudButtonGroup>
+    <MudStack Justify=Justify.SpaceBetween Row="true">
+        <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+            <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="NavigateToAddCollection">@locale["Add collection"]</MudButton>
+        </MudButtonGroup>
+
+        <MudButtonGroup Color="Color.Default" Size="Size.Small" Variant="Variant.Outlined">
+            <MudButton StartIcon="@Icons.Material.Filled.ImportExport" OnClick="ExportCsv">@locale["Export CSV"]</MudButton>
+        </MudButtonGroup>
+    </MudStack>
     <MudDivider DividerType="DividerType.Middle" Class="my-2" />
 }
 
@@ -51,17 +60,18 @@
 
 
     private ApplicationUserDto? user;
+    private string? _userId;
     private IEnumerable<CollectionDto> collections = [];
     private bool canManageCollection;
 
     protected override async Task OnParametersSetAsync()
     {
-        var userId = await InitUserId();
+        _userId = await InitUserId();
 
-        if (!string.IsNullOrEmpty(userId))
+        if (!string.IsNullOrEmpty(_userId))
         {
-            collections = await CollectionService.GetUserCollections(userId);
-            canManageCollection = await AuthService.IsAllowManageCollection(userId);
+            collections = await CollectionService.GetUserCollections(_userId);
+            canManageCollection = await AuthService.IsAllowManageCollection(_userId);
         }
         else NavigationManager.NavigateTo(AppRouteNotFound);
     }
@@ -78,6 +88,18 @@
             return await AuthService.GetCurrentUserId();
         }
         return null;
+    }
+
+    //https://learn.microsoft.com/ru-ru/aspnet/core/blazor/file-downloads?view=aspnetcore-8.0#download-from-a-stream
+    private async Task ExportCsv()
+    {
+        if (_userId != null)
+        {
+            var queryMyItems = ItemService.GetExportItemsQuery(_userId);
+            var fileStream = PageHelperService.GetFileStream(queryMyItems);
+            using var streamRef = new DotNetStreamReference(stream: fileStream);
+            await JS.InvokeVoidAsync(JSDownloadFileFuncName, $"collection_items.csv", streamRef);
+        }
     }
 
     private string GetCollectionsTitle() => string.IsNullOrEmpty(UserId) ? locale["My collections"] : $"{locale["Collections"]} ({user?.UserName})";

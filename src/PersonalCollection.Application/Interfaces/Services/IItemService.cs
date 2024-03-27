@@ -6,6 +6,7 @@ namespace PersonalCollection.Application.Interfaces.Services
     {
         public Task<int> AddItem(ItemEditCreateDto itemDto, IEnumerable<TagDto> tagsDto);
         public Task<T?> GetItemById<T>(int itemId);
+        public IQueryable<ItemExportDto> GetExportItemsQuery(string userId);
         public Task<IEnumerable<ItemDto>> GetLastAddedItems(int count);
         public Task<IEnumerable<ItemDto>> SearchItemsByTag(string tagName);
         public Task<IEnumerable<ItemDto>> SearchItems(string searchString);
@@ -13,7 +14,6 @@ namespace PersonalCollection.Application.Interfaces.Services
         public Task DeleteItem(int itemId);
 
         public Task<TagDto> AddNewTag(TagDto tagDto);
-        public Task<IEnumerable<TagDto>> GetAllItemTags();
         public Task<IEnumerable<TagDto>> GetItemTags(int itemId);
         public Task<IEnumerable<TagWithUsedCountDto>> GetTagsWithUsedCount();
         public Task<IEnumerable<TagDto>> SearchTag(string searchString);

@@ -2,6 +2,7 @@
 using PersonalCollection.Application.Models.Dto;
 using PersonalCollection.Domain.Entities;
 using System.Security.Claims;
+using static PersonalCollection.Domain.Constants;
 
 namespace PersonalCollection.Application.Mapping
 {
@@ -32,6 +33,15 @@ namespace PersonalCollection.Application.Mapping
                 .ForMember(dest => dest.Tags, act => act.MapFrom(src => src.Tags.Select(t => t.Name)));
             CreateMap<Item, ItemInCollectionDto>()
                 .ForMember(dest => dest.Tags, act => act.MapFrom(src => src.Tags.Select(t => t.Name)));
+            CreateMap<Item, ItemExportDto>()
+                .ForMember(dest => dest.CollectionName, act => act.MapFrom(src => src.Collection.Name))
+                .ForMember(dest => dest.CollectionTheme, act => act.MapFrom(src => src.Collection.Theme.Name))
+                .ForMember(dest => dest.Tags, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.Tags.Select(t => t.Name))))
+                .ForMember(dest => dest.CustomStrings, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.CustomStrings)))
+                .ForMember(dest => dest.CustomTexts, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.CustomTexts)))
+                .ForMember(dest => dest.CustomInts, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.CustomInts)))
+                .ForMember(dest => dest.CustomBools, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.CustomBools)))
+                .ForMember(dest => dest.CustomDates, act => act.MapFrom(src => string.Join(CsvItemSeparator, src.CustomDates)));
 
             CreateMap<Tag, TagDto>();
             CreateMap<TagDto, Tag>();
