@@ -1,6 +1,5 @@
 ﻿@attribute [Route(AppRouteSearch)]
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
-@rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject IItemService ItemService
 @inject IPageHelperService PageHelperService

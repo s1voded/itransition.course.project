@@ -1,6 +1,5 @@
 ﻿@page "/"
 @attribute [Authorize(Policy = PolicyUserNotBlockedOrAnonymous)]
-@rendermode @(new InteractiveServerRenderMode(false))
 @inject NavigationManager NavigationManager
 @inject ICollectionService CollectionService
 @inject IItemService ItemService

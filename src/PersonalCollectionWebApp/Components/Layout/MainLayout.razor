@@ -1,9 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider/>
-<MudPopoverProvider @rendermode=InteractiveServer />
-<MudDialogProvider @rendermode=InteractiveServer />
-<MudSnackbarProvider @rendermode=InteractiveServer />
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" />
+<MudPopoverProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 <MudLayout>
     <MudDrawer Open="true" Variant="DrawerVariant.Persistent">
@@ -11,6 +11,9 @@
     </MudDrawer>
     <MudAppBar Dense=true Color="Color.Transparent" Fixed=false Elevation="1">
         <CultureSelector />
+        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
+                             Icon="@Icons.Material.Filled.DarkMode" Color="@Color.Dark"
+                             ToggledIcon="@Icons.Material.Filled.LightMode" ToggledColor="@Color.Warning"/>
         <MudSpacer />
         <SearchAppBar />
     </MudAppBar>
@@ -20,3 +23,7 @@
         </MudContainer>
     </MudMainContent>
 </MudLayout>
+
+@code {
+    private static bool _isDarkMode;
+}
